@@ -4,8 +4,18 @@ import {startLogout} from "../redux/actions/auth/action.logout";
 
 /**
  * Creates a fetch for a custom HTTP request
+ *
+ * @param {function} dispatch - The redux dispatch function
+ * @param {string} url - The URL to fetch
+ * @param {object} params - the request parameters
+ * @param {boolean} showSuccessAlert - Whether to show a success alert
  */
-export const customHTTPRequest = async (dispatch, url, params = {}) => {
+export const customHTTPRequest = async (
+	dispatch,
+	url,
+	params = {},
+	showSuccessAlert = false
+) => {
 
 	const res = await fetch(url, {
 		method: 'GET',
@@ -27,17 +37,8 @@ export const customHTTPRequest = async (dispatch, url, params = {}) => {
 
 		return {};
 	}
-	if (res.status !== 200) {
-		await Swal.fire({
-			title: "Ha ocurrido un error. Intente más tarde",
-			icon: "error",
-			text: jsonRes.message,
-			onClose: () => Swal.close()
-		});
-		return {};
-	}
 
-	if(res.status === 400) {
+	if (res.status === 400 || res.status === 422) {
 		//TODO: replace it with 404 page
 		await Swal.fire({
 			title: "Ha ocurrido un error. Intente más tarde",
@@ -45,7 +46,17 @@ export const customHTTPRequest = async (dispatch, url, params = {}) => {
 			text: jsonRes.message,
 			onClose: () => Swal.close()
 		});
+
 		return {};
+	}
+
+	if (showSuccessAlert) {
+		await Swal.fire({
+			title: "Operación exitosa",
+			icon: "success",
+			text: jsonRes.message,
+			onClose: () => Swal.close()
+		});
 	}
 
 	return jsonRes;

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\GuideController;
 use App\Http\Controllers\TouristicPointController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::middleware(['auth:api'])->group(function(){
 	// Touristic points
 	Route::POST('/manage/punto-turistico/', [TouristicPointController::class, 'create']);
 	Route::PUT('/manage/punto-turistico/{id}', [TouristicPointController::class, 'update']);
+	Route::GET('/manage/punto-turistico/{id}', [TouristicPointController::class, 'loadById']);
 	Route::GET('/manage/puntos-turisticos/', [TouristicPointController::class, 'loadTouristicPoints']);
 
 	// Categories
@@ -36,4 +38,11 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::DELETE('/manage/category/{id}', [CategoryController::class, 'delete']);
 
 	Route::GET('/auth/verify-token', [AuthController::class, 'verifyToken']);
+
+	// Guides
+	Route::GET('/manage/guides/', [GuideController::class, 'read']);
+	Route::GET('/manage/guide/{id}', [GuideController::class, 'readById']);
+	Route::PUT('/manage/guide/{id}', [GuideController::class, 'update']);
+	Route::DELETE('/manage/guide/{id}', [GuideController::class, 'delete']);
+	Route::POST('/manage/guide/', [GuideController::class, 'create']);
 });

@@ -38,7 +38,7 @@ class CategoryController extends Controller
 		$model->create($params);
 
 		return response()->json([
-			NetworkAttributes::STATUS => NetworkAttributes::STATUS_OK,
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => "Categoria creada correctamente"
 		], NetworkAttributes::STATUS_200);
 	}
@@ -52,7 +52,7 @@ class CategoryController extends Controller
 		$categories = $model->all();
 
 		return response()->json([
-			NetworkAttributes::STATUS => NetworkAttributes::STATUS_OK,
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => "Categorias obtenidas correctamente",
 			NetworkAttributes::DATA => $categories
 		], NetworkAttributes::STATUS_200);
@@ -74,7 +74,7 @@ class CategoryController extends Controller
 		}
 
 		return response()->json([
-			NetworkAttributes::STATUS => NetworkAttributes::STATUS_OK,
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => "Categoria obtenida correctamente",
 			NetworkAttributes::DATA => $category
 		], NetworkAttributes::STATUS_200);
@@ -117,7 +117,7 @@ class CategoryController extends Controller
 		$category->update($params);
 
 		return response()->json([
-			NetworkAttributes::STATUS => NetworkAttributes::STATUS_OK,
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => "Categoria actualizada correctamente",
 			NetworkAttributes::DATA => $category
 		], NetworkAttributes::STATUS_200);
@@ -143,7 +143,7 @@ class CategoryController extends Controller
 		$category->delete();
 
 		return response()->json([
-			NetworkAttributes::STATUS => NetworkAttributes::STATUS_OK,
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => "Categoria eliminada correctamente"
 		], NetworkAttributes::STATUS_200);
 	}

@@ -84,8 +84,10 @@ class TouristicPointController extends Controller
 		], NetworkAttributes::STATUS_200);
 	}
 
-
-	public function loadTouristicPoints(Request $request) {
+	/**
+	 * Loads all the touristic points with a reduced set of attributes
+	 */
+	public function loadTouristicPoints() {
 
 		$model = new TouristicPoint();
 		$touristicPoints = $model->all();
@@ -94,6 +96,28 @@ class TouristicPointController extends Controller
 			NetworkAttributes::STATUS => 'success',
 			NetworkAttributes::MESSAGE => 'Puntos turísticos cargados correctamente',
 			NetworkAttributes::DATA => $touristicPoints
+		], NetworkAttributes::STATUS_200);
+	}
+
+	/**
+	 * Loads a touristic point with all its attributes
+	 */
+	public function loadById($id) {
+
+		$model = new TouristicPoint();
+		$touristicPoint = $model->find($id);
+
+		if(!$touristicPoint) {
+			return response()->json([
+				NetworkAttributes::STATUS => 'error',
+				NetworkAttributes::MESSAGE => 'Punto turístico no encontrado'
+			], NetworkAttributes::STATUS_404);
+		}
+
+		return response()->json([
+			NetworkAttributes::STATUS => 'success',
+			NetworkAttributes::MESSAGE => 'Punto turístico cargado correctamente',
+			NetworkAttributes::DATA => $touristicPoint
 		], NetworkAttributes::STATUS_200);
 	}
 }

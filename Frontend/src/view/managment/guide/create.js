@@ -18,9 +18,9 @@ const ManageGuideCreate = ({initS}) => {
 	const [schedules, setSchedules] = useState(initS?.schedules || []);
 	const [data, setData, _] = useCustomForm(initS || {
 		name: "",
-		identification: "",
-		cellphone: "",
-		available: false
+		cedula: "",
+		phone: "",
+		is_active: false
 	});
 
 	// handle deletion of a whole guide
@@ -86,14 +86,14 @@ const ManageGuideCreate = ({initS}) => {
 										/>
 									</div>
 									<div className="col-span-6 sm:col-span-3">
-										<label htmlFor="cellphone" className="block text-sm font-medium text-gray-700">
+										<label htmlFor="phone" className="block text-sm font-medium text-gray-700">
 											Teléfono
                       </label>
 										<input
 											type="text"
-											name="cellphone"
+											name="phone"
 											required={true}
-											value={data.cellphone}
+											value={data.phone}
 											onChange={(value) => {
 												setData(value);
 
@@ -109,8 +109,8 @@ const ManageGuideCreate = ({initS}) => {
                       </label>
 										<input
 											type="number"
-											name="identification"
-											value={data.identification}
+											name="cedula"
+											value={data.cedula}
 											onChange={setData}
 											placeholder="0000000000"
 											className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -168,10 +168,10 @@ const ManageGuideCreate = ({initS}) => {
 												<div className="flex items-start">
 													<div className="flex items-center h-5">
 														<input
-															name="available"
-															checked={!!data.available}
+															name="is_active"
+															checked={!!data.is_active}
 															onChange={(e) => {
-																setData({target: {value: Boolean(e.target.checked), name: 'available'}});
+																setData({target: {value: Boolean(e.target.checked), name: 'is_active'}});
 															}}
 															type="checkbox"
 															className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"

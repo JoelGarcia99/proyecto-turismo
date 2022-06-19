@@ -167,8 +167,8 @@ const ManagePuntoturisCreate = ({initS}) => {
 										>
 											{
 												categories?.map((cat) => {
-													return <option value={cat.title} key={cat._id}>
-														{cat.title}
+													return <option value={cat.name} key={cat._id}>
+														{cat.name}
 													</option>
 												})
 											}

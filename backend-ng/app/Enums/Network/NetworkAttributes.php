@@ -18,5 +18,5 @@ enum NetworkAttributes: string
 	const STATUS_404 = '404';
 
 	const STATUS_ERROR = 'error';
-	const STATUS_OK = 'ok';
+	const STATUS_SUCCESS = 'ok';
 }

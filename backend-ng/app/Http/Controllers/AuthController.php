@@ -26,7 +26,7 @@ class AuthController extends Controller
 		$accessToken = auth()->user()->createToken('authToken')->accessToken;
 
 		return response()->json([
-			NetworkAttributes::STATUS => NetworkAttributes::STATUS_OK,
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => 'Login successful',
 			NetworkAttributes::USER => auth()->user(),
 			NetworkAttributes::ACCESS_TOKEN => $accessToken,
@@ -53,7 +53,7 @@ class AuthController extends Controller
 		$accessToken = $user->createToken('authToken')->accessToken;
 
 		return response()->json([
-			NetworkAttributes::STATUS => NetworkAttributes::STATUS_OK,
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => 'User created successfully',
 			NetworkAttributes::USER => $user,
 			NetworkAttributes::ACCESS_TOKEN => $accessToken,
@@ -65,7 +65,7 @@ class AuthController extends Controller
 	 */
 	public function verifyToken(Request $request) {
 		return response()->json([
-			NetworkAttributes::STATUS => NetworkAttributes::STATUS_OK,
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => 'Token verified successfully',
 			NetworkAttributes::USER => auth()->user(),
 		]);

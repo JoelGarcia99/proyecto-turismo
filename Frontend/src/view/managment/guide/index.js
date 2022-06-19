@@ -64,10 +64,10 @@ const ManagaGuideIndex = ()=>{
 		      scope="row" 
 		      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
 		    >{guide.name || "N/A"}</th>
-		    <td className="px-6 py-4">{guide.identification || "N/A"}</td>
-		    <td className="px-6 py-4">{guide.cellphone || "N/A"}</td>
+		    <td className="px-6 py-4">{guide.cedula || "N/A"}</td>
+		    <td className="px-6 py-4">{guide.phone || "N/A"}</td>
 		    <td className="px-6 py-4">{(guide.schedules || []).length}&nbsp;disponibles</td>
-		    <td className="px-6 py-4">{guide.available? "Sí":"No"}</td>
+		    <td className="px-6 py-4">{guide.is_active? "Sí":"No"}</td>
 		    <td className="px-6 py-4">
 		      <Link
 			to={`${allRoutes.manage_guide_update}${guide._id}`}

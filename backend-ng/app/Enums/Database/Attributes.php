@@ -4,15 +4,23 @@ namespace App\Enums\Database;
 
 enum Attributes: string
 {
+	// Common
 	const ID = '_id';
 	const CREATED_AT = 'created_at';
 	const UPDATED_AT = 'updated_at';
+	const IMAGE_URL = 'image_url';
 	const NAME = 'name';
 	const ADDRESS = 'address';
 	const DESCRIPTION = 'description';
 	const SLUG = 'slug';
 	const CATEGORY = 'category';
 	const MAIN_IMAGE_URL = 'main_image_url';
+	const IS_ACTIVE = 'is_active';
+
+	// Guides
+	const SCHEDULE = 'schedule';
+	const CEDULA = 'cedula';
+	const PHONE = 'phone';
 
 	// Touristic point
 	const ALLOW_RESERVATION = 'allow_reservation';

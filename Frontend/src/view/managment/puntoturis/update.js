@@ -1,37 +1,34 @@
 import React, {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router';
+import {customHTTPRequest} from '../../../helpers/helper.network';
 import ManagePuntoturisCreate from './create';
 
 const ManagePuntoturisUpdate = () => {
 
-  // fetching data for this location
-  const [puntoTuris, setPuntoTuris] = useState(null);
-  const {token} = useSelector(state=>state.auth);
+	// fetching data for this location
+	const [puntoTuris, setPuntoTuris] = useState(null);
+	const {token} = useSelector(state => state.auth);
+	const dispatch = useDispatch();
 
-  // this comes from URL params
-  const {id} = useParams();
+	// this comes from URL params
+	const {id} = useParams();
 
-  useEffect(()=>{
-    fetch(`${process.env.REACT_APP_API_HOST}/punto-turistico/manage/${id}`, {
-      method: "GET",
-      headers: {
-	auth: token
-      },
-    }).then(async response=>{
-      const jsonRes = await response.json();
+	useEffect(() => {
+		customHTTPRequest(dispatch, `${process.env.REACT_APP_NG_API_HOST}/api/manage/punto-turistico/${id}`, {
+			headers: {
+				'Authorization': `Bearer ${token}`
+			},
+		}).then(async response => {
+				setPuntoTuris(response.data);
+		})
+	}, [setPuntoTuris]);
 
-      if(response.status === 200) {
-	setPuntoTuris(jsonRes.punto);
-      }
-    })
-  }, [setPuntoTuris]);
+	if (!puntoTuris) {
+		return <h1>Cargando</h1>
+	}
 
-  if(!puntoTuris) {
-    return <h1>Cargando</h1>
-  }
-
-  return <ManagePuntoturisCreate initS={puntoTuris} />;
+	return <ManagePuntoturisCreate initS={puntoTuris} />;
 }
 
 export default ManagePuntoturisUpdate

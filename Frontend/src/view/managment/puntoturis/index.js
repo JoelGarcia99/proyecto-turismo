@@ -4,7 +4,7 @@ import {Link, NavLink} from 'react-router-dom';
 import {faAdd, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-import {startFetchingLocations} from '../../../redux/actions/locations/action.location';
+import {startFetchingAllTP} from '../../../redux/actions/locations/action.location';
 import {allRoutes} from '../../../router/routes';
 import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 
@@ -14,7 +14,7 @@ const ManagePuntoturisIndex = ()=>{
   const {locations} = useSelector(state=>state.locations);
 
   useEffect(()=>{
-    dispatch(startFetchingLocations());
+    dispatch(startFetchingAllTP());
   }, [dispatch]);
   
 
