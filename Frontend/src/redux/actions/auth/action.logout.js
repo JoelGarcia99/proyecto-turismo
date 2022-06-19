@@ -6,6 +6,8 @@ export const startLogout = ()=>{
     localStorage.removeItem("proyecto_turismo-token");
     localStorage.removeItem("proyecto_turismo-user");
     dispatch( setLogout() );
+
+	window.location = '/login';
   }
 }
 

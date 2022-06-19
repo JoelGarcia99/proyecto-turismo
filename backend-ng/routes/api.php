@@ -3,7 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TouristicPointController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,22 +16,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::post('/manage/punto-turistico/', [TouristicPointController::class, 'create']);
-Route::PUT('/manage/punto-turistico/{id}', [TouristicPointController::class, 'update']);
-Route::get('/manage/puntos-turisticos/', [TouristicPointController::class, 'loadTouristicPoints']);
-
-Route::get('/manage/categories/', [CategoryController::class, 'read']);
-Route::post('/manage/category/', [CategoryController::class, 'create']);
-
 // Auth routes
 Route::prefix('auth')->group(function () {
-	Route::post('login', [AuthController::class, 'login']);
-	Route::post('register', [AuthController::class, 'register']);
-	Route::GET('verify', [AuthController::class, 'verify']);
+	Route::POST('login', [AuthController::class, 'login']);
+	Route::POST('register', [AuthController::class, 'register']);
 });
 
-Route::middleware('auth:api')->get('/test', fn()=>['res'=>'ok']);
+Route::middleware(['auth:api'])->group(function(){
+	// Touristic points
+	Route::POST('/manage/punto-turistico/', [TouristicPointController::class, 'create']);
+	Route::PUT('/manage/punto-turistico/{id}', [TouristicPointController::class, 'update']);
+	Route::GET('/manage/puntos-turisticos/', [TouristicPointController::class, 'loadTouristicPoints']);
+
+	// Categories
+	Route::GET('/manage/categories/', [CategoryController::class, 'read']);
+	Route::GET('/manage/categories/{id}', [CategoryController::class, 'readById']);
+	Route::POST('/manage/category/', [CategoryController::class, 'create']);
+	Route::PUT('/manage/category/{id}', [CategoryController::class, 'update']);
+	Route::DELETE('/manage/category/{id}', [CategoryController::class, 'delete']);
+
+	Route::GET('/auth/verify-token', [AuthController::class, 'verifyToken']);
+});

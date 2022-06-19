@@ -8,7 +8,7 @@ const MaravillasListComponent = () => {
 	const {loading, maravillas} = useSelector(state => state.locations);
 
 	useEffect(() => {
-		dispatch(startFetchingMaravillas());
+		// dispatch(startFetchingMaravillas());
 	}, []);
 
 	if (loading) {

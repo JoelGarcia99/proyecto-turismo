@@ -9,6 +9,7 @@ abstract class Base extends Model
 {
 
 	protected $collection;
+	protected $connection = 'mongodb';
 
 	protected $guarded = [
 		Attributes::ID,

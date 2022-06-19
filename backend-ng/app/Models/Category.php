@@ -8,6 +8,7 @@ use App\Enums\Database\Collections;
 class Category extends Base
 {
 	protected $collection = Collections::CATEGORIES;
+	protected $connection = 'mongodb';
 
 	static public $validation_rules = [
 		Attributes::NAME => 'required|max:50',

@@ -35,7 +35,7 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, fullWidth = fals
 		},
 		{name: 'Reservas', route: allRoutes.reservation, current: currentRoute === allRoutes.reservation},
 		{name: 'Planificador', route: allRoutes.home, current: false},
-		db_user.role === "admin" && {
+		db_user?.role === "admin" && {
 			name: 'Panel administrativo',
 			route: allRoutes.dashboard,
 			current: currentRoute === allRoutes.manage
@@ -44,11 +44,12 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, fullWidth = fals
 
 	// Only basic data is needed
 	const user = {
-		name: db_user.nombre + " " + db_user.apellido,
+		name: db_user.name,
 		email: db_user.email,
 		imageUrl:
 			'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 	}
+
 
 	return (
 		<>
@@ -65,10 +66,10 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, fullWidth = fals
 									<div className="flex items-center">
 										<div className="hidden md:block">
 											<div className="ml-10 flex items-baseline space-x-4">
-												{navigation.map((item) => (
+												{navigation.map((item, index) => (
 													<NavLink
-														key={item.name}
-														to={item.route}
+														key={index}
+														to={item.route ?? '#'}
 														className={classNames(
 															item.current
 																? 'bg-green-900 text-white'
@@ -113,8 +114,8 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, fullWidth = fals
 													leaveTo="transform opacity-0 scale-95"
 												>
 													<Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-														{userNavigation.map((item) => (
-															<Menu.Item key={item.name}>
+														{userNavigation.map((item, index) => (
+															<Menu.Item key={index}>
 																{({active}) => (
 																	item.action ?
 																		<a className={classNames(
@@ -123,7 +124,7 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, fullWidth = fals
 																		)} onClick={item.action}>{item.name}</a>
 
 																		: <NavLink
-																			to={item.route}
+																			to={item?.route ?? '#'}
 																			className={classNames(
 																				active ? 'bg-green-100' : '',
 																				'block px-4 py-2 text-sm text-green-700'
@@ -156,10 +157,10 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, fullWidth = fals
 							{/* This is what is expanded on responsive for mobile */}
 							<Disclosure.Panel className="md:hidden">
 								<div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-									{navigation.map((item) => (
+									{navigation.map((item, key) => (
 										<NavLink
-											key={item.name}
-											to={item.route}
+											key={key}
+											to={item?.route ?? '#'}
 											className={classNames(
 												item.current ? 'bg-green-900 text-white' : 'text-green-300 hover:bg-green-700 hover:text-white',
 												'block px-3 py-2 rounded-md text-base font-medium'
@@ -188,12 +189,12 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, fullWidth = fals
 										</button>
 									</div>
 									<div className="mt-3 px-2 space-y-1">
-										{userNavigation.map((item) => (
-											item.action ? <a key={item.name} className={classNames(
+										{userNavigation.map((item, index) => (
+											item.action ? <a key={index} className={classNames(
 												'block px-4 py-2 text-sm text-green-700 cursor-pointer'
 											)} onClick={item.action}>{item.name}</a>
 												: <Disclosure.Button
-													key={item.name}
+													key={index}
 													as="a"
 													href={item.href}
 													className="block px-3 py-2 rounded-md text-base font-medium text-green-400 hover:text-white hover:bg-green-700"

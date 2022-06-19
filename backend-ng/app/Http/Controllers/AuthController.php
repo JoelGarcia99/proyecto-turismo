@@ -63,23 +63,11 @@ class AuthController extends Controller
 	/**
 	 * Verify if the user is logged in
 	 */
-	public function verify(Request $request) {
-		$email = $request->json()->get('email');
-
-		if (Auth::check()) {
-			if (Auth::user()->email === $email) {
-				return response()->json([
-					NetworkAttributes::STATUS => NetworkAttributes::STATUS_OK,
-					NetworkAttributes::MESSAGE => 'User is logged in',
-					NetworkAttributes::USER => auth()->user(),
-				], NetworkAttributes::STATUS_200);
-			}
-		}
-
-		// User not logged in
+	public function verifyToken(Request $request) {
 		return response()->json([
-			NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
-			NetworkAttributes::MESSAGE => 'User is not logged in',
-		], NetworkAttributes::STATUS_401);
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_OK,
+			NetworkAttributes::MESSAGE => 'Token verified successfully',
+			NetworkAttributes::USER => auth()->user(),
+		]);
 	}
 }

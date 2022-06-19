@@ -1,36 +1,23 @@
 import Swal from "sweetalert2";
+import {customHTTPRequest} from "../../../helpers/helper.network";
 import types from "../../types";
 
-export const startFetchingCategories = ()=>{
-  return async(dispatch, state)=>{
+export const startFetchingCategories = () => {
+	return async (dispatch, state) => {
 
-    // token for session autorization
-    const {token} = state().auth;
+		// token for session autorization
+		const {token} = state().auth;
 
+		// This helper already handle all the actions such as redirections & show alerts to the user if needed
+		const jsonRes = await customHTTPRequest(dispatch, `${process.env.REACT_APP_NG_API_HOST}/api/manage/categories`, {
+			headers: {
+				'Authorization': `Bearer ${token}`
+			},
+		});
 
-    const res = await fetch(`${process.env.REACT_APP_API_HOST}/categories`, {
-      method: 'GET',
-      headers: {
-	'Content-Type': 'application/json;charset=utf-8',
-	'auth': token
-      },
-    });
-
-    const jsonRes = await res.json();
-
-    if(res.status !== 200) {
-      await Swal.fire({
-        title: "Ha ocurrido un error. Intente más tarde",
-        icon: "error",
-        text: jsonRes?.error.sqlMessage || jsonRes.message,
-        onClose: ()=>Swal.close()
-      });
-      return;
-    }
-
-    //TODO: remove second and third parameters if it's no longer required
-    dispatch(setcategories(jsonRes.categories, null, null)); 
-  }
+		//TODO: remove second and third parameters if it's no longer required
+		dispatch(setcategories(jsonRes.data, null, null));
+	}
 }
 
 /**
@@ -40,47 +27,29 @@ export const startFetchingCategories = ()=>{
  * @param isUpdate {boolean}  If true, then an ID should be provided in [category]
  * @param callback {function} if you want to execute some behavior after this ends
  * */
-export const startRegisteringCategory = (category, isUpdate=false, callback=()=>{})=>{
-  return async(_, state)=>{
+export const startRegisteringCategory = (category, isUpdate = false, callback = () => {}) => {
+	return async (dispatch, state) => {
 
-    const {token} = state().auth;
+		const {token} = state().auth;
 
-    let target_url = `${process.env.REACT_APP_API_HOST}/category/`;
+		let target_url = `${process.env.REACT_APP_NG_API_HOST}/api/manage/category/`;
 
-    if(isUpdate) {
-      target_url += category._id;
-    }
+		if (isUpdate) {
+			target_url += category._id;
+		}
 
-    const res = await fetch(target_url, {
-      method: isUpdate? 'PUT':'POST',
-      headers: {
-	'Content-Type': 'application/json;charset=utf-8',
-	'auth': token
-      },
-      body: JSON.stringify(category)
-    });
+		// Register/update a new category
+		await customHTTPRequest(dispatch, target_url, {
+			method: isUpdate ? 'PUT' : 'POST',
+			headers: {
+				'Authorization': `Bearer ${token}`
+			},
+			body: JSON.stringify(category)
+		});
 
-    const jsonRes = await res.json();
-
-    if(res.status !== 200) {
-      await Swal.fire({
-        title: jsonRes.message,
-        icon: "error",
-        text: jsonRes.error,
-        onClose: ()=>Swal.close()
-      });
-      return;
-    }
-    else{
-      Swal.fire({
-        title: "Proceso exitoso",
-        icon: "success",
-        text: jsonRes.message,
-      });
-
-      callback();
-    }
-  }
+		// a callback if the reponse is success
+		callback();
+	}
 };
 
 /**
@@ -90,50 +59,27 @@ export const startRegisteringCategory = (category, isUpdate=false, callback=()=>
  * @param id {string} the ID of the category to delete
  * @param callback {function} a piece of code to execute if this succeed
  */
-export const startDeletingCategory = (id, callback=()=>{})=>{
-  return async(_, state)=>{
-    const {token} = state().auth;
-  
-    let url = `${process.env.REACT_APP_API_HOST}/category/${id}`;
+export const startDeletingCategory = (id, callback = () => {}) => {
+	return async (dispatch, state) => {
+		const {token} = state().auth;
 
-    const res = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-	'Content-Type': 'application/json;charset=utf-8',
-	'auth': token
-      },
-    });
+		let url = `${process.env.REACT_APP_NG_API_HOST}/api/manage/category/${id}`;
 
-    const jsonRes = await res.json();
+		await customHTTPRequest(dispatch, url, {
+			method: 'DELETE',
+			headers: {
+				'Authorization': `Bearer ${token}`
+			},
+		});
 
-    if(res.status !== 200) {
-      await Swal.fire({
-        title: "Ha ocurrido un error. Intente más tarde",
-        icon: "error",
-        text: jsonRes.error,
-        onClose: ()=>Swal.close()
-      });
-      return;
-
-    }
-    else{
-      Swal.fire({
-        title: "Proceso exitoso",
-        icon: "success",
-        text: jsonRes.message,
-	onClose: ()=>{
-	  Swal.close();
+		// executing custom piece of code after registering
+		callback();
 	}
-      });
-      // executing custom piece of code after registering
-      callback();
-    }
-  }
 }
 
-export const setcategories = (categories, range, currentPage)=>({
-  type: types.fetchCategories,
-  currentPage, 
-  message: range,
-  payload: categories 
+export const setcategories = (categories, range, currentPage) => ({
+	type: types.fetchCategories,
+	currentPage,
+	message: range,
+	payload: categories
 });
