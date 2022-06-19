@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TouristicPointController;
 use Illuminate\Http\Request;
@@ -26,3 +27,12 @@ Route::get('/manage/puntos-turisticos/', [TouristicPointController::class, 'load
 
 Route::get('/manage/categories/', [CategoryController::class, 'read']);
 Route::post('/manage/category/', [CategoryController::class, 'create']);
+
+// Auth routes
+Route::prefix('auth')->group(function () {
+	Route::post('login', [AuthController::class, 'login']);
+	Route::post('register', [AuthController::class, 'register']);
+	Route::GET('verify', [AuthController::class, 'verify']);
+});
+
+Route::middleware('auth:api')->get('/test', fn()=>['res'=>'ok']);

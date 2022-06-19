@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Festive&family=Lato:wght@400;700;900&family=Outfit:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap');
+@import '../../colors/colors.scss';
+
+.alerta {
+    
+    color: $alerta;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 12px;
+    font-weight: 900;
+    padding: 1px;
+    text-transform: uppercase;
+    
+    
+    
+}

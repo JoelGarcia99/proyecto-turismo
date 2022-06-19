@@ -35,18 +35,28 @@ return [
     |
     */
 	'connections' => [
-        'mongodb' => [
-            'driver' => 'mongodb',
-            'host' => Utils::getEnv(DatabaseConfig::HOST),
-            'port' => Utils::getEnv(DatabaseConfig::PORT),
-            'database' => Utils::getEnv(DatabaseConfig::NAME),
-            // 'username' => Utils::getEnv(DatabaseConfig::USER),
-            // 'password' => Utils::getEnv(DatabaseConfig::PASS),
-            // 'options' => [
-            //     // here you can pass more settings to the Mongo Driver Manager
-            //     'database' => Utils::getEnv(DatabaseConfig::AUTHENTICATION_DATABASE)
+		'mongodb' => [
+			'driver' => 'mongodb',
+			'host' => Utils::getEnv(DatabaseConfig::HOST),
+			'port' => Utils::getEnv(DatabaseConfig::PORT),
+			'database' => Utils::getEnv(DatabaseConfig::NAME),
+			// 'username' => Utils::getEnv(DatabaseConfig::USER),
+			// 'password' => Utils::getEnv(DatabaseConfig::PASS),
+			// 'options' => [
+			//     // here you can pass more settings to the Mongo Driver Manager
+			//     'database' => Utils::getEnv(DatabaseConfig::AUTHENTICATION_DATABASE)
 			// ],
 		],
+		'mysql' => [
+			'driver' => 'mysql',
+			'host' => Utils::getEnv('DATABASE_AUTH_HOST', '127.0.0.1'),
+			'port' => Utils::getEnv('DATABASE_AUTH_PORT', '3306'),
+			'database' => Utils::getEnv('DATABASE_AUTH_NAME', 'forge'),
+			'username' => Utils::getEnv('DATABASE_AUTH_USER', 'forge'),
+			'password' => Utils::getEnv('DATABASE_AUTH_PASS', ''),
+			'charset' => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+		]
 	],
 
 	/*
