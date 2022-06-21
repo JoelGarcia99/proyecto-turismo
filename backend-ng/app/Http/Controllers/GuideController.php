@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Database\Attributes;
 use App\Enums\Network\NetworkAttributes;
+use App\Helpers\FileUploader;
 use App\Models\Guide;
+use App\Utilities\DateUtilities;
 use Illuminate\Http\Request;
 
 class GuideController extends Controller
@@ -45,6 +48,39 @@ class GuideController extends Controller
 		foreach ($body as $key => $value) {
 			if (in_array($key, $model::getAllAttributes())) {
 				$params[$key] = $value;
+			}
+		}
+
+		// validating schedules. By default, at schedule should be at least 45 minutes longer
+		$schedules = $params[Attributes::SCHEDULES];
+		$error_message = DateUtilities::validateMinRangeBetweenDates($schedules);
+
+		// If there is any string, then it means that there was an error
+		if($error_message != null)
+		{
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => $error_message
+			], NetworkAttributes::STATUS_400);
+		}
+
+		// sorting array before updating
+		if (count($schedules) > 1) {
+			// sorting the array by start range
+			usort($dates, function ($a, $b) {
+				return strtotime($a[Attributes::START_RANGE]) - strtotime($b[Attributes::START_RANGE]);
+			});
+		}
+
+		// extracting the image
+		$image = $request->file(Attributes::IMAGE_URL);
+
+		// Storing image in the server
+		if ($image) {
+
+			$image_path = FileUploader::uploadImage($image, 'images/guides/');
+			if ($image_path !== null) {
+				$params[Attributes::IMAGE_URL] = $image->store('images');
 			}
 		}
 
@@ -100,6 +136,28 @@ class GuideController extends Controller
 			}
 		}
 
+		// validating schedules. By default, at schedule should be at least 45 minutes longer
+		$schedules = $params[Attributes::SCHEDULES];
+		$error_message = DateUtilities::validateMinRangeBetweenDates($schedules);
+
+		// If there is any string, then it means that there was an error
+		if($error_message != null)
+		{
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => $error_message
+			], NetworkAttributes::STATUS_400);
+		}
+
+		// sorting array before updating
+		if (count($schedules) > 1) {
+			// sorting the array by start range
+			usort($dates, function ($a, $b) {
+				return strtotime($a[Attributes::START_RANGE]) - strtotime($b[Attributes::START_RANGE]);
+			});
+		}
+
+
 		// searching for the guide
 		$guide = $model->find($id);
 
@@ -123,7 +181,8 @@ class GuideController extends Controller
 	/**
 	 * Delete a guide from the database
 	 */
-	public function delete($id) {
+	public function delete($id)
+	{
 		// searching for the guide
 		$model = new Guide();
 		$guide = $model->find($id);

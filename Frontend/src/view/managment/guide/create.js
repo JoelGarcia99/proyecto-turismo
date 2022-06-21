@@ -7,7 +7,7 @@ import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 import {useNavigate} from 'react-router';
 import {allRoutes} from '../../../router/routes';
 import {startDeletingGuide, startRegisteringGuide} from '../../../redux/actions/guideman/action.guideman';
-import {format} from 'date-fns';
+import {add, format} from 'date-fns';
 
 
 const ManageGuideCreate = ({initS}) => {
@@ -63,7 +63,7 @@ const ManageGuideCreate = ({initS}) => {
 						<p className="mt-1 text-sm text-gray-600">
 							Información personal sobre el guía. Este guía puede estar asociado a varios puntos
 							turísticos.
-              </p>
+						</p>
 					</div>
 				</div>
 				<div className="mt-5 md:mt-0 md:col-span-2">
@@ -74,7 +74,7 @@ const ManageGuideCreate = ({initS}) => {
 									<div className="col-span-12">
 										<label className="block text-sm font-medium text-gray-700" htmlFor="name">
 											Nombre
-		      </label>
+										</label>
 										<input
 											type="text"
 											name="name"
@@ -88,7 +88,7 @@ const ManageGuideCreate = ({initS}) => {
 									<div className="col-span-6 sm:col-span-3">
 										<label htmlFor="phone" className="block text-sm font-medium text-gray-700">
 											Teléfono
-                      </label>
+										</label>
 										<input
 											type="text"
 											name="phone"
@@ -106,7 +106,7 @@ const ManageGuideCreate = ({initS}) => {
 									<div className="col-span-6 sm:col-span-3">
 										<label htmlFor="last-name" className="block text-sm font-medium text-gray-700">
 											Cédula
-                      </label>
+										</label>
 										<input
 											type="number"
 											name="cedula"
@@ -119,30 +119,36 @@ const ManageGuideCreate = ({initS}) => {
 									<div className="col-span-12">
 										<label htmlFor="street-address" className="flex-row flex text-sm font-medium text-gray-700">
 											Horarios &nbsp;
-			<div
+											<div
 												className="flex flex-row items-center px-1 text-white text-xs rounded" style={{backgroundColor: "green", cursor: "pointer"}}
 												onClick={() => {
-													setSchedules([...schedules, {from: 0, to: 0}])
+													setSchedules([
+														...schedules,
+														{
+															from: Date.now(),
+															to: add(Date.now(), {hours: 2}).getTime()
+														}
+													])
 												}}
 											>
 												Nuevo
 												&nbsp;
-			  <FontAwesomeIcon icon={faAdd} />
+												<FontAwesomeIcon icon={faAdd} />
 											</div>
 										</label>
 										{
 											schedules.map((schedule, index) => {
 												return <div key={index} className="flex flex-row flex-wrap justify-evenly items-center my-2 shadow-md rounded px-2 py-2" >
 													<span className="text-sm w-min">Desde</span> &nbsp;
-			    <input
+													<input
 														type="datetime-local"
 														value={format(new Date(schedule.from), "yyyy-MM-dd'T'HH:mm")}
 														onChange={(e) => handleScheduleDelete(index, 'from', (new Date(e.target.value)).getTime())}
 														required={true}
 														className="form-control block w-min px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 													/> &nbsp;
-			    <span className="text-sm w-min">hasta</span> &nbsp;
-			    <input
+													<span className="text-sm w-min">hasta</span> &nbsp;
+													<input
 														type="datetime-local"
 														value={format(new Date(schedule.to), "yyyy-MM-dd'T'HH:mm")}
 														onChange={(e) => handleScheduleDelete(index, 'to', (new Date(e.target.value)).getTime())}
@@ -150,7 +156,7 @@ const ManageGuideCreate = ({initS}) => {
 														className="form-control block w-min px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 													/> &nbsp;
 
-			    <button
+													<button
 														onClick={(e) => {
 															e.preventDefault();
 															setSchedules(schedules.slice(0, -1));
@@ -180,7 +186,7 @@ const ManageGuideCreate = ({initS}) => {
 													<div className="ml-3 text-sm">
 														<label htmlFor="comments" className="font-medium text-gray-700">
 															Marcar como disponible
-                          </label>
+														</label>
 														<p className="text-gray-500">Permitir asignar este guía a algún centro turístico</p>
 													</div>
 												</div>
@@ -207,7 +213,7 @@ const ManageGuideCreate = ({initS}) => {
 						className="inline-flex justify-center mr-2 py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 					>
 						Eliminar
-	    </button>
+					</button>
 				}
 
 				<button

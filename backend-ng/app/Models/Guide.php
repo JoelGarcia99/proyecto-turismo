@@ -11,9 +11,9 @@ class Guide extends Base
 
 	public static $validation_rules = [
 		Attributes::NAME => 'required|string|max:255',
-		Attributes::IMAGE_URL => 'string',
+		Attributes::IMAGE_URL => '',
 		Attributes::IS_ACTIVE => 'boolean',
-		Attributes::SCHEDULE => 'array',
+		Attributes::SCHEDULES => 'array',
 		Attributes::CEDULA => 'string|required|max:10|min:10',
 		Attributes::PHONE => 'string|required|max:10|min:10',
 	];

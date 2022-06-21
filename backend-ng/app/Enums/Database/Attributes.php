@@ -17,8 +17,13 @@ enum Attributes: string
 	const MAIN_IMAGE_URL = 'main_image_url';
 	const IS_ACTIVE = 'is_active';
 
+	// Date
+	const START_RANGE = 'from';
+	const END_RANGE = 'to';
+
 	// Guides
 	const SCHEDULE = 'schedule';
+	const SCHEDULES = 'schedules';
 	const CEDULA = 'cedula';
 	const PHONE = 'phone';
 
