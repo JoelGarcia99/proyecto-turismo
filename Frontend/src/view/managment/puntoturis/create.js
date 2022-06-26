@@ -28,7 +28,6 @@ const ManagePuntoturisCreate = ({initS}) => {
 	const navigator = useNavigate();
 
 	const {categories} = useSelector((state) => state.category);
-	const {guidemen: guides} = useSelector(state => state.guideman);
 	const [images, setImages] = useState([]);
 	const [mainImage, setMainImage] = useState(null);
 
@@ -54,15 +53,23 @@ const ManagePuntoturisCreate = ({initS}) => {
 		}));
 	}
 
-	// Removes a guide from the linked guides
-	const handleRemoveGuide = (_id) => {
-		let linked_guides = linkedGuides.filter(linked_id => linked_id !== _id);
-
-		setLinkedGuides(linked_guides);
-	}
-
+	// general data related to the touristic point such as description, name, availability, etc
 	const handleGeneralDataSubmit = (e) => {
 		e.preventDefault();
+
+		// cleaning all the trash fields
+		const newData = cleanUndefinedFields(data);
+
+		// removing non useful fields
+		delete newData.main_image;
+
+		// sending only non null fields
+		dispatch((initS ? startUpdatingLocation : startRegisteringLocation)({
+			...newData
+		}, () => {
+			navigator(allRoutes.manage_puntoturis);
+			return;
+		}));
 	}
 
 	const handleMultimediaDataSubmit = (e) => {

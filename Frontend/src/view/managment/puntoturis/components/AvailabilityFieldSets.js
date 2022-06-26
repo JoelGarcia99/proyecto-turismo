@@ -20,11 +20,11 @@ const AvailabilityFieldSets = ({data, setData}) => {
 				title: "Maravilla",
 				description: "Marcar este punto turístico como una maravilla",
 				properties: {
-					name: "is_maravilla",
-					checked: data.is_maravilla,
+					name: "is_wonder",
+					checked: data.is_wonder,
 					type: "checkbox",
 					onChange: (e) => {
-						setData({target: {value: Boolean(e.target.checked), name: 'is_maravilla'}});
+						setData({target: {value: Boolean(e.target.checked), name: 'is_wonder'}});
 					}
 
 				}

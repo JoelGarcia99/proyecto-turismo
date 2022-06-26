@@ -50,7 +50,6 @@ export const startFetchingMaravillas = () => {
 }
 
 /**
- *
  * Starts fetching all the touristic points
  */
 export const startFetchingAllTP = () => {
@@ -106,14 +105,15 @@ export const startUpdatingLocation = (location, callback) => {
 
 		const {token} = state().auth;
 
-		const res = await fetch(`${process.env.REACT_APP_API_HOST}/punto-turistico/${location._id}`, {
+		const res = await fetch(`${process.env.REACT_APP_NG_API_HOST}/api/manage/punto-turistico/${location._id}`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json;charset=utf-8',
-				'auth': token
+				'Authorization': `Bearer ${token}`
 			},
 			body: JSON.stringify(location)
 		});
+
 
 		const jsonRes = await res.json();
 
@@ -121,7 +121,7 @@ export const startUpdatingLocation = (location, callback) => {
 			await Swal.fire({
 				title: "Ha ocurrido un error. Intente más tarde",
 				icon: "error",
-				text: jsonRes.error.sqlMessage,
+				text: jsonRes.message,
 				onClose: () => Swal.close()
 			});
 			return;
@@ -136,7 +136,6 @@ export const startUpdatingLocation = (location, callback) => {
 
 			// dispatch(setNewLocation(jsonRes.punto_turistico));
 			callback();
-
 		}
 	}
 }
@@ -153,7 +152,7 @@ export const startDeletingPunto = (id, callback) => {
 
 		const {token} = state().auth;
 
-		const res = await fetch(`${process.env.REACT_APP_API_HOST}/punto-turistico/${id}`, {
+		const res = await fetch(`${process.env.REACT_NG_APP_API_HOST}/punto-turistico/${id}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',

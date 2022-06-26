@@ -55,8 +55,15 @@ class TouristicPointController extends Controller
 		// main model to perform DB operations
 		$model = TouristicPoint::find($request->id);
 
+		if(!$model) {
+			return response()->json([
+				NetworkAttributes::STATUS => 'error',
+				NetworkAttributes::MESSAGE => 'Punto turístico no encontrado'
+			], NetworkAttributes::STATUS_404);
+		}
+
 		// validating fields
-		if(!$request->validate($model::$validation_rules)) {
+		if(!$request->validate(TouristicPoint::$validation_rules)) {
 			return response()->json([
 				NetworkAttributes::STATUS => 'error',
 				NetworkAttributes::MESSAGE => "Algunos campos son invalidos" //TODO: improve it
@@ -71,7 +78,7 @@ class TouristicPointController extends Controller
 
 		// generating an array of fields
 		foreach($body as $key => $value) {
-			if(in_array($key, $model::getAllAttributes())){
+			if(in_array($key, TouristicPoint::getAllAttributes())){
 				$params[$key] = $value;
 			}
 		}
