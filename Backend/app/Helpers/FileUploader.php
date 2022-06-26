@@ -6,17 +6,20 @@ use Illuminate\Support\Str;
 
 class FileUploader
 {
-	static private $validExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+
+	const INVALID_EXTENSION_CODE = 1;
+
+	static public $validExtensions = ['jpg', 'jpeg', 'png', 'webp'];
 
 	/**
 	 * Uploads an image to the server and returns the path to the image.
 	 */
-	public static function uploadImage($file, $folder): string | null {
+	public static function uploadImage($file, $folder): string | int {
 		$extension = $file->getClientOriginalExtension();
 
 		// Validating the extension is allowed.
 		if (!in_array($extension, self::$validExtensions)) {
-			return null;
+			return self::INVALID_EXTENSION_CODE;
 		}
 
 		// Generating a random string as the name of the image

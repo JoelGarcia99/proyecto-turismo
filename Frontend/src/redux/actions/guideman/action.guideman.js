@@ -13,6 +13,7 @@ export const startFetchingGuides = (forManage = true, callback = () => {}) => {
 		// token for session autorization
 		const {token} = state().auth;
 
+		// If "manage" is the prefix then the user is in the admin panel
 		const res = await customHTTPRequest(dispatch, `${process.env.REACT_APP_NG_API_HOST}/api${forManage ? "/manage" : ""}/guides`, {
 			headers: {
 				Authorization: `Bearer ${token}`
@@ -123,6 +124,37 @@ export const startDeletingGuide = (id, callback = () => {}) => {
 		// executing custom piece of code after registering
 		if(res !== {}) {
 			callback();
+		}
+	}
+}
+
+/**
+ * uploads an image to the server
+ * @param {File} image - the image to upload
+ */
+export const startUploadingImage = (guideId, image, callback = () => {}) => {
+	return async (dispatch, state) => {
+		const {token} = state().auth;
+
+		let url = `${process.env.REACT_APP_NG_API_HOST}/api/manage/guide/${guideId}/upload-image`;
+
+		const formData = new FormData();
+		formData.append('image', image);
+		formData.append('guideId', guideId);
+
+		// Connecting with the server
+		const res = await customHTTPRequest(dispatch, url, {
+			method: 'PUT',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'multipart/form-data'
+			},
+			body: formData
+		}, true);
+
+		// executing custom piece of code after registering
+		if(res !== {}) {
+			callback(res.image);
 		}
 	}
 }

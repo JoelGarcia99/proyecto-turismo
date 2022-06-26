@@ -1,4 +1,12 @@
-﻿# Some installations  
+﻿# Proyecto turismo
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+# Desarrolladores
+	- Developer 1
+	- Developer 2
+
+# Some installations  
  ## MongoDB  
  installation guide: https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-database  
  start command: sudo mongod --dbpath ~/data/db

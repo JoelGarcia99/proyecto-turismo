@@ -1,4 +1,4 @@
-import {faAdd, faRemove} from '@fortawesome/free-solid-svg-icons';
+import {faAdd, faRemove, faUpload} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import React, {useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -6,7 +6,7 @@ import useCustomForm from '../../../hooks/useCustomForm';
 import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 import {useNavigate} from 'react-router';
 import {allRoutes} from '../../../router/routes';
-import {startDeletingGuide, startRegisteringGuide} from '../../../redux/actions/guideman/action.guideman';
+import {startDeletingGuide, startRegisteringGuide, startUploadingImage} from '../../../redux/actions/guideman/action.guideman';
 import {add, format} from 'date-fns';
 
 
@@ -15,23 +15,58 @@ const ManageGuideCreate = ({initS}) => {
 	const dispatch = useDispatch();
 	const navigator = useNavigate();
 
-	const [schedules, setSchedules] = useState(initS?.schedules || []);
-	const [data, setData, _] = useCustomForm(initS || {
+	// Creating a copy to work with. 
+	// WARNING: do not use this for validation since this is never null or undefined
+	const initialState = {...initS};
+
+	// defining image field
+	const [image, setImage] = useState({url: initS?.image_url || ''});
+
+	// The image will not be uploaded to the server with all the other params
+	delete initialState.image_url;
+
+	const [schedules, setSchedules] = useState(initialState?.schedules || []);
+	const [data, setData, _] = useCustomForm(initialState || {
 		name: "",
 		cedula: "",
 		phone: "",
 		is_active: false
 	});
 
+	// e is the event
+	const handleImageChange = (e) => {
+		let reader = new FileReader();
+		let file = e.target.files[0];
+
+		reader.onloadend = () => {
+			setImage({url: reader.result, file});
+		}
+
+		// If error then the image should be removed
+		try {
+			reader.readAsDataURL(file);
+		} catch (_) {
+			setImage({});
+		}
+	}
+
 	// handle deletion of a whole guide
 	const handleDelete = (e) => {
 		e.preventDefault();
 
 		dispatch(
-			startDeletingGuide(initS._id, () => {
+			startDeletingGuide(initialState._id, () => {
 				navigator(allRoutes.manage_guide);
 			})
 		);
+	}
+
+	// Uploading the image for the guide on the server
+	const handleImageUpload = (e) => {
+		e.preventDefault();
+
+		//TODO: lock interface while this is uploading
+		dispatch(startUploadingImage(initS._id, image.file));
 	}
 
 	// handling deletion of a single schedule. The [key] referes to 'from' or 'to'
@@ -47,7 +82,7 @@ const ManageGuideCreate = ({initS}) => {
 		e.preventDefault();
 
 		dispatch(startRegisteringGuide(
-			{_id: initS?._id, ...data, schedules}, !!initS, () => {
+			{_id: initialState?._id, ...data, schedules}, !!initS, () => {
 				navigator(allRoutes.manage_guide);
 			}
 		));
@@ -71,6 +106,38 @@ const ManageGuideCreate = ({initS}) => {
 						<div className="shadow overflow-hidden sm:rounded-md">
 							<div className="px-4 py-5 bg-white sm:p-6">
 								<div className="grid grid-cols-6 gap-6">
+									{
+										initS &&
+										<div className="col-span-12">
+											<label className="block text-sm font-medium text-gray-700" htmlFor="name">
+												Subir foto
+											</label>
+											{/* This image should be rounded */}
+											{
+												image.url &&
+
+												<img
+													src={image.url}
+													alt=""
+													className="animate__animated animate__fadeIn my-4 rounded-full"
+													style={{height: "10rem", width: "10rem"}}
+												/>
+											}
+											<input
+												type="file"
+												name="image_url"
+
+												onChange={handleImageChange}
+												className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+											/>
+											{
+												image.file &&
+												<button onClick={handleImageUpload} className="bg-green-700 text-white rounded my-4 px-4 py-2">
+													<FontAwesomeIcon icon={faUpload} />&nbsp;Subir
+												</button>
+											}
+										</div>
+									}
 									<div className="col-span-12">
 										<label className="block text-sm font-medium text-gray-700" htmlFor="name">
 											Nombre

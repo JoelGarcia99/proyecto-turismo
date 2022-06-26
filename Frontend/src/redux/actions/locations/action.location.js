@@ -7,7 +7,7 @@ export const startFetchingReservables = (callback = (points) => {}) => {
 
 		const {token} = state().auth;
 
-		const res = await fetch(`${process.env.REACT_APP_API_HOST}/puntos-turisticos/reservables`, {
+		const res = await fetch(`${process.env.REACT_APP_NG_API_HOST}/puntos-turisticos/reservables`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -23,7 +23,7 @@ export const startFetchingReservables = (callback = (points) => {}) => {
 				icon: "error",
 				text: jsonRes.message,
 				onClose: () => Swal.close()
-			});
+			})
 		}
 		else {
 			Swal.close();
@@ -40,26 +40,11 @@ export const startFetchingReservables = (callback = (points) => {}) => {
 export const startFetchingMaravillas = () => {
 	return async (dispatch) => {
 
-		const res = await fetch(`${process.env.REACT_APP_API_HOST}/punto-turistico/maravillas`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-			}
+		const res = await customHTTPRequest(dispatch, `${process.env.REACT_APP_NG_API_HOST}/api/puntos-turisticos/maravillas`, {
 		});
 
-		const jsonRes = await res.json();
-
-		if (res.status !== 200) {
-			Swal.fire({
-				title: "Ha ocurrido un error. Intente más tarde",
-				icon: "error",
-				text: jsonRes.message,
-				onClose: () => Swal.close()
-			});
-		}
-		else {
-			Swal.close();
-			dispatch(setMaravillaData(jsonRes.puntos));
+		if(res !== {}) {
+			dispatch(setMaravillaData(res.data));
 		}
 	}
 }
@@ -91,44 +76,26 @@ export const startFetchingAllTP = () => {
  * @param {function} callback Is a function to execute a piece of code after this job is done
  */
 export const startRegisteringLocation = (location, callback) => {
-	return async (_, state) => {
+	return async (dispatch, state) => {
 
+		// extracting authorization token
 		const {token} = state().auth;
 
-		const res = await fetch(`${process.env.REACT_APP_API_HOST}/punto-turistico`, {
+		const res = await customHTTPRequest(dispatch, `${process.env.REACT_APP_NG_API_HOST}/api/manage/punto-turistico/`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json;charset=utf-8',
-				'auth': token
+				'Authorization': `Bearer ${token}`,
+				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(location)
-		});
+		}, true);
 
-		const jsonRes = await res.json();
-
-		if (res.status !== 200) {
-			await Swal.fire({
-				title: "Ha ocurrido un error. Intente más tarde",
-				icon: "error",
-				text: jsonRes.error.sqlMessage,
-				onClose: () => Swal.close()
-			});
-			return;
-		}
-		else {
-			await Swal.fire({
-				title: "Proceso exitoso",
-				icon: "success",
-				text: jsonRes.message,
-				onClose: () => Swal.close()
-			});
-
-			// dispatch(setNewLocation(jsonRes.punto_turistico));
+		if(res !== {}) {
+			// custom piece of code
 			callback();
-
 		}
 	}
-};
+}
 
 /**
  * @param {object} location Is the object of the locatino with all the fields

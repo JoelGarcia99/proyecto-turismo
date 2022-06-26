@@ -38,7 +38,10 @@ export const customHTTPRequest = async (
 		return {};
 	}
 
-	if (res.status === 400 || res.status === 422) {
+	// Common errors from the API
+	const errorCodes = [400, 404, 405, 500];
+
+	if (errorCodes.includes(res.status)) {
 		//TODO: replace it with 404 page
 		await Swal.fire({
 			title: "Ha ocurrido un error. Intente más tarde",

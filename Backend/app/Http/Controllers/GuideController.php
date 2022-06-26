@@ -56,8 +56,7 @@ class GuideController extends Controller
 		$error_message = DateUtilities::validateMinRangeBetweenDates($schedules);
 
 		// If there is any string, then it means that there was an error
-		if($error_message != null)
-		{
+		if ($error_message != null) {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
 				NetworkAttributes::MESSAGE => $error_message
@@ -70,18 +69,6 @@ class GuideController extends Controller
 			usort($dates, function ($a, $b) {
 				return strtotime($a[Attributes::START_RANGE]) - strtotime($b[Attributes::START_RANGE]);
 			});
-		}
-
-		// extracting the image
-		$image = $request->file(Attributes::IMAGE_URL);
-
-		// Storing image in the server
-		if ($image) {
-
-			$image_path = FileUploader::uploadImage($image, 'images/guides/');
-			if ($image_path !== null) {
-				$params[Attributes::IMAGE_URL] = $image->store('images');
-			}
 		}
 
 		// setting the data
@@ -141,8 +128,7 @@ class GuideController extends Controller
 		$error_message = DateUtilities::validateMinRangeBetweenDates($schedules);
 
 		// If there is any string, then it means that there was an error
-		if($error_message != null)
-		{
+		if ($error_message != null) {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
 				NetworkAttributes::MESSAGE => $error_message
@@ -202,4 +188,80 @@ class GuideController extends Controller
 			], NetworkAttributes::STATUS_404);
 		}
 	}
+
+	/**
+	 * Updates the image of the guide
+	 */
+	public function updateImage(Request $request)
+	{
+		// loading the image from the request
+		$image = $request->file(Attributes::IMAGE);
+		$id = $request->id;
+
+		return response()->json(['explore'=>$request, 'message'=>count($request->all()), 'image'=>$image, '_id'=>$request->id]);
+		if (!$image) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "Debe proporcionar una imagen"
+			], NetworkAttributes::STATUS_404);
+		}
+
+
+		// searching for the guide
+		$model = new Guide();
+		$guide = $model->find($id);
+
+		if(!$guide) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "Guide not found"
+			], NetworkAttributes::STATUS_404);
+		}
+
+		// creating the path
+		$image_path = FileUploader::uploadImage($image, 'images/guides/');
+
+		// Validating the user is not uploading an invalid format
+		if ($image_path === FileUploader::INVALID_EXTENSION_CODE) {
+
+			$valid_extensions = implode(', ', FileUploader::$validExtensions);
+
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "Invalid extension, the only allowed extensions are: " . $valid_extensions
+			], NetworkAttributes::STATUS_400);
+		}
+
+		// updating the image path
+		$guide->update([
+			Attributes::IMAGE_URL => $image_path
+		]);
+
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => "Image updated successfully"
+		], NetworkAttributes::STATUS_200);
+	}
+
+	/**
+	 * Showing the list of all the active guides. This can be used without any
+	 * kind of aithorization/role
+	 */
+	public function readActiveGuides() {
+		$guides = Guide::where(Attributes::IS_ACTIVE, true)->get();
+
+		if(!$guides) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "No guides found"
+			], NetworkAttributes::STATUS_404);
+		}
+
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => "Guias consultados correctamente",
+			NetworkAttributes::DATA => $guides
+		], NetworkAttributes::STATUS_200);
+	}
+
 }

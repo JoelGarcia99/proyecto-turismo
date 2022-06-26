@@ -21,11 +21,11 @@ const PuntoturisAbout = () => {
 	const [punto, setPunto] = useState({});
 
 	useEffect(() => {
-		fetch(`${process.env.REACT_APP_API_HOST}/punto-turistico/${slug}`).then(async (response) => {
+		fetch(`${process.env.REACT_APP_NG_API_HOST}/api/punto-turistico/${slug}`).then(async (response) => {
 			const jsonRes = await response.json();
 
 			if (response.status === 200) {
-				const punto = jsonRes.punto;
+				const punto = jsonRes.data;
 				setPunto(punto);
 			}
 

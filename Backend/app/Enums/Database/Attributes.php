@@ -9,6 +9,7 @@ enum Attributes: string
 	const CREATED_AT = 'created_at';
 	const UPDATED_AT = 'updated_at';
 	const IMAGE_URL = 'image_url';
+	const IMAGE = 'image';
 	const NAME = 'name';
 	const ADDRESS = 'address';
 	const DESCRIPTION = 'description';

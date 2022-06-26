@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Database\Attributes;
 use App\Enums\Network\NetworkAttributes;
 use App\Models\TouristicPoint;
 use Illuminate\Http\Request;
@@ -118,6 +119,48 @@ class TouristicPointController extends Controller
 			NetworkAttributes::STATUS => 'success',
 			NetworkAttributes::MESSAGE => 'Punto turístico cargado correctamente',
 			NetworkAttributes::DATA => $touristicPoint
+		], NetworkAttributes::STATUS_200);
+	}
+
+	/**
+	 * Read a list of touristic points that are categorized as wonder
+	 */
+	public function readMaravillas() {
+		$model = new TouristicPoint();
+		$touristicPoints = $model->where(Attributes::IS_WONDER, '=', true)->get();
+
+		if(!$touristicPoints) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "No se han encontrado puntos turísticos"
+			], NetworkAttributes::STATUS_404);
+		}
+
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => "Puntos turísticos consultados correctamente",
+			NetworkAttributes::DATA => $touristicPoints
+		], NetworkAttributes::STATUS_200);
+	}
+
+	/**
+	 * Read a touristic point by ID
+	 */
+	public function readBySlug(string $slug) {
+		$model = new TouristicPoint();
+		$touristicPoints = $model->where(Attributes::SLUG, '=', $slug)->get();
+
+		if(!$touristicPoints || count($touristicPoints) == 0) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "No se ha encontrado el punto turístico"
+			], NetworkAttributes::STATUS_404);
+		}
+
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => "Punto turístico consultado correctamente",
+			NetworkAttributes::DATA => $touristicPoints[0]
 		], NetworkAttributes::STATUS_200);
 	}
 }
