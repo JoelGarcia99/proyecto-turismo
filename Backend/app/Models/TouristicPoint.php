@@ -18,8 +18,8 @@ class TouristicPoint extends Base
 
 	static public $validation_rules = [
 		Attributes::NAME => 'required|string|max:255',
-		Attributes::DESCRIPTION => 'string|max:255',
-		Attributes::SHORT_DESCRIPTION => 'string|max:60',
+		Attributes::DESCRIPTION => 'string|max:3000',
+		Attributes::SHORT_DESCRIPTION => 'string|max:500',
 		Attributes::ADDRESS => 'string|max:255',
 		Attributes::CATEGORY => 'string',
 		Attributes::IS_WONDER => 'boolean',

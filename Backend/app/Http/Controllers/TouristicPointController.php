@@ -170,4 +170,25 @@ class TouristicPointController extends Controller
 			NetworkAttributes::DATA => $touristicPoints[0]
 		], NetworkAttributes::STATUS_200);
 	}
+
+	/**
+	 *  Start loading a list of reservables touristic points
+	 */
+	public function readReservables() {
+		$model = new TouristicPoint();
+		$touristicPoints = $model->where(Attributes::ALLOW_RESERVATION, '=', true)->get();
+
+		if(!$touristicPoints || count($touristicPoints) == 0) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "No se han encontrado puntos turísticos"
+			], NetworkAttributes::STATUS_404);
+		}
+
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => "Puntos turísticos consultados correctamente",
+			NetworkAttributes::DATA => $touristicPoints
+		], NetworkAttributes::STATUS_200);
+	}
 }

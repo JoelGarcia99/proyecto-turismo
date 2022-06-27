@@ -98,13 +98,15 @@ const ManagePuntoturisCreate = ({initS}) => {
 		dispatch(startFetchingGuides(false));
 	}, [dispatch]);
 
+
+
 	return <form onSubmit={handleSubmit}>
 		<Sidebar title="Registrar punto turístico" activeRoute={allRoutes.manage_puntoturis} />
 		<DescriptionInputPanelLayout
 			title="Datos generales"
 			description="Ingrese los datos generales del punto turístico"
 			onClick={handleGeneralDataSubmit}
-			showSubmitButton={true}
+			isUpdate={!initS}
 			child={
 				<>
 					<ResponsiveInput
@@ -166,7 +168,7 @@ const ManagePuntoturisCreate = ({initS}) => {
 				title="Datos multimedia"
 				description="Ingrese los datos multimedia del punto turístico"
 				onClick={handleMultimediaDataSubmit}
-				showSubmitButton={!!initS}
+				isUpdate={initS}
 				child={
 					<>
 					</>

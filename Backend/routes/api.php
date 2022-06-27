@@ -54,3 +54,4 @@ Route::GET('/guides', [GuideController::class, 'readActiveGuides']);
 // Maravillas
 Route::GET('/puntos-turisticos/maravillas', [TouristicPointController::class, 'readMaravillas']);
 Route::GET('/punto-turistico/{slug}', [TouristicPointController::class, 'readBySlug']);
+Route::GET('/puntos-turisticos/reservables', [TouristicPointController::class, 'readReservables']);

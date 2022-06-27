@@ -7,11 +7,11 @@ export const startFetchingReservables = (callback = (points) => {}) => {
 
 		const {token} = state().auth;
 
-		const res = await fetch(`${process.env.REACT_APP_NG_API_HOST}/puntos-turisticos/reservables`, {
+		const res = await fetch(`${process.env.REACT_APP_NG_API_HOST}/api/puntos-turisticos/reservables`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-				'auth': token
+				'Authorization': `Bearer ${token}`
 			}
 		});
 
@@ -27,8 +27,8 @@ export const startFetchingReservables = (callback = (points) => {}) => {
 		}
 		else {
 			Swal.close();
-			dispatch(setReservables(jsonRes.puntos));
-			callback(jsonRes.puntos);
+			dispatch(setReservables(jsonRes.data));
+			// callback(jsonRes.data);
 		}
 	}
 }

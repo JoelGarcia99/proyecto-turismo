@@ -8,8 +8,8 @@ const AvailabilityFieldSets = ({data, setData}) => {
 				title: "Permitir reservas",
 				description: "Permitir reservas para este punto turístico",
 				properties: {
-					name: "allow_reservations",
-					checked: data.allow_reservations,
+					name: "allow_reservation",
+					checked: data.allow_reservation,
 					type: "checkbox",
 					onChange: (e) => {
 						setData({target: {value: Boolean(e.target.checked), name: 'allow_reservation'}});
@@ -34,3 +34,4 @@ const AvailabilityFieldSets = ({data, setData}) => {
 }
 
 export default AvailabilityFieldSets
+
