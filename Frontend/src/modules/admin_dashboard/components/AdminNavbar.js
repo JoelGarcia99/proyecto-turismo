@@ -26,17 +26,6 @@ export default function AdminNavbar({ showSidebar, setShowSidebar, title }) {
             <div className="container max-w-full mx-auto flex items-center justify-between md:pr-8 md:pl-10">
                 <div className="md:hidden">
 		  {/*hamburguer button to show sidebar */}
-                    <Button
-                        color="transparent"
-                        buttonType="link"
-                        size="lg"
-                        iconOnly
-                        rounded
-                        ripple="light"
-                        onClick={() => setShowSidebar('left-0')}
-                    >
-                        <Icon name="menu" size="2xl" color="white" />
-                    </Button>
                     <div
                         className={`absolute top-2 md:hidden ${
                             showSidebar === 'left-0' ? 'left-64' : '-left-64'
