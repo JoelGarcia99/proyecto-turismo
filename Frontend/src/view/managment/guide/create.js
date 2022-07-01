@@ -20,7 +20,7 @@ const ManageGuideCreate = ({initS}) => {
 	const initialState = {...initS};
 
 	// defining image field
-	const [image, setImage] = useState({url: initS?.image_url || ''});
+	const [image, setImage] = useState({url: initS?.image_url? `${process.env.REACT_APP_NG_API_HOST}/images/guides/${initS.image_url}` : ''});
 
 	// The image will not be uploaded to the server with all the other params
 	delete initialState.image_url;

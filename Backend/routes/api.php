@@ -45,7 +45,7 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::PUT('/manage/guide/{id}', [GuideController::class, 'update']);
 	Route::DELETE('/manage/guide/{id}', [GuideController::class, 'delete']);
 	Route::POST('/manage/guide/', [GuideController::class, 'create']);
-	Route::PUT('/manage/guide/{id}/upload-image', [GuideController::class, 'updateImage']);
+	Route::POST('/manage/guide/{id}/upload-image', [GuideController::class, 'updateImage']);
 });
 
 // Public routes
@@ -55,3 +55,4 @@ Route::GET('/guides', [GuideController::class, 'readActiveGuides']);
 Route::GET('/puntos-turisticos/maravillas', [TouristicPointController::class, 'readMaravillas']);
 Route::GET('/punto-turistico/{slug}', [TouristicPointController::class, 'readBySlug']);
 Route::GET('/puntos-turisticos/reservables', [TouristicPointController::class, 'readReservables']);
+Route::GET('/puntos-turisticos', [TouristicPointController::class, 'readByCategories']);

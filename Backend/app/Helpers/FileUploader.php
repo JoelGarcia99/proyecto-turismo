@@ -28,6 +28,7 @@ class FileUploader
 		// Uploading the image to the server.
 		$file->move($folder, $fileName);
 
+		// buiulding URL
 		return $fileName;
 	}
 

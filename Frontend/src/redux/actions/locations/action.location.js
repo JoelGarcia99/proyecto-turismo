@@ -2,6 +2,14 @@ import Swal from "sweetalert2";
 import {customHTTPRequest} from "../../../helpers/helper.network";
 import types from "../../types";
 
+// export const startFetchingWithCategories = () => {
+// 	return async (dispatch) => {
+//
+//
+//
+// 	}
+// }
+//
 export const startFetchingReservables = (callback = (points) => {}) => {
 	return async (dispatch, state) => {
 
@@ -43,7 +51,7 @@ export const startFetchingMaravillas = () => {
 		const res = await customHTTPRequest(dispatch, `${process.env.REACT_APP_NG_API_HOST}/api/puntos-turisticos/maravillas`, {
 		});
 
-		if(res !== {}) {
+		if (res !== {}) {
 			dispatch(setMaravillaData(res.data));
 		}
 	}
@@ -89,7 +97,7 @@ export const startRegisteringLocation = (location, callback) => {
 			body: JSON.stringify(location)
 		}, true);
 
-		if(res !== {}) {
+		if (res !== {}) {
 			// custom piece of code
 			callback();
 		}

@@ -9,6 +9,32 @@ use Illuminate\Http\Request;
 
 class TouristicPointController extends Controller
 {
+
+	/**
+	 * Returns all the touristic points classified by categories
+	 */
+	public function readByCategories() {
+		// querying all the touristic points
+		$touristicPoints = TouristicPoint::all();
+
+		// storing all the categories with their touristic points
+		$categoriesWithTP = [];
+
+		// going through each touristic point
+		foreach($touristicPoints as $touristicPoint) {
+			// getting the category
+			$category = $touristicPoint->category;
+
+			$categoriesWithTP[$category][] = $touristicPoint;
+		}
+		
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => 'Mostrando todos los puntos turisticos',
+			NetworkAttributes::DATA => $categoriesWithTP
+		], NetworkAttributes::STATUS_200);
+	}
+
 	/**
 	 * Creates a new touristic point
 	 */

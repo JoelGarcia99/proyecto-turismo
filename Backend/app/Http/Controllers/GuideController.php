@@ -7,6 +7,7 @@ use App\Enums\Network\NetworkAttributes;
 use App\Helpers\FileUploader;
 use App\Models\Guide;
 use App\Utilities\DateUtilities;
+use Exception;
 use Illuminate\Http\Request;
 
 class GuideController extends Controller
@@ -198,7 +199,6 @@ class GuideController extends Controller
 		$image = $request->file(Attributes::IMAGE);
 		$id = $request->id;
 
-		return response()->json(['explore'=>$request, 'message'=>count($request->all()), 'image'=>$image, '_id'=>$request->id]);
 		if (!$image) {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
@@ -211,7 +211,7 @@ class GuideController extends Controller
 		$model = new Guide();
 		$guide = $model->find($id);
 
-		if(!$guide) {
+		if (!$guide) {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
 				NetworkAttributes::MESSAGE => "Guide not found"
@@ -232,6 +232,16 @@ class GuideController extends Controller
 			], NetworkAttributes::STATUS_400);
 		}
 
+		// removing previous image before updating
+		try {
+
+			if ($guide->image_url != null && $guide->image_url != "") {
+				unlink(public_path() . "/images/guides/" . $guide->image_url);
+			}
+		} catch (exception $e) {
+
+		}
+
 		// updating the image path
 		$guide->update([
 			Attributes::IMAGE_URL => $image_path
@@ -239,7 +249,8 @@ class GuideController extends Controller
 
 		return response()->json([
 			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
-			NetworkAttributes::MESSAGE => "Image updated successfully"
+			NetworkAttributes::MESSAGE => "Image updated successfully",
+			NetworkAttributes::DATA => $image_path
 		], NetworkAttributes::STATUS_200);
 	}
 
@@ -247,10 +258,11 @@ class GuideController extends Controller
 	 * Showing the list of all the active guides. This can be used without any
 	 * kind of aithorization/role
 	 */
-	public function readActiveGuides() {
+	public function readActiveGuides()
+	{
 		$guides = Guide::where(Attributes::IS_ACTIVE, true)->get();
 
-		if(!$guides) {
+		if (!$guides) {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
 				NetworkAttributes::MESSAGE => "No guides found"
@@ -263,5 +275,4 @@ class GuideController extends Controller
 			NetworkAttributes::DATA => $guides
 		], NetworkAttributes::STATUS_200);
 	}
-
 }

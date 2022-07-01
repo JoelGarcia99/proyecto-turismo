@@ -36,6 +36,7 @@ import ManageCategoryIndex from '../view/managment/category';
 import ManageCategoryCreate from '../view/managment/category/create';
 import ManageCategoryUpdate from '../view/managment/category/update';
 import ManageReservationsIndex from '../view/managment/reservations';
+import TouristicPoints from '../view/punto-turistico/TouristicPoints';
 
 
 const adminRoutes = {
@@ -75,7 +76,7 @@ const privateRoutes = {
 const publicRoutes = {
 	login: "/login",
 	register: "/registro",
-	index: "/"
+	index: "/",
 }
 
 
@@ -167,6 +168,7 @@ const RoutesComponent = () => {
 				<Route exact path={publicRoutes.register} element={<Registro />} />
 				<Route exact path={privateRoutes.home} element={<HomeScsreen />} />
 				<Route exact path={privateRoutes.reservation} element={<Reservation />} />
+				<Route exact path={privateRoutes.puntos_turis} element={<TouristicPoints />} />
 
 				<Route exact path={privateRoutes.punto_detail + ":slug"} element={<PuntoturisAbout />} />
 				<Route exact path={privateRoutes.manage_puntoturis} element={<ManagePuntoturisIndex />} />

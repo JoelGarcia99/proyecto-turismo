@@ -17,14 +17,23 @@ export const customHTTPRequest = async (
 	showSuccessAlert = false
 ) => {
 
+	const headers = {
+		'Content-Type': 'application/json;charset=utf-8',
+		'Accept': 'application/json',
+		...params?.headers ?? {}
+	}
+
+	// removing content type if needed
+	if(params?.headers['Content-Type'] === null) {
+		delete headers['Content-Type'];
+	}
+
+	console.log(headers)
+
 	const res = await fetch(url, {
 		method: 'GET',
 		...params,
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8',
-			'Accept': 'application/json',
-			...params?.headers ?? {}
-		},
+		headers
 	});
 
 	const jsonRes = await res.json();

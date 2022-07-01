@@ -140,14 +140,16 @@ export const startUploadingImage = (guideId, image, callback = () => {}) => {
 
 		const formData = new FormData();
 		formData.append('image', image);
-		formData.append('guideId', guideId);
+		// formData.append('guideId', guideId);
+
+		console.log(image);
 
 		// Connecting with the server
 		const res = await customHTTPRequest(dispatch, url, {
-			method: 'PUT',
+			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${token}`,
-				'Content-Type': 'multipart/form-data'
+				'Content-Type': null
 			},
 			body: formData
 		}, true);
