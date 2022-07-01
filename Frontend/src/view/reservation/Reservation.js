@@ -131,7 +131,7 @@ const Reservation = ({isUpdate = false}) => {
 					guides.map((guide, index) => {
 						return <div key={index} className="mx-8 rounded-xl px-2 py-2 cursor-pointer hover:shadow-xl hover:bg-gray-200">
 							<img
-								src={guide.image_url}
+								src={`${process.env.REACT_APP_NG_API_HOST}/images/guides/${guide.image_url}`}
 								alt=""
 								className="animate__animated animate__fadeIn my-4 rounded-full"
 								style={{height: "10rem", width: "10rem"}}
