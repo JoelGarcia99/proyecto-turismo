@@ -14,11 +14,11 @@ docker-compose stop
 docker-compose rm -f
 
 echo "Building backend image"
-cd ./backend
+cd ./Backend
 
-docker build -t portoturismo_backend:latest .
+# docker build -t portoturismo_backend:latest .
 
-cd ../web_frontend
+cd ../Frontend
 echo "Building frontend image"
 docker build -t portoturismo_frontend:latest .
 

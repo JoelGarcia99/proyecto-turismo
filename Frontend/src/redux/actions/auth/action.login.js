@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import {allRoutes} from "../../../router/routes";
 import types from "../../types";
 
-export const startLogin = (email, password) => {
+export const startLogin = (email, password, callback=()=>{}) => {
 	return async (dispatch) => {
 
 		const res = await fetch(`${process.env.REACT_APP_NG_API_HOST}/api/auth/login`, {
@@ -34,6 +34,8 @@ export const startLogin = (email, password) => {
 			// window.location.href = "http://localhost:3000/home";
 			dispatch(setLoginData(jsonRes.user, jsonRes.token));
 		}
+
+		callback();
 	}
 }
 
