@@ -191,45 +191,45 @@ class GuideController extends Controller
 	}
 
 	/**
-	 * Updates the image of the guide
+	 * updates the image of the guide
 	 */
-	public function updateImage(Request $request)
+	public function updateImage(request $request)
 	{
 		// loading the image from the request
-		$image = $request->file(Attributes::IMAGE);
+		$image = $request->file(attributes::image);
 		$id = $request->id;
 
 		if (!$image) {
 			return response()->json([
-				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
-				NetworkAttributes::MESSAGE => "Debe proporcionar una imagen"
-			], NetworkAttributes::STATUS_404);
+				networkattributes::status => networkattributes::status_error,
+				networkattributes::message => "debe proporcionar una imagen"
+			], networkattributes::status_404);
 		}
 
 
 		// searching for the guide
-		$model = new Guide();
+		$model = new guide();
 		$guide = $model->find($id);
 
 		if (!$guide) {
 			return response()->json([
-				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
-				NetworkAttributes::MESSAGE => "Guide not found"
-			], NetworkAttributes::STATUS_404);
+				networkattributes::status => networkattributes::status_error,
+				networkattributes::message => "guide not found"
+			], networkattributes::status_404);
 		}
 
 		// creating the path
-		$image_path = FileUploader::uploadImage($image, 'images/guides/');
+		$image_path = fileuploader::uploadimage($image, 'images/guides/');
 
-		// Validating the user is not uploading an invalid format
-		if ($image_path === FileUploader::INVALID_EXTENSION_CODE) {
+		// validating the user is not uploading an invalid format
+		if ($image_path === fileuploader::invalid_extension_code) {
 
-			$valid_extensions = implode(', ', FileUploader::$validExtensions);
+			$valid_extensions = implode(', ', fileuploader::$validextensions);
 
 			return response()->json([
-				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
-				NetworkAttributes::MESSAGE => "Invalid extension, the only allowed extensions are: " . $valid_extensions
-			], NetworkAttributes::STATUS_400);
+				networkattributes::status => networkattributes::status_error,
+				networkattributes::message => "invalid extension, the only allowed extensions are: " . $valid_extensions
+			], networkattributes::status_400);
 		}
 
 		// removing previous image before updating
@@ -244,14 +244,14 @@ class GuideController extends Controller
 
 		// updating the image path
 		$guide->update([
-			Attributes::IMAGE_URL => $image_path
+			attributes::image_url => $image_path
 		]);
 
 		return response()->json([
-			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
-			NetworkAttributes::MESSAGE => "Image updated successfully",
-			NetworkAttributes::DATA => $image_path
-		], NetworkAttributes::STATUS_200);
+			networkattributes::status => networkattributes::status_success,
+			networkattributes::message => "image updated successfully",
+			networkattributes::data => $image_path
+		], networkattributes::status_200);
 	}
 
 	/**

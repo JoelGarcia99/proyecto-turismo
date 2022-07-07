@@ -8,6 +8,7 @@ import {useNavigate} from 'react-router';
 import {allRoutes} from '../../../router/routes';
 import {startDeletingGuide, startRegisteringGuide, startUploadingImage} from '../../../redux/actions/guideman/action.guideman';
 import {add, format} from 'date-fns';
+import ImageUploader from '../../../components/images/component.uploader';
 
 
 const ManageGuideCreate = ({initS}) => {
@@ -19,8 +20,7 @@ const ManageGuideCreate = ({initS}) => {
 	// WARNING: do not use this for validation since this is never null or undefined
 	const initialState = {...initS};
 
-	// defining image field
-	const [image, setImage] = useState({url: initS?.image_url? `${process.env.REACT_APP_NG_API_HOST}/images/guides/${initS.image_url}` : ''});
+	const initialImageUrl = initS?.image_url? `${process.env.REACT_APP_NG_API_HOST}/images/guides/${initS.image_url}`:"";
 
 	// The image will not be uploaded to the server with all the other params
 	delete initialState.image_url;
@@ -32,23 +32,6 @@ const ManageGuideCreate = ({initS}) => {
 		phone: "",
 		is_active: false
 	});
-
-	// e is the event
-	const handleImageChange = (e) => {
-		let reader = new FileReader();
-		let file = e.target.files[0];
-
-		reader.onloadend = () => {
-			setImage({url: reader.result, file});
-		}
-
-		// If error then the image should be removed
-		try {
-			reader.readAsDataURL(file);
-		} catch (_) {
-			setImage({});
-		}
-	}
 
 	// handle deletion of a whole guide
 	const handleDelete = (e) => {
@@ -62,9 +45,7 @@ const ManageGuideCreate = ({initS}) => {
 	}
 
 	// Uploading the image for the guide on the server
-	const handleImageUpload = (e) => {
-		e.preventDefault();
-
+	const handleImageUpload = (image) => {
 		//TODO: lock interface while this is uploading
 		dispatch(startUploadingImage(initS._id, image.file));
 	}
@@ -108,35 +89,10 @@ const ManageGuideCreate = ({initS}) => {
 								<div className="grid grid-cols-6 gap-6">
 									{
 										initS &&
-										<div className="col-span-12">
-											<label className="block text-sm font-medium text-gray-700" htmlFor="name">
-												Subir foto
-											</label>
-											{/* This image should be rounded */}
-											{
-												image.url &&
-
-												<img
-													src={image.url}
-													alt=""
-													className="animate__animated animate__fadeIn my-4 rounded-full"
-													style={{height: "10rem", width: "10rem"}}
-												/>
-											}
-											<input
-												type="file"
-												name="image_url"
-
-												onChange={handleImageChange}
-												className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+											<ImageUploader
+												initialUrl={initialImageUrl}
+												handleImageUpload={handleImageUpload}
 											/>
-											{
-												image.file &&
-												<button onClick={handleImageUpload} className="bg-green-700 text-white rounded my-4 px-4 py-2">
-													<FontAwesomeIcon icon={faUpload} />&nbsp;Subir
-												</button>
-											}
-										</div>
 									}
 									<div className="col-span-12">
 										<label className="block text-sm font-medium text-gray-700" htmlFor="name">

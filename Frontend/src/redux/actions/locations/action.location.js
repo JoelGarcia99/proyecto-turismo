@@ -2,6 +2,36 @@ import Swal from "sweetalert2";
 import {customHTTPRequest} from "../../../helpers/helper.network";
 import types from "../../types";
 
+/**
+ * uploads an image to the server
+ * @param {File} image - the image to upload
+ */
+export const startUploadingImage = (id, image, callback = () => {}) => {
+	return async (dispatch, state) => {
+		const {token} = state().auth;
+
+		let url = `${process.env.REACT_APP_NG_API_HOST}/api/manage/puntos-turisticos/${id}/upload-image`;
+
+		const formData = new FormData();
+		formData.append('image', image);
+
+		// Connecting with the server
+		const res = await customHTTPRequest(dispatch, url, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': null
+			},
+			body: formData
+		}, true);
+
+		// executing custom piece of code after registering
+		if(res !== {}) {
+			callback(res.image);
+		}
+	}
+}
+
 // export const startFetchingWithCategories = () => {
 // 	return async (dispatch) => {
 //

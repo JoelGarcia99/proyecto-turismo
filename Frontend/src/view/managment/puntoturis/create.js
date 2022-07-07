@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import useCustomForm from '../../../hooks/useCustomForm';
 import {startFetchingCategories} from '../../../redux/actions/category/action.category';
-import {startDeletingPunto, startRegisteringLocation, startUpdatingLocation} from '../../../redux/actions/locations/action.location';
+import {startDeletingPunto, startRegisteringLocation, startUpdatingLocation, startUploadingImage} from '../../../redux/actions/locations/action.location';
 import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 import {useNavigate} from 'react-router';
 import {allRoutes} from '../../../router/routes';
@@ -15,6 +15,9 @@ import AvailabilityFieldSets from './components/AvailabilityFieldSets';
 import CustomUrlInput from '../../../components/inputs/customUrlInput';
 import CustomTextArea from '../../../components/inputs/CustomTextArea';
 import CustomRichText from '../../../components/inputs/CustomRichText';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faUpload} from '@fortawesome/free-solid-svg-icons';
+import ImageUploader from '../../../components/images/component.uploader';
 
 
 /**
@@ -28,9 +31,9 @@ const ManagePuntoturisCreate = ({initS}) => {
 	const navigator = useNavigate();
 
 	const {categories} = useSelector((state) => state.category);
-	const [images, setImages] = useState([]);
-	const [mainImage, setMainImage] = useState(null);
 
+	const initialImageUrl = initS?.main_image_url;
+	
 	const [linkedGuides, setLinkedGuides] = useState(initS?.guides || []);
 	const [data, setData, _] = useCustomForm(initS || {
 		name: "",
@@ -40,9 +43,7 @@ const ManagePuntoturisCreate = ({initS}) => {
 		is_wonder: false,
 		short_description: "",
 		description: "",
-		main_image: "",
 	});
-
 
 	// Permanently removes this guide from DB
 	const handleDelete = (e) => {
@@ -61,7 +62,7 @@ const ManagePuntoturisCreate = ({initS}) => {
 		const newData = cleanUndefinedFields(data);
 
 		// removing non useful fields
-		delete newData.main_image;
+		delete newData.main_image_url;
 
 		// sending only non null fields
 		dispatch((initS ? startUpdatingLocation : startRegisteringLocation)({
@@ -91,6 +92,12 @@ const ManagePuntoturisCreate = ({initS}) => {
 			navigator(allRoutes.manage_puntoturis);
 			return;
 		}));
+	}
+	//
+	// Uploading the image for the guide on the server
+	const handleImageUpload = (image) => {
+		//TODO: lock interface while this is uploading
+		dispatch(startUploadingImage(initS._id, image.file));
 	}
 
 	useEffect(() => {
@@ -170,8 +177,17 @@ const ManagePuntoturisCreate = ({initS}) => {
 				onClick={handleMultimediaDataSubmit}
 				isUpdate={initS}
 				child={
-					<>
-					</>
+					<div id="main">
+						<div id="main-image" className="border-color-gray-200">
+							<h1 className="text-xl font-bold">Imagen principal</h1>
+							<ImageUploader
+								initialUrl={initialImageUrl}
+								circular={false}
+								panelHeight={"20rem"}
+								handleImageUpload={handleImageUpload}
+							/>
+						</div>
+					</div>
 				}
 			/>
 		}

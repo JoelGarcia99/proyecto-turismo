@@ -4,12 +4,78 @@ namespace App\Http\Controllers;
 
 use App\Enums\Database\Attributes;
 use App\Enums\Network\NetworkAttributes;
+use App\Helpers\FileUploader;
+use App\Models\Guide;
 use App\Models\TouristicPoint;
+use Exception;
 use Illuminate\Http\Request;
 
 class TouristicPointController extends Controller
 {
 
+	/**
+	 * updates the image of the guide
+	 */
+	public function updateImage(request $request)
+	{
+		// loading the image from the request
+		$image = $request->file(attributes::IMAGE);
+		$id = $request->id;
+
+		if (!$image) {
+			return response()->json([
+				networkattributes::STATUS => networkattributes::STATUS_ERROR,
+				networkattributes::MESSAGE => "Debe proporcionar una imagen"
+			], networkattributes::STATUS_404);
+		}
+
+
+		// searching for the guide
+		$model = new TouristicPoint();
+		$touristicPoint = $model->find($id);
+
+		if (!$touristicPoint) {
+			return response()->json([
+				networkattributes::STATUS => networkattributes::STATUS_ERROR,
+				networkattributes::MESSAGE => "Punto turístico no encontrado"
+			], networkattributes::STATUS_404);
+		}
+
+		// creating the path
+		$image_path = FileUploader::uploadimage($image, 'images/touristic_points/');
+
+		// validating the user is not uploading an invalid format
+		if ($image_path === fileuploader::INVALID_EXTENSION_CODE) {
+
+			$valid_extensions = implode(', ', FileUploader::$validExtensions);
+
+			return response()->json([
+				networkattributes::STATUS => networkattributes::STATUS_ERROR,
+				networkattributes::MESSAGE => "Extension no soportada, las unicas soportadas son: " . $valid_extensions
+			], networkattributes::STATUS_400);
+		}
+
+		// removing previous image before updating
+		try {
+
+			if ($touristicPoint->main_image != null && $touristicPoint->main_image != "") {
+				unlink(public_path() . "/images/touristic_points/" . $touristicPoint->main_image);
+			}
+		} catch (Exception $e) {
+
+		}
+
+		// updating the image path
+		$touristicPoint->update([
+			Attributes::MAIN_IMAGE_URL=> "/images/touristic_points/".$image_path
+		]);
+
+		return response()->json([
+			networkattributes::STATUS => networkattributes::STATUS_SUCCESS,
+			networkattributes::MESSAGE => "La imagen se actualizó correctamente",
+			networkattributes::DATA => $image_path
+		], networkattributes::STATUS_200);
+	}
 	/**
 	 * Returns all the touristic points classified by categories
 	 */

@@ -24,11 +24,14 @@ export const customHTTPRequest = async (
 	}
 
 	// removing content type if needed
-	if(params?.headers['Content-Type'] === null) {
-		delete headers['Content-Type'];
-	}
+	try {
+		if (params?.headers['Content-Type'] === null) {
+			delete headers['Content-Type'];
+		}
 
-	console.log(headers)
+	} catch (_) {
+		// do nothing
+	}
 
 	const res = await fetch(url, {
 		method: 'GET',

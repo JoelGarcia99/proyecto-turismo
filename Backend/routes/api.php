@@ -29,6 +29,7 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::PUT('/manage/punto-turistico/{id}', [TouristicPointController::class, 'update']);
 	Route::GET('/manage/punto-turistico/{id}', [TouristicPointController::class, 'loadById']);
 	Route::GET('/manage/puntos-turisticos/', [TouristicPointController::class, 'loadTouristicPoints']);
+	Route::POST('/manage/puntos-turisticos/{id}/upload-image', [TouristicPointController::class, 'updateImage']);
 
 	// Categories
 	Route::GET('/manage/categories/', [CategoryController::class, 'read']);

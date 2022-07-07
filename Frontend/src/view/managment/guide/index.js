@@ -6,7 +6,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {allRoutes} from '../../../router/routes';
 import {Link, NavLink} from 'react-router-dom';
 import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
-import {startFetchingGuides} from '../../../redux/actions/guideman/action.guideman';
+import {startDeletingGuide, startFetchingGuides} from '../../../redux/actions/guideman/action.guideman';
+import {ToastContainer} from 'react-toastify';
 
 const ManagaGuideIndex = () => {
 
@@ -18,7 +19,9 @@ const ManagaGuideIndex = () => {
 	}, [dispatch]);
 
 	const handleDelete = (guideID)=>{
-		console.log("Hola", guideID);
+		dispatch(startDeletingGuide(guideID, ()=>{
+			{/* return <ToastContainer /> */}
+		}));
 	}
 
 
@@ -87,7 +90,7 @@ const ManagaGuideIndex = () => {
 										&nbsp;&nbsp;
 										<div
 											className="cursor-pointer hover:bg-red-300 py-1 px-1 rounded text-center"
-											onClick={(e)=>handleDelete(guide._id)}
+											onClick={()=>handleDelete(guide._id)}
 										>
 											<FontAwesomeIcon
 												icon={faTrash}

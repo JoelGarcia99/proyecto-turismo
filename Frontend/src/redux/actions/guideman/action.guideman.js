@@ -30,7 +30,7 @@ export const startFetchingGuides = (forManage = true, callback = () => {}) => {
  * It's only used for admin panel.
  * @param forManage {boolean} Put it false if normal user can access
  **/
-export const startFetchingGuidesByPoint = (id, callback = (points) => {}) => {
+export const startFetchingGuidesByPoint = (id, callback = () => {}) => {
 	return async (dispatch, state) => {
 
 		// token for session autorization
