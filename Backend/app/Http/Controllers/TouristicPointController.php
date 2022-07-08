@@ -146,11 +146,12 @@ class TouristicPointController extends Controller
 		}
 
 		// creating & storing on DB
-		$model->create($params);
+		$data = $model->create($params);
 
 		return response()->json([
 			NetworkAttributes::STATUS => 'success',
 			NetworkAttributes::MESSAGE => 'Punto turístico creado correctamente',
+			NetworkAttributes::DATA => $data
 		], NetworkAttributes::STATUS_200);
 	}
 
@@ -192,11 +193,12 @@ class TouristicPointController extends Controller
 		}
 
 		// updating & storing on DB
-		$model->update($params);
+		$data = $model->update($params);
 
 		return response()->json([
 			NetworkAttributes::STATUS => 'success',
 			NetworkAttributes::MESSAGE => 'Punto turístico actualizado correctamente',
+			NetworkAttributes::DATA => $data
 		], NetworkAttributes::STATUS_200);
 	}
 

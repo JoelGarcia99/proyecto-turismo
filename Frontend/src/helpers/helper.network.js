@@ -1,3 +1,4 @@
+import {toast} from "react-toastify";
 import Swal from "sweetalert2";
 import {startLogout} from "../redux/actions/auth/action.logout";
 
@@ -55,23 +56,12 @@ export const customHTTPRequest = async (
 
 	if (errorCodes.includes(res.status)) {
 		//TODO: replace it with 404 page
-		await Swal.fire({
-			title: "Ha ocurrido un error. Intente más tarde",
-			icon: "error",
-			text: jsonRes.message,
-			onClose: () => Swal.close()
-		});
-
+		toast.error(jsonRes.message);
 		return {};
 	}
 
 	if (showSuccessAlert) {
-		await Swal.fire({
-			title: "Operación exitosa",
-			icon: "success",
-			text: jsonRes.message,
-			onClose: () => Swal.close()
-		});
+		toast.success(jsonRes.message);
 	}
 
 	return jsonRes;

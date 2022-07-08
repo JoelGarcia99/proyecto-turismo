@@ -1,3 +1,4 @@
+import {toast} from "react-toastify";
 import Swal from "sweetalert2";
 import {customHTTPRequest} from "../../../helpers/helper.network";
 import types from "../../types";
@@ -6,7 +7,7 @@ import types from "../../types";
  * uploads an image to the server
  * @param {File} image - the image to upload
  */
-export const startUploadingImage = (id, image, isMainImage=true, callback = () => {}) => {
+export const startUploadingImage = (id, image, isMainImage = true, callback = () => {}) => {
 	return async (dispatch, state) => {
 		const {token} = state().auth;
 
@@ -14,8 +15,8 @@ export const startUploadingImage = (id, image, isMainImage=true, callback = () =
 
 		// if it is not the main image then it means that it needs to be pushed with the already
 		// loaded images
-		if (!isMainImage) {
-			url += `?is_main_image=false`;
+		if (isMainImage) {
+			url += `?is_main_image=true`;
 		}
 
 		const formData = new FormData();
@@ -32,7 +33,7 @@ export const startUploadingImage = (id, image, isMainImage=true, callback = () =
 		}, true);
 
 		// executing custom piece of code after registering
-		if(res !== {}) {
+		if (res !== {}) {
 			callback(res.image);
 		}
 	}
@@ -135,7 +136,7 @@ export const startRegisteringLocation = (location, callback) => {
 
 		if (res !== {}) {
 			// custom piece of code
-			callback();
+			callback(res.data);
 		}
 	}
 }
@@ -145,41 +146,23 @@ export const startRegisteringLocation = (location, callback) => {
  * @param {function} callback Is a function to execute a piece of code after this job is done
  */
 export const startUpdatingLocation = (location, callback) => {
-	return async (_, state) => {
+	return async (dispatch, state) => {
 
 		const {token} = state().auth;
 
-		const res = await fetch(`${process.env.REACT_APP_NG_API_HOST}/api/manage/punto-turistico/${location._id}`, {
+		const url = `${process.env.REACT_APP_NG_API_HOST}/api/manage/punto-turistico/${location._id}`;
+		const res = await customHTTPRequest(dispatch, url, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json;charset=utf-8',
 				'Authorization': `Bearer ${token}`
 			},
 			body: JSON.stringify(location)
-		});
+		}, true);
 
-
-		const jsonRes = await res.json();
-
-		if (res.status !== 200) {
-			await Swal.fire({
-				title: "Ha ocurrido un error. Intente más tarde",
-				icon: "error",
-				text: jsonRes.message,
-				onClose: () => Swal.close()
-			});
-			return;
-		}
-		else {
-			await Swal.fire({
-				title: "Proceso exitoso",
-				icon: "success",
-				text: jsonRes.message,
-				onClose: () => Swal.close()
-			});
-
-			// dispatch(setNewLocation(jsonRes.punto_turistico));
-			callback();
+		// it means success
+		if(res !== {}) {
+			callback(res.data);
 		}
 	}
 }

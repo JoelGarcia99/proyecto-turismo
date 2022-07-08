@@ -14,6 +14,7 @@ import AvailabilityFieldSets from './components/AvailabilityFieldSets';
 import CustomTextArea from '../../../components/inputs/CustomTextArea';
 import CustomRichText from '../../../components/inputs/CustomRichText';
 import ImageUploader from '../../../components/images/component.uploader';
+import {ToastContainer} from 'react-toastify';
 
 
 /**
@@ -44,6 +45,8 @@ const ManagePuntoturisCreate = ({initS}) => {
 		description: "",
 	});
 
+	// TODO put on the UI a state to manage a message when the point is created
+
 	// Permanently removes this guide from DB
 	const handleDelete = (e) => {
 		e.preventDefault();
@@ -66,8 +69,11 @@ const ManagePuntoturisCreate = ({initS}) => {
 		// sending only non null fields
 		dispatch((initS ? startUpdatingLocation : startRegisteringLocation)({
 			...newData
-		}, () => {
-			navigator(allRoutes.manage_puntoturis);
+		}, (response) => {
+			if (!initS) {
+				navigator(allRoutes.manage_puntoturis_edit + response._id);
+			}
+			// TODO: update current page without recharging the page
 			return;
 		}));
 	}
@@ -83,18 +89,28 @@ const ManagePuntoturisCreate = ({initS}) => {
 		// sending only non null fields
 		dispatch((initS ? startUpdatingLocation : startRegisteringLocation)({
 			...newData,
-		}, () => {
-			navigator(allRoutes.manage_puntoturis);
+		}, (response) => {
+			if (!initS) {
+				navigator(allRoutes.manage_puntoturis_edit + response._id);
+			}
+			// TODO: update current page without recharging the page
 			return;
 		}));
 	}
+
 	//
 	// Uploading the image for the guide on the server
-	const handleImageUpload = (image, isMainImage = true) => {
+	const handleImageUpload = (image, isMainImage = false) => {
 		//TODO: lock interface while this is uploading
-		dispatch(startUploadingImage(initS._id, image.file, isMainImage, ()=>{
-			setImageList(imageList)
+		dispatch(startUploadingImage(initS._id, image.file, isMainImage, () => {
+			if(isMainImage) {
+				setImageList(imageList)
+			}
 		}));
+	}
+
+	const handleMainImageUpload = (image) => {
+		handleImageUpload(image, true);
 	}
 
 	// initial loading of categories
@@ -178,7 +194,7 @@ const ManagePuntoturisCreate = ({initS}) => {
 								initialUrl={initialImageUrl}
 								circular={false}
 								panelHeight={"20rem"}
-								handleImageUpload={handleImageUpload}
+								handleImageUpload={handleMainImageUpload}
 							/>
 						</div>
 						<div className="my-4"></div>
@@ -189,7 +205,7 @@ const ManagePuntoturisCreate = ({initS}) => {
 							{/** */}
 							<div className="flex flex-row flex-wrap justify-evenly">
 								<ImageUploader
-									initialUrl={imageList[0] != null ? process.env.REACT_APP_NG_API_HOST + imageList[0]: null}
+									initialUrl={imageList[0] != null ? process.env.REACT_APP_NG_API_HOST + imageList[0] : null}
 									handleImageUpload={handleImageUpload}
 									showButtons={!imageList[0]}
 									circular={false}
@@ -202,7 +218,7 @@ const ManagePuntoturisCreate = ({initS}) => {
 										// if index is 0 then it means that it is the main image, so we 
 										// do not need to rerender it again
 										if (imageList.length === 1 || index === imageList.length - 1) {
-											return <ImageUploader key={index} circular={false} handleImageUpload={handleImageUpload}/>
+											return <ImageUploader key={index} circular={false} handleImageUpload={handleImageUpload} />
 										}
 
 										// showing a new image uploader
@@ -230,6 +246,9 @@ const ManagePuntoturisCreate = ({initS}) => {
 				Eliminar
 			</button>
 		}
+
+
+		<ToastContainer />
 	</form>
 }
 

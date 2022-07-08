@@ -6,10 +6,11 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import MaravillasListComponent from "./component.maravillas";
 
 import morcillaImage from "../../assets/others/FESTIVAL DE LA MORCILLA PARROQUIA ABDÓN CALDERÓN.webp";
-import hotelImage  from "../../assets/others/HOTEL CEIBO REAL.webp";
+import hotelImage from "../../assets/others/HOTEL CEIBO REAL.webp";
 import arqueoImage from "../../assets/others/PARQUE ARQUEOLÓGICO  HOJAS JABONCILLO.webp";
 import WideDescriptorComponent from "./component.wideDescriptor";
 import SessionFooterComponent from "./component.footer";
+import {Link} from "react-router-dom";
 
 
 const HomeScsreen = () => {
@@ -26,12 +27,12 @@ const HomeScsreen = () => {
 				</h1>
 				<div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
 					<div className="">
-						<a
-							href="#"
+						<Link
+							to={allRoutes.reservation}
 							className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10"
 						>
 							Haz tu reserva!
-                  </a>
+						</Link>
 					</div>
 				</div>
 			</div>

@@ -13,6 +13,9 @@ import WideDescriptorComponent from '../home/component.wideDescriptor';
 import morcillaImage from "../../assets/others/FESTIVAL DE LA MORCILLA PARROQUIA ABDÓN CALDERÓN.webp";
 import {toast, ToastContainer} from 'react-toastify';
 
+import 'react-toastify/dist/ReactToastify.css';
+import SpinLoader from '../../components/loader/SpinLoader';
+
 const PuntoturisAbout = () => {
 
 	const {slug} = useParams();
@@ -26,6 +29,9 @@ const PuntoturisAbout = () => {
 			if (response.status === 200) {
 				const punto = jsonRes.data;
 				setPunto(punto);
+			}
+			else {
+				toast.error(jsonRes.message);
 			}
 
 			// if loading is false and there is no data, then it's a 404 error
@@ -41,17 +47,10 @@ const PuntoturisAbout = () => {
 	// border radius for all the components here
 	const borderRadius = "1rem";
 
+	// Loading animation while the interface is fetching data
 	if (isLoading) {
-		return <h1>Loading</h1>;
+		return <center><SpinLoader /></center>;
 	}
-
-	toast('Crack', {
-		position: "top-right",
-		autoClose: 5000,
-		hideProgressBar: false,
-	});
-
-	return <ToastContainer />;
 
 	return <div className="puntoturis-about">
 
@@ -150,6 +149,9 @@ const PuntoturisAbout = () => {
 			{/* Footer */}
 			<SessionFooterComponent />
 		</div>
+
+
+		<ToastContainer />
 	</div>
 }
 
