@@ -33,6 +33,7 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "react-toastify": "^9.0.5",
     "redux-thunk": "^2.4.1",
     "sanitize-html": "^2.7.0",
     "sass": "^1.49.9",

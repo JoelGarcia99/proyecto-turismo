@@ -6,17 +6,13 @@ import {startDeletingPunto, startRegisteringLocation, startUpdatingLocation, sta
 import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 import {useNavigate} from 'react-router';
 import {allRoutes} from '../../../router/routes';
-import {startFetchingGuides} from '../../../redux/actions/guideman/action.guideman';
 import {cleanUndefinedFields} from '../../../helpers/helper.cleaner';
 import ResponsiveInput from '../../../components/inputs/responsiveInput';
 import ResponsiveSelect from '../../../components/inputs/responsiveSelect';
 import DescriptionInputPanelLayout from '../../../components/inputs/descriptionInputPanelLayout';
 import AvailabilityFieldSets from './components/AvailabilityFieldSets';
-import CustomUrlInput from '../../../components/inputs/customUrlInput';
 import CustomTextArea from '../../../components/inputs/CustomTextArea';
 import CustomRichText from '../../../components/inputs/CustomRichText';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faUpload} from '@fortawesome/free-solid-svg-icons';
 import ImageUploader from '../../../components/images/component.uploader';
 
 
@@ -32,9 +28,12 @@ const ManagePuntoturisCreate = ({initS}) => {
 
 	const {categories} = useSelector((state) => state.category);
 
-	const initialImageUrl = initS?.main_image_url;
-	
-	const [linkedGuides, setLinkedGuides] = useState(initS?.guides || []);
+	// images upload process
+	const initialImageUrl = process.env.REACT_APP_NG_API_HOST + initS?.main_image_url;
+
+	// list of all the images related to this point.
+	const [imageList, setImageList] = useState(initS?.images ?? []);
+
 	const [data, setData, _] = useCustomForm(initS || {
 		name: "",
 		address: "",
@@ -73,11 +72,8 @@ const ManagePuntoturisCreate = ({initS}) => {
 		}));
 	}
 
-	const handleMultimediaDataSubmit = (e) => {
-		e.preventDefault();
-	}
-
-	// Adding a touristic point
+	// Adding a touristic point. Only normal data, do not add any file or media
+	// content since the backend will drop them all.
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
@@ -87,7 +83,6 @@ const ManagePuntoturisCreate = ({initS}) => {
 		// sending only non null fields
 		dispatch((initS ? startUpdatingLocation : startRegisteringLocation)({
 			...newData,
-			guides: linkedGuides
 		}, () => {
 			navigator(allRoutes.manage_puntoturis);
 			return;
@@ -95,17 +90,17 @@ const ManagePuntoturisCreate = ({initS}) => {
 	}
 	//
 	// Uploading the image for the guide on the server
-	const handleImageUpload = (image) => {
+	const handleImageUpload = (image, isMainImage = true) => {
 		//TODO: lock interface while this is uploading
-		dispatch(startUploadingImage(initS._id, image.file));
+		dispatch(startUploadingImage(initS._id, image.file, isMainImage, ()=>{
+			setImageList(imageList)
+		}));
 	}
 
+	// initial loading of categories
 	useEffect(() => {
 		dispatch(startFetchingCategories(0, 100));
-		dispatch(startFetchingGuides(false));
 	}, [dispatch]);
-
-
 
 	return <form onSubmit={handleSubmit}>
 		<Sidebar title="Registrar punto turístico" activeRoute={allRoutes.manage_puntoturis} />
@@ -174,7 +169,6 @@ const ManagePuntoturisCreate = ({initS}) => {
 			<DescriptionInputPanelLayout
 				title="Datos multimedia"
 				description="Ingrese los datos multimedia del punto turístico"
-				onClick={handleMultimediaDataSubmit}
 				isUpdate={initS}
 				child={
 					<div id="main">
@@ -186,6 +180,44 @@ const ManagePuntoturisCreate = ({initS}) => {
 								panelHeight={"20rem"}
 								handleImageUpload={handleImageUpload}
 							/>
+						</div>
+						<div className="my-4"></div>
+						<div id="image-list" className="border-color-gray-200">
+							<h1 className="text-cl font-bold flex flex-row items-center">
+								<span>Otras imagenes</span>
+							</h1>
+							{/** */}
+							<div className="flex flex-row flex-wrap justify-evenly">
+								<ImageUploader
+									initialUrl={imageList[0] != null ? process.env.REACT_APP_NG_API_HOST + imageList[0]: null}
+									handleImageUpload={handleImageUpload}
+									showButtons={!imageList[0]}
+									circular={false}
+									maxWidth={false}
+									showTitle={!imageList[0]}
+								/>
+								{
+									imageList.map((_, index) => {
+
+										// if index is 0 then it means that it is the main image, so we 
+										// do not need to rerender it again
+										if (imageList.length === 1 || index === imageList.length - 1) {
+											return <ImageUploader key={index} circular={false} handleImageUpload={handleImageUpload}/>
+										}
+
+										// showing a new image uploader
+										return <ImageUploader
+											key={index}
+											initialUrl={process.env.REACT_APP_NG_API_HOST + imageList[index + 1]}
+											showTitle={false}
+											handleImageUpload={handleImageUpload}
+											showButtons={false}
+											circular={false}
+											maxWidth={false}
+										/>
+									})
+								}
+							</div>
 						</div>
 					</div>
 				}

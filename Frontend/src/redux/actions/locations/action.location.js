@@ -6,11 +6,17 @@ import types from "../../types";
  * uploads an image to the server
  * @param {File} image - the image to upload
  */
-export const startUploadingImage = (id, image, callback = () => {}) => {
+export const startUploadingImage = (id, image, isMainImage=true, callback = () => {}) => {
 	return async (dispatch, state) => {
 		const {token} = state().auth;
 
 		let url = `${process.env.REACT_APP_NG_API_HOST}/api/manage/puntos-turisticos/${id}/upload-image`;
+
+		// if it is not the main image then it means that it needs to be pushed with the already
+		// loaded images
+		if (!isMainImage) {
+			url += `?is_main_image=false`;
+		}
 
 		const formData = new FormData();
 		formData.append('image', image);

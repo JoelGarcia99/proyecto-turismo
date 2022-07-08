@@ -22,6 +22,10 @@ class TouristicPointController extends Controller
 		$image = $request->file(attributes::IMAGE);
 		$id = $request->id;
 
+		// query params to determine if it is the main image or not
+		$isMainImage = $request->query(attributes::IS_MAIN_IMAGE, 'false');
+		$isMainImage = $isMainImage == 'true';
+
 		if (!$image) {
 			return response()->json([
 				networkattributes::STATUS => networkattributes::STATUS_ERROR,
@@ -57,18 +61,27 @@ class TouristicPointController extends Controller
 
 		// removing previous image before updating
 		try {
-
+			// It is not needed for the other images since if two identicals images are uploaded
+			// they will just be uploaded together with different IDs.
 			if ($touristicPoint->main_image != null && $touristicPoint->main_image != "") {
 				unlink(public_path() . "/images/touristic_points/" . $touristicPoint->main_image);
 			}
-		} catch (Exception $e) {
+		} catch (Exception) { }
 
+		// Updating the image according to its type
+		if ($isMainImage) {
+			$touristicPoint->update([
+				Attributes::MAIN_IMAGE_URL => "/images/touristic_points/" . $image_path
+			]);
+		} else {
+			// Appending the new image to the previous ones
+			$imageList = $touristicPoint->images ?? [];
+			$imageList[] = "/images/touristic_points/" . $image_path;
+
+			$touristicPoint->update([
+				Attributes::IMAGES => $imageList
+			]);
 		}
-
-		// updating the image path
-		$touristicPoint->update([
-			Attributes::MAIN_IMAGE_URL=> "/images/touristic_points/".$image_path
-		]);
 
 		return response()->json([
 			networkattributes::STATUS => networkattributes::STATUS_SUCCESS,
@@ -79,7 +92,8 @@ class TouristicPointController extends Controller
 	/**
 	 * Returns all the touristic points classified by categories
 	 */
-	public function readByCategories() {
+	public function readByCategories()
+	{
 		// querying all the touristic points
 		$touristicPoints = TouristicPoint::all();
 
@@ -87,13 +101,13 @@ class TouristicPointController extends Controller
 		$categoriesWithTP = [];
 
 		// going through each touristic point
-		foreach($touristicPoints as $touristicPoint) {
+		foreach ($touristicPoints as $touristicPoint) {
 			// getting the category
 			$category = $touristicPoint->category;
 
 			$categoriesWithTP[$category][] = $touristicPoint;
 		}
-		
+
 		return response()->json([
 			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => 'Mostrando todos los puntos turisticos',
@@ -104,13 +118,14 @@ class TouristicPointController extends Controller
 	/**
 	 * Creates a new touristic point
 	 */
-	public function create(Request $request) {
+	public function create(Request $request)
+	{
 
 		// main model to perform DB operations
 		$model = new TouristicPoint();
 
 		// validating fields
-		if(!$request->validate($model::$validation_rules)) {
+		if (!$request->validate($model::$validation_rules)) {
 			return response()->json([
 				NetworkAttributes::STATUS => 'error',
 				NetworkAttributes::MESSAGE => "Algunos campos son invalidos" //TODO: improve it
@@ -124,8 +139,8 @@ class TouristicPointController extends Controller
 		$params = [];
 
 		// generating an array of fields
-		foreach($body as $key => $value) {
-			if(in_array($key, $model::getAllAttributes())){
+		foreach ($body as $key => $value) {
+			if (in_array($key, $model::getAllAttributes())) {
 				$params[$key] = $value;
 			}
 		}
@@ -142,12 +157,13 @@ class TouristicPointController extends Controller
 	/**
 	 * Updates a touristic point
 	 */
-	public function update(Request $request) {
-		
+	public function update(Request $request)
+	{
+
 		// main model to perform DB operations
 		$model = TouristicPoint::find($request->id);
 
-		if(!$model) {
+		if (!$model) {
 			return response()->json([
 				NetworkAttributes::STATUS => 'error',
 				NetworkAttributes::MESSAGE => 'Punto turístico no encontrado'
@@ -155,7 +171,7 @@ class TouristicPointController extends Controller
 		}
 
 		// validating fields
-		if(!$request->validate(TouristicPoint::$validation_rules)) {
+		if (!$request->validate(TouristicPoint::$validation_rules)) {
 			return response()->json([
 				NetworkAttributes::STATUS => 'error',
 				NetworkAttributes::MESSAGE => "Algunos campos son invalidos" //TODO: improve it
@@ -169,8 +185,8 @@ class TouristicPointController extends Controller
 		$params = [];
 
 		// generating an array of fields
-		foreach($body as $key => $value) {
-			if(in_array($key, TouristicPoint::getAllAttributes())){
+		foreach ($body as $key => $value) {
+			if (in_array($key, TouristicPoint::getAllAttributes())) {
 				$params[$key] = $value;
 			}
 		}
@@ -187,7 +203,8 @@ class TouristicPointController extends Controller
 	/**
 	 * Loads all the touristic points with a reduced set of attributes
 	 */
-	public function loadTouristicPoints() {
+	public function loadTouristicPoints()
+	{
 
 		$model = new TouristicPoint();
 		$touristicPoints = $model->all();
@@ -202,12 +219,13 @@ class TouristicPointController extends Controller
 	/**
 	 * Loads a touristic point with all its attributes
 	 */
-	public function loadById($id) {
+	public function loadById($id)
+	{
 
 		$model = new TouristicPoint();
 		$touristicPoint = $model->find($id);
 
-		if(!$touristicPoint) {
+		if (!$touristicPoint) {
 			return response()->json([
 				NetworkAttributes::STATUS => 'error',
 				NetworkAttributes::MESSAGE => 'Punto turístico no encontrado'
@@ -224,11 +242,12 @@ class TouristicPointController extends Controller
 	/**
 	 * Read a list of touristic points that are categorized as wonder
 	 */
-	public function readMaravillas() {
+	public function readMaravillas()
+	{
 		$model = new TouristicPoint();
 		$touristicPoints = $model->where(Attributes::IS_WONDER, '=', true)->get();
 
-		if(!$touristicPoints) {
+		if (!$touristicPoints) {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
 				NetworkAttributes::MESSAGE => "No se han encontrado puntos turísticos"
@@ -245,11 +264,12 @@ class TouristicPointController extends Controller
 	/**
 	 * Read a touristic point by ID
 	 */
-	public function readBySlug(string $slug) {
+	public function readBySlug(string $slug)
+	{
 		$model = new TouristicPoint();
 		$touristicPoints = $model->where(Attributes::SLUG, '=', $slug)->get();
 
-		if(!$touristicPoints || count($touristicPoints) == 0) {
+		if (!$touristicPoints || count($touristicPoints) == 0) {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
 				NetworkAttributes::MESSAGE => "No se ha encontrado el punto turístico"
@@ -266,11 +286,12 @@ class TouristicPointController extends Controller
 	/**
 	 *  Start loading a list of reservables touristic points
 	 */
-	public function readReservables() {
+	public function readReservables()
+	{
 		$model = new TouristicPoint();
 		$touristicPoints = $model->where(Attributes::ALLOW_RESERVATION, '=', true)->get();
 
-		if(!$touristicPoints || count($touristicPoints) == 0) {
+		if (!$touristicPoints || count($touristicPoints) == 0) {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
 				NetworkAttributes::MESSAGE => "No se han encontrado puntos turísticos"

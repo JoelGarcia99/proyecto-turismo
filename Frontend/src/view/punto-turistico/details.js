@@ -11,8 +11,7 @@ import {Carousel} from 'react-responsive-carousel';
 import useWindowDimensions from '../../hooks/hooks.windowDimension';
 import WideDescriptorComponent from '../home/component.wideDescriptor';
 import morcillaImage from "../../assets/others/FESTIVAL DE LA MORCILLA PARROQUIA ABDÓN CALDERÓN.webp";
-import hotelImage  from "../../assets/others/HOTEL CEIBO REAL.webp";
-import arqueoImage from "../../assets/others/PARQUE ARQUEOLÓGICO  HOJAS JABONCILLO.webp";
+import {toast, ToastContainer} from 'react-toastify';
 
 const PuntoturisAbout = () => {
 
@@ -31,7 +30,7 @@ const PuntoturisAbout = () => {
 
 			// if loading is false and there is no data, then it's a 404 error
 			setLoading(false);
-		})
+		});
 	}, [slug]);
 
 	// Image height neceesary since background is floating
@@ -39,11 +38,20 @@ const PuntoturisAbout = () => {
 	// margin after the main background image
 	const globalMarginTop = "0vh";
 
+	// border radius for all the components here
 	const borderRadius = "1rem";
 
 	if (isLoading) {
 		return <h1>Loading</h1>;
 	}
+
+	toast('Crack', {
+		position: "top-right",
+		autoClose: 5000,
+		hideProgressBar: false,
+	});
+
+	return <ToastContainer />;
 
 	return <div className="puntoturis-about">
 
@@ -52,7 +60,12 @@ const PuntoturisAbout = () => {
 		/>
 		{/* Background image	    */}
 		<main
-			style={{top: "0", height: imageHeight, zIndex: "-1", backgroundImage: `url(${punto.main_image})`}}
+			style={{
+				top: "0",
+				height: imageHeight,
+				zIndex: "-1",
+				backgroundImage: `url(${process.env.REACT_APP_NG_API_HOST + punto.main_image_url})`
+			}}
 			className="w-full fixed bg-cover py-3 px-4"
 		>
 		</main>
@@ -107,19 +120,25 @@ const PuntoturisAbout = () => {
 				</div>
 			</div>
 			{/* Image Gallery */}
-			<div id="img-gallery" className="bg-white">
-				<h1 className="text-xl px-8 font-bold uppercase my-2">Imágenes</h1>
-				<div id="carrousel py-4 w-full">
-					<GalleryCarrousel />
+			{
+				punto?.images &&
+				<div id="img-gallery" className="bg-white">
+					<h1 className="text-xl px-8 font-bold uppercase my-2">Imágenes</h1>
+					<div id="carrousel py-4 w-full">
+						<GalleryCarrousel imagesUrls={punto.images} />
+					</div>
 				</div>
-			</div>
+			}
 			{/* Video Gallery */}
-			<div id="vid-gallery" style={{marginTop: "4rem"}}>
-				<h1 className="text-xl px-8 font-bold uppercase my-2">videos</h1>
-				<div id="carrousel py-4 w-full">
-					<GalleryCarrousel />
+			{
+				punto?.videos &&
+				<div id="vid-gallery" style={{marginTop: "4rem"}}>
+					<h1 className="text-xl px-8 font-bold uppercase my-2">videos</h1>
+					<div id="carrousel py-4 w-full">
+						<GalleryCarrousel imagesUrls={punto.videos} />
+					</div>
 				</div>
-			</div>
+			}
 			{/* Description content */}
 			<WideDescriptorComponent
 				title="Plato típico"
@@ -134,14 +153,8 @@ const PuntoturisAbout = () => {
 	</div>
 }
 
-const GalleryCarrousel = () => {
-
-	function importAll(r) {
-		return r.keys().map(r);
-	}
-
+const GalleryCarrousel = ({imagesUrls}) => {
 	const {width} = useWindowDimensions();
-	const images = importAll(require.context('../../assets/header/', false, /\.(svg|webp)$/));
 
 	return <div className="mx-auto flex-col items-center justify-center" style={{width: "90%"}}>
 		<Carousel
@@ -157,9 +170,9 @@ const GalleryCarrousel = () => {
 
 		>
 			{
-				images.map((image, index) => {
+				imagesUrls.map((image, index) => {
 					return <div key={index} className="px-2">
-						<img src={image} className="object-cover rounded-xl" alt="" />
+						<img src={process.env.REACT_APP_NG_API_HOST + image} className="object-cover rounded-xl" alt="" />
 					</div>
 
 				})}

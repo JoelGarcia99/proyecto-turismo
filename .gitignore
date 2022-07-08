@@ -4,3 +4,5 @@ data-volume/
 Backend/public/images/
 Backend/vendor/
 Frontend/node_modules/
+
+**/**/node_modules

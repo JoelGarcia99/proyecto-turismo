@@ -4,6 +4,9 @@ namespace App\Enums\Database;
 
 enum Attributes: string
 {
+	// Query params
+	const IS_MAIN_IMAGE = 'is_main_image';
+
 	// Common
 	const ID = '_id';
 	const CREATED_AT = 'created_at';
@@ -32,5 +35,6 @@ enum Attributes: string
 	const ALLOW_RESERVATION = 'allow_reservation';
 	const IS_WONDER = 'is_wonder';
 	const SHORT_DESCRIPTION = 'short_description';
+	const IMAGES = 'images';
 
 }

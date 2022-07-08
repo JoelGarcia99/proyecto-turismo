@@ -10,7 +10,15 @@ import {useState} from "react";
  * @param {boolean} circular - whether the image should be circular or not
  * @param {boolean} maxWidth - if the image should expand all the width of the available space
  */
-const ImageUploader = ({initialUrl = "", circular=true, panelWidth="100%", panelHeight="10rem", handleImageUpload}) => {
+const ImageUploader = ({
+	initialUrl = null,
+	showButtons = true,
+	circular = true,
+	panelWidth = "100%",
+	panelHeight = "10rem",
+	showTitle = true,
+	handleImageUpload
+}) => {
 
 	const [image, setImage] = useState({url: initialUrl});
 
@@ -34,7 +42,9 @@ const ImageUploader = ({initialUrl = "", circular=true, panelWidth="100%", panel
 
 	return <div className="col-span-12">
 		<label className="block text-sm font-medium text-gray-700" htmlFor="name">
-			Subirimagen
+			{
+				showTitle && "Subir imagen"
+			}
 		</label>
 		{/* This image should be rounded */}
 		{
@@ -43,19 +53,21 @@ const ImageUploader = ({initialUrl = "", circular=true, panelWidth="100%", panel
 			<img
 				src={image.url}
 				alt=""
-				className={`animate__animated animate__fadeIn my-4 ${circular? "rounded-full":"rounded-xl"}`}
-				style={{height: circular?"10rem":panelHeight, width: circular?"10rem":panelWidth, objectFit: "cover"}}
+				className={`animate__animated animate__fadeIn my-4 ${circular ? "rounded-full" : "rounded-xl"}`}
+				style={{height: circular ? "10rem" : panelHeight, width: circular ? "10rem" : panelWidth, objectFit: "cover"}}
 			/>
 		}
-		<input
-			type="file"
-			name="image_url"
-			onChange={handleImageChange}
-			className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-		/>
+		{showButtons &&
+			<input
+				type="file"
+				name="image_url"
+				onChange={handleImageChange}
+				className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+			/>
+		}
 		{
-			image.file &&
-			<button onClick={()=>handleImageUpload(image)} className="bg-green-700 text-white rounded my-4 px-4 py-2">
+			(showButtons && image.file) &&
+			<button onClick={() => handleImageUpload(image)} className="bg-green-700 text-white rounded my-4 px-4 py-2">
 				<FontAwesomeIcon icon={faUpload} />&nbsp;Subir
 			</button>
 		}
