@@ -78,7 +78,7 @@ const PuntoturisAbout = () => {
 				<FontAwesomeIcon icon={faLocationDot} />
 				&nbsp;&nbsp;{punto.address}
 			</small>
-			<hr 
+			<hr
 				style={{
 					backgroundColor: "red",
 					border: "none",
@@ -152,14 +152,17 @@ const PuntoturisAbout = () => {
 				</div>
 			}
 			{/* Description content */}
-			<WideDescriptorComponent
-				title="Plato típico"
-				subtitle={punto.typical_plate}
-				imageLeft={false}
-				imageUrl={(punto?.typical_plate_image_url) && (process.env.REACT_APP_NG_API_HOST + punto.typical_plate_image_url)}
-				showButton={false}
-				details={punto.typical_plate_description}
-			/>
+			{
+				punto.typical_plate &&
+				<WideDescriptorComponent
+					title="Plato típico"
+					subtitle={punto.typical_plate}
+					imageLeft={false}
+					imageUrl={(punto?.typical_plate_image_url) && (process.env.REACT_APP_NG_API_HOST + punto.typical_plate_image_url) || ""}
+					showButton={false}
+					details={punto?.typical_plate_description ?? ""}
+				/>
+			}
 			{/* Footer */}
 			<SessionFooterComponent />
 		</div>

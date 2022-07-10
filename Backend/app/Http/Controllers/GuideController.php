@@ -53,7 +53,7 @@ class GuideController extends Controller
 		}
 
 		// validating schedules. By default, at schedule should be at least 45 minutes longer
-		$schedules = $params[Attributes::SCHEDULES];
+		$schedules = isset($params[Attributes::SCHEDULES])? $params[Attributes::SCHEDULES] : [];
 		$error_message = DateUtilities::validateMinRangeBetweenDates($schedules);
 
 		// If there is any string, then it means that there was an error
@@ -67,17 +67,18 @@ class GuideController extends Controller
 		// sorting array before updating
 		if (count($schedules) > 1) {
 			// sorting the array by start range
-			usort($dates, function ($a, $b) {
+			usort($schedules, function ($a, $b) {
 				return strtotime($a[Attributes::START_RANGE]) - strtotime($b[Attributes::START_RANGE]);
 			});
 		}
 
 		// setting the DATA
-		$model->create($params);
+		$newGuide = $model->create($params);
 
 		return response()->json([
 			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => "Guide created successfully",
+			NetworkAttributes::DATA => $newGuide
 		], NetworkAttributes::STATUS_200);
 	}
 
@@ -125,7 +126,7 @@ class GuideController extends Controller
 		}
 
 		// validating schedules. By default, at schedule should be at least 45 minutes longer
-		$schedules = $params[Attributes::SCHEDULES];
+		$schedules = isset($params[Attributes::SCHEDULES])? $params[Attributes::SCHEDULES] : [];
 		$error_message = DateUtilities::validateMinRangeBetweenDates($schedules);
 
 		// If there is any string, then it means that there was an error
@@ -139,7 +140,7 @@ class GuideController extends Controller
 		// sorting array before updating
 		if (count($schedules) > 1) {
 			// sorting the array by start range
-			usort($dates, function ($a, $b) {
+			usort($schedules, function ($a, $b) {
 				return strtotime($a[Attributes::START_RANGE]) - strtotime($b[Attributes::START_RANGE]);
 			});
 		}
@@ -150,17 +151,17 @@ class GuideController extends Controller
 
 		if ($guide) {
 			// updating the guide
-			$guide->update($params);
+			$newGuide = $guide->update($params);
 
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
-				NetworkAttributes::MESSAGE => "Guide updated successfully",
-				NetworkAttributes::DATA => $guide
+				NetworkAttributes::MESSAGE => "Guia actualizado correctamente",
+				NetworkAttributes::DATA => $newGuide
 			], NetworkAttributes::STATUS_200);
 		} else {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
-				NetworkAttributes::MESSAGE => "Guide not found"
+				NetworkAttributes::MESSAGE => "Guia no encontrado"
 			], NetworkAttributes::STATUS_404);
 		}
 	}
@@ -219,7 +220,7 @@ class GuideController extends Controller
 		}
 
 		// creating the path
-		$image_path = fileuploader::uploadimage($image, 'images/guides/');
+		$image_path = FileUploader::uploadImage($image, 'images/guides/');
 
 		// validating the user is not uploading an invalid format
 		if ($image_path === fileuploader::INVALID_EXTENSION_CODE) {
@@ -238,19 +239,19 @@ class GuideController extends Controller
 			if ($guide->image_url != null && $guide->image_url != "") {
 				unlink(public_path() . "/images/guides/" . $guide->image_url);
 			}
-		} catch (exception $e) {
+		} catch (exception) {
 
 		}
 
 		// updating the IMAGE path
 		$guide->update([
-			attributes::IMAGE_URL=> $image_path
+			attributes::IMAGE_URL=> "/images/guides/".$image_path
 		]);
 
 		return response()->json([
-			networkattributes::STATUS => networkattributes::STATUS_SUCCESS,,
-			networkattributes::MESSAGE => "IMAGE updated successfully",
-			networkattributes::DATA => $image_path
+			networkattributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			networkattributes::MESSAGE => "Imagen actualizada correctamente",
+			networkattributes::DATA => "/images/guides/".$image_path
 		], networkattributes::STATUS_200);
 	}
 

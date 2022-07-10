@@ -87,7 +87,7 @@ export const startRegisteringGuide = (guide, isUpdate = false, callback = () => 
 			url += `${guide._id}`;
 		}
 
-		await customHTTPRequest(dispatch, url, {
+		const response = await customHTTPRequest(dispatch, url, {
 			method: isUpdate ? 'PUT' : 'POST',
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -95,8 +95,11 @@ export const startRegisteringGuide = (guide, isUpdate = false, callback = () => 
 			body: JSON.stringify(guide)
 		}, true);
 
-		// Custom piece of code to execute if this ends properly
-		callback();
+		if (response !== {} && !isUpdate) {
+			// Custom piece of code to execute if this ends properly
+			callback(response.data);
+		}
+
 	}
 };
 
@@ -122,7 +125,7 @@ export const startDeletingGuide = (id, callback = () => {}) => {
 		}, true);
 
 		// executing custom piece of code after registering
-		if(res !== {}) {
+		if (res !== {}) {
 			callback();
 		}
 	}
@@ -155,7 +158,7 @@ export const startUploadingImage = (guideId, image, callback = () => {}) => {
 		}, true);
 
 		// executing custom piece of code after registering
-		if(res !== {}) {
+		if (res !== {}) {
 			callback(res.image);
 		}
 	}

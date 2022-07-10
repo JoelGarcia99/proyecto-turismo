@@ -8,6 +8,11 @@ enum Attributes: string
 	const IS_MAIN_IMAGE = 'is_main_image';
 	const IS_TYPICAL_PLATE_IMAGE = 'is_typical_plate_image';
 
+	// Reservation
+	const POINT = 'point';
+	const GUIDE = 'guide';
+	const AFORUM = 'aforum';
+
 	// Common
 	const ID = '_id';
 	const CREATED_AT = 'created_at';

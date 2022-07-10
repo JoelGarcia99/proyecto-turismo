@@ -9,6 +9,7 @@ import {allRoutes} from '../../../router/routes';
 import {startDeletingGuide, startRegisteringGuide, startUploadingImage} from '../../../redux/actions/guideman/action.guideman';
 import {add, format} from 'date-fns';
 import ImageUploader from '../../../components/images/component.uploader';
+import {ToastContainer} from 'react-toastify';
 
 
 const ManageGuideCreate = ({initS}) => {
@@ -20,7 +21,7 @@ const ManageGuideCreate = ({initS}) => {
 	// WARNING: do not use this for validation since this is never null or undefined
 	const initialState = {...initS};
 
-	const initialImageUrl = initS?.image_url? `${process.env.REACT_APP_NG_API_HOST}/images/guides/${initS.image_url}`:"";
+	const initialImageUrl = initS?.image_url? `${process.env.REACT_APP_NG_API_HOST}${initS.image_url}`:"";
 
 	// The image will not be uploaded to the server with all the other params
 	delete initialState.image_url;
@@ -63,8 +64,8 @@ const ManageGuideCreate = ({initS}) => {
 		e.preventDefault();
 
 		dispatch(startRegisteringGuide(
-			{_id: initialState?._id, ...data, schedules}, !!initS, () => {
-				navigator(allRoutes.manage_guide);
+			{_id: initialState?._id, ...data, schedules}, !!initS, (guide) => {
+				navigator(allRoutes.manage_guide_update+guide._id);
 			}
 		));
 	}
@@ -249,6 +250,7 @@ const ManageGuideCreate = ({initS}) => {
 
 			</div>
 		</div>
+		<ToastContainer />
 	</form>
 }
 

@@ -9,6 +9,7 @@ use Carbon\Carbon;
 class DateUtilities
 {
 	const HOUR_MILLISECONDS = 3600 * 1000; // 1 hour in milliseconds
+	const QUARTER_TO_HOUR_MILLISECONDS = 45 * 60 * 1000; // 45 minutes in milliseconds
 	const REST_BETWEEN_SHCEDULES_MILLISECONDS = 15 * 60 * 1000; // 15 minutes
 	const MAX_DURATION_OF_SCHEDULES_MILLISECONDS = 120 * 60 * 1000; // 2 hours in milliseconds
 
@@ -41,14 +42,14 @@ class DateUtilities
 
 			// Validating that the start date and end date correspond to the same day
 			// TODO: simplify this
-			if(Carbon::parse($start_date)->format('Y-m-d') != Carbon::parse($end_date)->format('Y-m-d')) {
-				return 'Las fechas de inicio y fin de las horas de trabajo no corresponden al mismo día';
-			}
+			// if(Carbon::parse($start_date)->format('Y-m-d') != Carbon::parse($end_date)->format('Y-m-d')) {
+			// 	return 'Las fechas de inicio y fin de las horas de trabajo no corresponden al mismo día';
+			// }
 
 			// validating that the range is at least one hour. This implicity will also validates
 			// that the start date is before the end date
-			if ($end_date - $start_date < self::HOUR_MILLISECONDS) {
-				return 'El rango de cada horario debe ser de al menos una hora.';
+			if ($end_date - $start_date < self::QUARTER_TO_HOUR_MILLISECONDS) {
+				return 'El rango de cada horario debe ser de al menos 45 minutos.';
 			}
 
 			// Validating the range is not too long
@@ -63,7 +64,7 @@ class DateUtilities
 
 			// validating schedules are not overlapping each other & that the next range starts with a proper rest 
 			// between the current range and the next range
-			if (count($dates) > 1) {
+			if (count($dates) > 1 && $i < count($dates) - 1) {
 				if ($end_date + self::REST_BETWEEN_SHCEDULES_MILLISECONDS >= $dates[$i + 1][Attributes::START_RANGE]) {
 					return 'Los horarios de cada tour no pueden superponerse, y debe haber una pausa de 15 minutos entre ellos.';
 				}

@@ -13,6 +13,7 @@
         "laravel/passport": "^10.4",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
+        "laraveles/spanish": "^1.5",
         "nesbot/carbon": "^2.58"
     },
     "require-dev": {

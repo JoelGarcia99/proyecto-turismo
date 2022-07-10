@@ -9,9 +9,10 @@ import useWindowDimensions from '../../hooks/hooks.windowDimension';
  * @param {string} imageUrl - The image url of the element.
  */
 const WideDescriptorComponent = ({
+	identification = null,
 	buttonText = null,
 	isTitleInside = false,
-	targetRoute = "#",
+	onClick = ()=>{},
 	showButton = true,
 	imageLeft = true,
 	title,
@@ -44,6 +45,7 @@ const WideDescriptorComponent = ({
 			{
 				showButton &&
 				<button
+					onClick={()=>onClick(identification)}
 					className={`px-2 py-2 bg-transparent border-2 border-sky-500 hover:text-white w-full md:w-32 hover:bg-sky-600 text-black rounded-3xl font-bold shadow-2xl ${imageLeft ? "self-end" : "self-start"}`}
 				>{buttonText || "Ver detalles"}</button>
 			}
@@ -69,7 +71,6 @@ const WideDescriptorComponent = ({
 }
 
 WideDescriptorComponent.propTypes = {
-	title: PropTypes.string.isRequired,
 	targetRoute: PropTypes.string,
 	details: PropTypes.string.isRequired,
 	imageUrl: PropTypes.string.isRequired,
