@@ -12,6 +12,7 @@ import {useState} from "react";
  */
 const ImageUploader = ({
 	initialUrl = null,
+	title="Subir imagen",
 	showButtons = true,
 	circular = true,
 	panelWidth = "100%",
@@ -43,7 +44,7 @@ const ImageUploader = ({
 	return <div className="col-span-12">
 		<label className="block text-sm font-medium text-gray-700" htmlFor="name">
 			{
-				showTitle && "Subir imagen"
+				showTitle && title
 			}
 		</label>
 		{/* This image should be rounded */}
@@ -67,7 +68,10 @@ const ImageUploader = ({
 		}
 		{
 			(showButtons && image.file) &&
-			<button onClick={() => handleImageUpload(image)} className="bg-green-700 text-white rounded my-4 px-4 py-2">
+			<button 
+				onClick={(e) => {e.preventDefault();handleImageUpload(image)}}
+				className="bg-green-700 text-white rounded my-4 px-4 py-2"
+			>
 				<FontAwesomeIcon icon={faUpload} />&nbsp;Subir
 			</button>
 		}

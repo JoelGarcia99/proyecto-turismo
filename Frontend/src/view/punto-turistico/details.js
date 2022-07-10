@@ -74,9 +74,21 @@ const PuntoturisAbout = () => {
 			style={{backgroundColor: "rgba(20, 20, 20, 0.8)"}}
 		>
 			<h1 className="mx-auto text-2xl font-bold uppercase">{punto.name}</h1>
-			<small className="text-xs"><FontAwesomeIcon icon={faLocationDot} />&nbsp;&nbsp;{punto.address}</small>
-			<hr style={{backgroundColor: "red", border: "none", borderTop: "1px solid white"}} />
-			<br /><span style={{marginTop: "10rem", textAlign: "justify !important"}} >{punto.short_description}</span>
+			<small className="text-xs">
+				<FontAwesomeIcon icon={faLocationDot} />
+				&nbsp;&nbsp;{punto.address}
+			</small>
+			<hr 
+				style={{
+					backgroundColor: "red",
+					border: "none",
+					borderTop: "1px solid white"
+				}}
+			/>
+			<br />
+			<span style={{marginTop: "10rem", textAlign: "justify !important"}} >
+				{punto.short_description}
+			</span>
 		</div>
 
 		<div
@@ -95,7 +107,8 @@ const PuntoturisAbout = () => {
 		<div className="bg-white">
 			<div className="flex flex-col lg:flex-row w-full px-4 py-8" style={{marginTop: "1rem"}}>
 				<div
-					className="prose-lg w-full lg:w-3/5 px-8 animate__animated animate__fadeInLeft" style={{textAlign: "justify"}}
+					className="prose-lg w-full lg:w-3/5 px-8 animate__animated animate__fadeInLeft"
+					style={{textAlign: "justify"}}
 					dangerouslySetInnerHTML={{__html: sanitizeHtml(punto.description)}}
 				></div>
 				<div className="nx-20 flex flex-col">
@@ -141,10 +154,11 @@ const PuntoturisAbout = () => {
 			{/* Description content */}
 			<WideDescriptorComponent
 				title="Plato típico"
+				subtitle={punto.typical_plate}
 				imageLeft={false}
-				imageUrl={morcillaImage}
+				imageUrl={(punto?.typical_plate_image_url) && (process.env.REACT_APP_NG_API_HOST + punto.typical_plate_image_url)}
 				showButton={false}
-				details="La maravilla es una experiencia que te permite disfrutar de una comida que no te parece familiar, pero que te da la oportunidad de disfrutar de una experiencia que te hará sentir muy feliz. La maravilla es una experiencia que te permite disfrutar de una comida que no te parece familiar, pero que te da la oportunidad de disfrutar de una experiencia que te hará sentir muy feliz. "
+				details={punto.typical_plate_description}
 			/>
 			{/* Footer */}
 			<SessionFooterComponent />

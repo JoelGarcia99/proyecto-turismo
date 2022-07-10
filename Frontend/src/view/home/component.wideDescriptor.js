@@ -8,7 +8,17 @@ import useWindowDimensions from '../../hooks/hooks.windowDimension';
  * @param {string} detail - The detail of the element.
  * @param {string} imageUrl - The image url of the element.
  */
-const WideDescriptorComponent = ({buttonText = null, isTitleInside = false, title, targetRoute = "#", showButton = true, details, imageUrl, imageLeft = true}) => {
+const WideDescriptorComponent = ({
+	buttonText = null,
+	isTitleInside = false,
+	targetRoute = "#",
+	showButton = true,
+	imageLeft = true,
+	title,
+	subtitle="",
+	details,
+	imageUrl
+}) => {
 	const backgroundColor = "#D9D9D9";
 
 	const {width} = useWindowDimensions();
@@ -18,13 +28,18 @@ const WideDescriptorComponent = ({buttonText = null, isTitleInside = false, titl
 		imageLeft = true;
 	}
 
-	const imageDiv = <img src={imageUrl} className={`flex-1 h-full rounded-2xl h-44 sm:h-80 object-cover`} />;
+	const imageDiv = <img 
+		src={imageUrl}
+		className={`flex-1 h-full rounded-2xl h-44 sm:h-80 object-cover`}
+	/>;
+
 	const detailDiv =
 		<div className="flex flex-col px-3 py-3 w-full lg:w-1/3 justify-evenly align-center">
 			{
 				isTitleInside &&
 				<h1 className="text-xl py-2 uppercase font-bold">{title}</h1>
 			}
+			<h2 className="font-bold">{subtitle}</h2>
 			<span>{details}</span>
 			{
 				showButton &&

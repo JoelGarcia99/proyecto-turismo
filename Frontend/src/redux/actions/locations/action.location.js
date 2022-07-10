@@ -7,7 +7,13 @@ import types from "../../types";
  * uploads an image to the server
  * @param {File} image - the image to upload
  */
-export const startUploadingImage = (id, image, isMainImage = true, callback = () => {}) => {
+export const startUploadingImage = (
+	id,
+	image,
+	isMainImage = true,
+	isTypicalPlateImage=false,
+	callback = () => {}
+) => {
 	return async (dispatch, state) => {
 		const {token} = state().auth;
 
@@ -15,9 +21,8 @@ export const startUploadingImage = (id, image, isMainImage = true, callback = ()
 
 		// if it is not the main image then it means that it needs to be pushed with the already
 		// loaded images
-		if (isMainImage) {
-			url += `?is_main_image=true`;
-		}
+		url += `?is_main_image=${isMainImage? "true" : "false"}`;
+		url += `&is_typical_plate_image=${isTypicalPlateImage? "true" : "false"}`;
 
 		const formData = new FormData();
 		formData.append('image', image);
@@ -39,14 +44,6 @@ export const startUploadingImage = (id, image, isMainImage = true, callback = ()
 	}
 }
 
-// export const startFetchingWithCategories = () => {
-// 	return async (dispatch) => {
-//
-//
-//
-// 	}
-// }
-//
 export const startFetchingReservables = (callback = (points) => {}) => {
 	return async (dispatch, state) => {
 

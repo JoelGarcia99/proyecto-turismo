@@ -6,6 +6,7 @@ enum Attributes: string
 {
 	// Query params
 	const IS_MAIN_IMAGE = 'is_main_image';
+	const IS_TYPICAL_PLATE_IMAGE = 'is_typical_plate_image';
 
 	// Common
 	const ID = '_id';
@@ -36,5 +37,7 @@ enum Attributes: string
 	const IS_WONDER = 'is_wonder';
 	const SHORT_DESCRIPTION = 'short_description';
 	const IMAGES = 'images';
-
+	const TYPICAL_PLATE = 'typical_plate';
+	const TYPICAL_PLATE_DESCRIPTION = 'typical_plate_description';
+	const TYPICAL_PLATE_IMAGE_URL = 'typical_plate_image_url';
 }

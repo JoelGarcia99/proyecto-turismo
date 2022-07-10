@@ -63,8 +63,11 @@ class TouristicPointController extends Controller
 		try {
 			// It is not needed for the other images since if two identicals images are uploaded
 			// they will just be uploaded together with different IDs.
-			if ($touristicPoint->main_image != null && $touristicPoint->main_image != "") {
+			if ($isMainImage && $touristicPoint->main_image != null && $touristicPoint->main_image != "") {
 				unlink(public_path() . "/images/touristic_points/" . $touristicPoint->main_image);
+			}
+			else if($request->query(Attributes::IS_TYPICAL_PLATE_IMAGE) == 'true') {
+				unlink(public_path() . "/images/touristic_points/" . $touristicPoint->typical_plate_image);
 			}
 		} catch (Exception) { }
 
@@ -73,7 +76,12 @@ class TouristicPointController extends Controller
 			$touristicPoint->update([
 				Attributes::MAIN_IMAGE_URL => "/images/touristic_points/" . $image_path
 			]);
-		} else {
+		} else if($request->query(attributes::IS_TYPICAL_PLATE_IMAGE, 'false')=='true') {
+			$touristicPoint->update([
+				Attributes::TYPICAL_PLATE_IMAGE_URL => "/images/touristic_points/" . $image_path
+			]);
+		}
+		else {
 			// Appending the new image to the previous ones
 			$imageList = $touristicPoint->images ?? [];
 			$imageList[] = "/images/touristic_points/" . $image_path;

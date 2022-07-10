@@ -24,7 +24,10 @@ class TouristicPoint extends Base
 		Attributes::CATEGORY => 'string',
 		Attributes::IS_WONDER => 'boolean',
 		Attributes::MAIN_IMAGE_URL => 'string|max:255',
-		Attributes::ALLOW_RESERVATION => 'boolean'
+		Attributes::ALLOW_RESERVATION => 'boolean',
+		Attributes::TYPICAL_PLATE => 'string|max:500',
+		Attributes::TYPICAL_PLATE_DESCRIPTION => 'string|max:3000',
+		Attributes::TYPICAL_PLATE_IMAGE_URL => 'string|max:255',
 	];
 
 	/**
