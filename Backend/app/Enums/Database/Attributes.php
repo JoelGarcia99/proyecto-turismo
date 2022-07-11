@@ -9,6 +9,11 @@ enum Attributes: string
 	const IS_TYPICAL_PLATE_IMAGE = 'is_typical_plate_image';
 	const POINT_ID = 'point_id';
 
+	// Reviews
+	const REVIEW_SCORE = 'review_score';
+	const REVIEW_COMMENT = 'review_comment';
+	const AUTHOR_ID = 'author_id';
+
 	// Reservation
 	const POINT = 'point';
 	const GUIDE = 'guide';

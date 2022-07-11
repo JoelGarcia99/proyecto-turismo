@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TouristicPointController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +50,8 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::POST('/manage/guide/', [GuideController::class, 'create']);
 	Route::POST('/manage/guide/{id}/upload-image', [GuideController::class, 'updateImage']);
 
+	// reservations
+	Route::POST('/review/', [ReviewController::class, 'create']);
 });
 
 // Public routes

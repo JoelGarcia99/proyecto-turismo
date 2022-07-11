@@ -15,6 +15,7 @@ import {toast, ToastContainer} from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import SpinLoader from '../../components/loader/SpinLoader';
+import Reviews from './components/component.reviews';
 
 const PuntoturisAbout = () => {
 
@@ -23,6 +24,7 @@ const PuntoturisAbout = () => {
 	const [punto, setPunto] = useState({});
 
 	useEffect(() => {
+		// fetching data of the touristic point
 		fetch(`${process.env.REACT_APP_NG_API_HOST}/api/punto-turistico/${slug}`).then(async (response) => {
 			const jsonRes = await response.json();
 
@@ -163,6 +165,8 @@ const PuntoturisAbout = () => {
 					details={punto?.typical_plate_description ?? ""}
 				/>
 			}
+			<Reviews pointId={punto._id}/>
+			<div className='my-8'></div>
 			{/* Footer */}
 			<SessionFooterComponent />
 		</div>

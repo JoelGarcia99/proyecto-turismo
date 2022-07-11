@@ -8,4 +8,5 @@ enum Collections: string
 	const CATEGORIES = 'portoturismo.categories';
 	const GUIDES = 'portoturismo.guides';
 	const RESERVATIONS = 'portoturismo.reservations';
+	const REVIEWS = 'portoturismo.reviews';
 }

@@ -5,6 +5,7 @@ import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 import {useNavigate} from 'react-router';
 import {allRoutes} from '../../../router/routes';
 import {startDeletingCategory, startRegisteringCategory} from '../../../redux/actions/category/action.category';
+import CustomTextArea from '../../../components/inputs/CustomTextArea';
 
 
 const ManageCategoryCreate = ({initS}) => {
@@ -15,8 +16,6 @@ const ManageCategoryCreate = ({initS}) => {
 	const [data, setData, _] = useCustomForm(initS || {
 		name: "",
 		description: "",
-		target: "",
-		active: false
 	});
 
 	const handleDelete = (e) => {
@@ -56,20 +55,6 @@ const ManageCategoryCreate = ({initS}) => {
 							<div className="px-4 py-5 bg-white sm:p-6">
 								<div className="grid grid-cols-6 gap-6">
 									<div className="col-span-12">
-										<label className="block text-sm font-medium text-gray-700" htmlFor="name">
-											Descripción
-										</label>
-										<input
-											type="text"
-											name="description"
-											required={true}
-											value={data.description}
-											onChange={setData}
-											placeholder="Descripción"
-											className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-										/>
-									</div>
-									<div className="col-span-6 sm:col-span-3">
 										<label htmlFor="cellphone" className="block text-sm font-medium text-gray-700">
 											Título
 										</label>
@@ -86,46 +71,19 @@ const ManageCategoryCreate = ({initS}) => {
 										/>
 									</div>
 
-									<div className="col-span-6 sm:col-span-3">
-										<label htmlFor="last-name" className="block text-sm font-medium text-gray-700">
-											Target
-										</label>
-										<input
-											type="text"
-											name="target"
-											value={data.target}
+									<div className="col-span-12">
+										<CustomTextArea
+											description={"Breve Descripción de la categoría"}
+											title={"Descripción"}
+											name="description"
+											required={true}
+											value={data.description}
 											onChange={setData}
-											placeholder="ejemplo: Punto-turistico"
-											className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+											maxLength={3000}
+											placeholder="Descripción"
 										/>
 									</div>
 									<br />
-									<div className="py-5 col-span-6 bg-white space-y-6 sm:p-6">
-										<fieldset>
-											<div className="space-y-4">
-												<div className="flex items-start">
-													<div className="flex items-center h-5">
-														<input
-															name="active"
-															checked={data.active}
-															onChange={(e) => {
-																setData({target: {value: Boolean(e.target.checked), name: 'active'}});
-															}}
-															type="checkbox"
-															className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-														/>
-													</div>
-													<div className="ml-3 text-sm">
-														<label htmlFor="comments" className="font-medium text-gray-700">
-															Marcar como disponible
-														</label>
-														<p className="text-gray-500">Permitir el uso de esta categoría</p>
-													</div>
-												</div>
-											</div>
-										</fieldset>
-									</div>
-
 								</div>
 							</div>
 						</div>
