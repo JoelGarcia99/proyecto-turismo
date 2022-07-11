@@ -16,5 +16,6 @@ class Guide extends Base
 		Attributes::SCHEDULES => 'array',
 		Attributes::CEDULA => 'string|required|max:10|min:10',
 		Attributes::PHONE => 'string|required|max:10|min:10',
+		Attributes::POINT_ID => 'string'
 	];
 }

@@ -1,15 +1,10 @@
 
-import {faLocationDot, faLocationPin} from '@fortawesome/free-solid-svg-icons';
+import {faSave} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {Carousel} from 'react-responsive-carousel';
-import {useNavigate} from 'react-router';
 import SessionHeaderComponent from '../../components/header/sessionHeaderComponent';
-import SpinLoader from '../../components/loader/SpinLoader';
-import useCustomForm from '../../hooks/useCustomForm';
-import {startFetchingGuides} from '../../redux/actions/guideman/action.guideman';
-import {startFetchingReservables} from '../../redux/actions/locations/action.location';
 import {startSavingReservation} from '../../redux/actions/reservations/action.reservation';
 import {allRoutes} from '../../router/routes';
 import SessionFooterComponent from '../home/component.footer';
@@ -18,17 +13,27 @@ import _GuideSelector from './components/_GuideSelector';
 import _PointSelector from './components/_PointSelector';
 import _ScheduleSelector from './components/_ScheduleSelector';
 import _DateSelector from './components/_DateSelector';
+import CustomTextArea from '../../components/inputs/CustomTextArea';
+import ResponsiveSelect from '../../components/inputs/responsiveSelect';
+import {ToastContainer} from 'react-toastify';
+import {useNavigate} from 'react-router-dom';
 
-const Reservation = ({isUpdate = false}) => {
+const Reservation = () => {
 
 	const dispatch = useDispatch();
 
-	const [status, setStatus] = useState({
-		point: null,
-		date: null,
-		guide: null,
-		schedule: null,
-	});
+	const [status, setStatus] = useState({});
+	const navigator = useNavigate();
+
+	const handleReservationSubmit = ()=>{
+		dispatch(startSavingReservation({
+			...status,
+			point: status.point._id,
+			guide: status.guide._id,
+		}, ()=>{
+			setStatus({});
+		}));
+	}
 
 	function importAll(r) {
 		return r.keys().map(r);
@@ -62,9 +67,56 @@ const Reservation = ({isUpdate = false}) => {
 			<div style={{height: "75vh"}}></div>
 			<_PointSelector status={status} setStatus={setStatus} />
 			<_DateSelector status={status} setStatus={setStatus} />
-			<_GuideSelector status={status} setStatus={setStatus} />
-			<_ScheduleSelector status={status} setStatus={setStatus} />
+			<div className="flex flex-row flex-wrap justify-evenly py-4">
+				{
+					status.point && status.date &&
+					<_GuideSelector status={status} setStatus={setStatus} />
+				}
+				{
+					status.guide &&
+					<div className='flex flex-col justify-between w-2/6'>
+						<h1 className="text-xl font-bold px-4 my-4"></h1>
+						<_ScheduleSelector status={status} setStatus={setStatus} />
+						<ResponsiveSelect
+							name="aforum"
+							title={"Aforo"}
+							setData={(value) => setStatus({...status, aforum: value.target.value})}
+							data={[
+								{value: "15_20", label: "15 a 20 personas"},
+								{value: "20_30", label: "20 a 30 personas"},
+								{value: "30_40", label: "30 a 40 personas"},
+								{value: "40_50", label: "40 a 50 personas"},
+							]}
+							displayProp={'label'}
+							valueProp={'value'}
+						/>
+						<CustomTextArea
+							title={"Descripción"}
+							name={"description"}
+							placeholder={"Establezca el proposito de la reserva"}
+							value={status.description}
+							onChange={(value) => setStatus({...status, description: value.target.value})}
+							description={"Proposito de la reserva"}
+							maxLength={2000}
+						/>
+					</div>
+				}
+			</div>
+			{
+				status.res_schedule &&
+				<div className='flex flex-row justify-end px-16'>
+					<button
+						onClick={handleReservationSubmit}
+						className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full right-10 flex items-center justify-center my-4"
+					>
+						<FontAwesomeIcon icon={faSave} />
+						&nbsp;&nbsp;
+						Agendar
+					</button>
+				</div>
+			}
 			<SessionFooterComponent />
+			<ToastContainer />
 		</div>
 	);
 }

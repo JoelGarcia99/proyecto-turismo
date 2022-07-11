@@ -8,7 +8,7 @@
  * @param {string} displayProp - the property name to display in the select
  * @param {string} valueProp - the property name to use as value in the select
  */
-const ResponsiveSelect = ({title, name, setData, data, displayProp, valueProp }) => {
+const ResponsiveSelect = ({title, name, setData, data, displayProp, valueProp, formater=e=>e, customDisplay}) => {
 	return <div className="col-span-6 sm:col-span-3">
 		<label htmlFor="country" className="block text-sm font-medium text-gray-700">
 			{title}
@@ -21,7 +21,7 @@ const ResponsiveSelect = ({title, name, setData, data, displayProp, valueProp })
 			{
 				data?.map((cat, index) => {
 					return <option value={cat[valueProp]} key={index}>
-						{cat[displayProp]}
+						{customDisplay?customDisplay(cat) : formater(cat[displayProp])}
 					</option>
 				})
 			}

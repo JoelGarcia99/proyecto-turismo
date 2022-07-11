@@ -1,31 +1,40 @@
 import {format} from "date-fns"
+import {useEffect} from "react";
+import ResponsiveSelect from "../../../components/inputs/responsiveSelect";
 
 const _ScheduleSelector = ({status, setStatus}) => {
 
-	if (status.guide && status.schedule) {
+	let todaySchedules = [];
 
+	if (status.guide.schedules) {
+		todaySchedules = status.guide.schedules.filter(schedule => {
+			let a = format(new Date(schedule.from), 'yyyy-MM-dd');
+			let b = status.date;
+
+			return a === b;
+		});
 	}
 
-	else if (status.guide) {
-		return <>
-			<h1 className="text-xl font-bold px-4 my-4">Seleccione la fecha y hora de la reserva</h1>
+	useEffect(() => {
+		setStatus({
+			...status,
+			res_schedule: todaySchedules[0]
+		});
+	}, []);
+
+	if (status.guide) {
+		return <div className="flex flex-col">
 			{/*TODO: remove this and make it dynamic to fetch the selected guide schedules*/}
 			<div>
-				{
-					status.guide?.schedules.map((schedule, index) => {
-						return <div key={index} className="flex flex-row justify-center">
-							<div className="flex flex-row justify-center">
-								<p className="text-center font-bold uppercase">
-									{format(schedule.from, 'p')}
-								</p>
-								<p className="text-center font-bold uppercase">
-									&nbsp; - &nbsp;{format(schedule.to, 'p')}
-								</p>
-							</div>
-						</div>
-					})}
+				<ResponsiveSelect
+					title={"Seleccione hora de reserva"}
+					data={todaySchedules}
+					displayProp={"from"}
+					customDisplay={(schedule) => "De " + format(schedule.from, "HH:mm") + " a " + format(schedule.to, "HH:mm")}
+					name={"res_schedule"}
+				/>
 			</div>
-		</>
+		</div>
 	}
 
 	else return <></>

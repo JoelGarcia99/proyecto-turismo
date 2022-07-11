@@ -7,11 +7,13 @@ enum Attributes: string
 	// Query params
 	const IS_MAIN_IMAGE = 'is_main_image';
 	const IS_TYPICAL_PLATE_IMAGE = 'is_typical_plate_image';
+	const POINT_ID = 'point_id';
 
 	// Reservation
 	const POINT = 'point';
 	const GUIDE = 'guide';
 	const AFORUM = 'aforum';
+	const RES_SCHEDULE = 'res_schedule';
 
 	// Common
 	const ID = '_id';

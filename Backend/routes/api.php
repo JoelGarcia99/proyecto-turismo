@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GuideController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TouristicPointController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,7 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::DELETE('/manage/guide/{id}', [GuideController::class, 'delete']);
 	Route::POST('/manage/guide/', [GuideController::class, 'create']);
 	Route::POST('/manage/guide/{id}/upload-image', [GuideController::class, 'updateImage']);
+
 });
 
 // Public routes
@@ -57,3 +59,7 @@ Route::GET('/puntos-turisticos/maravillas', [TouristicPointController::class, 'r
 Route::GET('/punto-turistico/{slug}', [TouristicPointController::class, 'readBySlug']);
 Route::GET('/puntos-turisticos/reservables', [TouristicPointController::class, 'readReservables']);
 Route::GET('/puntos-turisticos', [TouristicPointController::class, 'readByCategories']);
+
+// reservations
+Route::POST('/reservation/', [ReservationController::class, 'create']);
+Route::GET('/reservation/load-available-guides', [ReservationController::class, 'loadAvailableGuides']);

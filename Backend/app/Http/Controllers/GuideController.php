@@ -8,6 +8,7 @@ use App\Helpers\FileUploader;
 use App\Models\Guide;
 use App\Utilities\DateUtilities;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class GuideController extends Controller
@@ -34,50 +35,24 @@ class GuideController extends Controller
 	public function create(Request $request)
 	{
 
-		// Validating params, if any is not ok then a bad state is returned
-		$request->validate(Guide::$validation_rules);
+		$response = $this->updateFlow($request, null);
 
-		// Only extracting needed DATA from the request
-		$body = $request->json();
+		if($response instanceof JsonResponse) {
+			return $response;
+		}
 
-		// defining the model
+		//only params are needed here
+		[, $params] = $response;
+
+		// creating an instance to create a new model on MongoDB
 		$model = new Guide();
-
-		// list of allowed params to be set
-		$params = [];
-
-		foreach ($body as $key => $value) {
-			if (in_array($key, $model::getAllAttributes())) {
-				$params[$key] = $value;
-			}
-		}
-
-		// validating schedules. By default, at schedule should be at least 45 minutes longer
-		$schedules = isset($params[Attributes::SCHEDULES])? $params[Attributes::SCHEDULES] : [];
-		$error_message = DateUtilities::validateMinRangeBetweenDates($schedules);
-
-		// If there is any string, then it means that there was an error
-		if ($error_message != null) {
-			return response()->json([
-				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
-				NetworkAttributes::MESSAGE => $error_message
-			], NetworkAttributes::STATUS_400);
-		}
-
-		// sorting array before updating
-		if (count($schedules) > 1) {
-			// sorting the array by start range
-			usort($schedules, function ($a, $b) {
-				return strtotime($a[Attributes::START_RANGE]) - strtotime($b[Attributes::START_RANGE]);
-			});
-		}
 
 		// setting the DATA
 		$newGuide = $model->create($params);
 
 		return response()->json([
 			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
-			NetworkAttributes::MESSAGE => "Guide created successfully",
+			NetworkAttributes::MESSAGE => "Guia creado exitosamente",
 			NetworkAttributes::DATA => $newGuide
 		], NetworkAttributes::STATUS_200);
 	}
@@ -94,19 +69,19 @@ class GuideController extends Controller
 		if ($guide) {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
-				NetworkAttributes::MESSAGE => "Guide found",
+				NetworkAttributes::MESSAGE => "Mostrando datos del guia",
 				NetworkAttributes::DATA => $guide
 			], NetworkAttributes::STATUS_200);
 		} else {
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
-				NetworkAttributes::MESSAGE => "Guide not found"
+				NetworkAttributes::MESSAGE => "Guia no encontrado"
 			], NetworkAttributes::STATUS_404);
 		}
 	}
 
-	public function update(Request $request, $id)
-	{
+	private function updateFlow(Request $request, $id):Array|JsonResponse{
+
 		// Validating params, if any is not ok then a bad state is returned
 		$request->validate(Guide::$validation_rules);
 
@@ -127,6 +102,16 @@ class GuideController extends Controller
 
 		// validating schedules. By default, at schedule should be at least 45 minutes longer
 		$schedules = isset($params[Attributes::SCHEDULES])? $params[Attributes::SCHEDULES] : [];
+
+		// sorting array before updating
+		if (count($schedules) > 1) {
+			// sorting the array by start range
+			usort($schedules, function ($a, $b) {
+				return strtotime($b[Attributes::START_RANGE]) - strtotime($a[Attributes::START_RANGE]);
+			});
+		}
+
+		// validations related to schedule ranges
 		$error_message = DateUtilities::validateMinRangeBetweenDates($schedules);
 
 		// If there is any string, then it means that there was an error
@@ -137,17 +122,24 @@ class GuideController extends Controller
 			], NetworkAttributes::STATUS_400);
 		}
 
-		// sorting array before updating
-		if (count($schedules) > 1) {
-			// sorting the array by start range
-			usort($schedules, function ($a, $b) {
-				return strtotime($a[Attributes::START_RANGE]) - strtotime($b[Attributes::START_RANGE]);
-			});
-		}
-
 
 		// searching for the guide
 		$guide = $model->find($id);
+
+		return [$guide, $params];
+	}
+
+	public function update(Request $request, $id)
+	{
+
+		$response = $this->updateFlow($request, $id);
+
+		// if response is a JSON then an error just occurred
+		if ($response instanceof JsonResponse) {
+			return $response;
+		}
+
+		[$guide, $params] = $response;
 
 		if ($guide) {
 			// updating the guide

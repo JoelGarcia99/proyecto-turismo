@@ -28,7 +28,7 @@ class DateUtilities
 		if (count($dates) > 1) {
 			// sorting the array by start range
 			usort($dates, function ($a, $b) {
-				return strtotime($a[Attributes::START_RANGE]) - strtotime($b[Attributes::START_RANGE]);
+				return strtotime($b[Attributes::START_RANGE]) - strtotime($a[Attributes::START_RANGE]);
 			});
 		}
 
@@ -62,15 +62,53 @@ class DateUtilities
 				return 'El rango de cada horario debe ser mayor a la fecha actual.';
 			}
 
+			// validating end date is after start date 
+			if ($end_date < $start_date) {
+				return 'La fecha de fin de cada horario debe ser mayor a la fecha de inicio.';
+			}
+
 			// validating schedules are not overlapping each other & that the next range starts with a proper rest 
 			// between the current range and the next range
 			if (count($dates) > 1 && $i < count($dates) - 1) {
 				if ($end_date + self::REST_BETWEEN_SHCEDULES_MILLISECONDS >= $dates[$i + 1][Attributes::START_RANGE]) {
-					return 'Los horarios de cada tour no pueden superponerse, y debe haber una pausa de 15 minutos entre ellos.';
+					$a = self::parseFomr13digitsTimestampTo10digits($end_date);
+					$b = self::parseFomr13digitsTimestampTo10digits($dates[$i + 1][Attributes::START_RANGE]);
+
+					// substracting 6hrs to $a and $b
+					// TODO: test it
+					$a -= 5 * self::HOUR_MILLISECONDS / 1000;
+					$b -= 5 * self::HOUR_MILLISECONDS / 1000;
+
+					// parsing $a to human readable format
+					$a = Carbon::createFromTimestamp($a)->format('Y-m-d H:i');
+
+					$baseMessage = 'Los horarios de cada tour no pueden superponerse, y debe haber una pausa de 15 minutos entre ellos. ';
+					$specific = 'Uno de tus horarios termina el '.$a.' y el siguiente comienza a las '.Carbon::parse($b)->format('d-m-y H:i:s');
+
+					return $baseMessage.$specific;
 				}
 			}
 		}
 
 		return null;
+	}
+
+
+	public static function compareOnlyDate(string $date1, string $date2): int
+	{
+		$date1 = Carbon::parse($date1);
+		$date2 = Carbon::parse($date2);
+
+		return $date1->diffInDays($date2);
+	}
+
+	public static function parseTimestampToDate(int $timestamp): string
+	{
+		return Carbon::createFromTimestamp($timestamp / 1000)->format('Y-m-d');
+	}
+
+	public static function parseFomr13digitsTimestampTo10digits(int $timestamp): int
+	{
+		return floor($timestamp / 1000);
 	}
 }

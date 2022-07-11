@@ -1,7 +1,7 @@
 import {faAdd, faRemove, faUpload} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import React, {useState} from 'react';
-import {useDispatch} from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import useCustomForm from '../../../hooks/useCustomForm';
 import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 import {useNavigate} from 'react-router';
@@ -10,6 +10,9 @@ import {startDeletingGuide, startRegisteringGuide, startUploadingImage} from '..
 import {add, format} from 'date-fns';
 import ImageUploader from '../../../components/images/component.uploader';
 import {ToastContainer} from 'react-toastify';
+import ResponsiveSelect from '../../../components/inputs/responsiveSelect';
+import SpinLoader from '../../../components/loader/SpinLoader';
+import {startFetchingReservables} from '../../../redux/actions/locations/action.location';
 
 
 const ManageGuideCreate = ({initS}) => {
@@ -21,7 +24,7 @@ const ManageGuideCreate = ({initS}) => {
 	// WARNING: do not use this for validation since this is never null or undefined
 	const initialState = {...initS};
 
-	const initialImageUrl = initS?.image_url? `${process.env.REACT_APP_NG_API_HOST}${initS.image_url}`:"";
+	const initialImageUrl = initS?.image_url ? `${process.env.REACT_APP_NG_API_HOST}${initS.image_url}` : "";
 
 	// The image will not be uploaded to the server with all the other params
 	delete initialState.image_url;
@@ -33,6 +36,12 @@ const ManageGuideCreate = ({initS}) => {
 		phone: "",
 		is_active: false
 	});
+
+	const {reservables: points} = useSelector(state => state.locations);
+
+	useEffect(() => {
+		dispatch(startFetchingReservables())
+	}, []);
 
 	// handle deletion of a whole guide
 	const handleDelete = (e) => {
@@ -65,7 +74,7 @@ const ManageGuideCreate = ({initS}) => {
 
 		dispatch(startRegisteringGuide(
 			{_id: initialState?._id, ...data, schedules}, !!initS, (guide) => {
-				navigator(allRoutes.manage_guide_update+guide._id);
+				navigator(allRoutes.manage_guide_update + guide._id);
 			}
 		));
 	}
@@ -90,10 +99,10 @@ const ManageGuideCreate = ({initS}) => {
 								<div className="grid grid-cols-6 gap-6">
 									{
 										initS &&
-											<ImageUploader
-												initialUrl={initialImageUrl}
-												handleImageUpload={handleImageUpload}
-											/>
+										<ImageUploader
+											initialUrl={initialImageUrl}
+											handleImageUpload={handleImageUpload}
+										/>
 									}
 									<div className="col-span-12">
 										<label className="block text-sm font-medium text-gray-700" htmlFor="name">
@@ -140,6 +149,24 @@ const ManageGuideCreate = ({initS}) => {
 											className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
 										/>
 									</div>
+									{
+										!points &&
+										<SpinLoader />
+									}
+									{
+
+										points && points.length > 0 &&
+										<div className="col-span-12">
+											<ResponsiveSelect
+												setData={setData}
+												name="point_id"
+												title="Seleccione un punto turistico"
+												displayProp="name"
+												valueProp="_id"
+												data={points}
+											/>
+										</div>
+									}
 									<div className="col-span-12">
 										<label htmlFor="street-address" className="flex-row flex text-sm font-medium text-gray-700">
 											Horarios &nbsp;
@@ -166,7 +193,7 @@ const ManageGuideCreate = ({initS}) => {
 													<span className="text-sm w-min">Desde</span> &nbsp;
 													<input
 														type="datetime-local"
-														value={format(new Date(schedule.from), "yyyy-MM-dd'T'HH:mm")}
+														value={format(new Date(schedule.from), "yyyy-MM-dd HH:mm")}
 														onChange={(e) => handleScheduleDelete(index, 'from', (new Date(e.target.value)).getTime())}
 														required={true}
 														className="form-control block w-min px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
@@ -174,7 +201,7 @@ const ManageGuideCreate = ({initS}) => {
 													<span className="text-sm w-min">hasta</span> &nbsp;
 													<input
 														type="datetime-local"
-														value={format(new Date(schedule.to), "yyyy-MM-dd'T'HH:mm")}
+														value={format(new Date(schedule.to), "yyyy-MM-dd HH:mm")}
 														onChange={(e) => handleScheduleDelete(index, 'to', (new Date(e.target.value)).getTime())}
 														required={true}
 														className="form-control block w-min px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"

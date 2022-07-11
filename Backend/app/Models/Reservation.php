@@ -11,9 +11,9 @@ class Reservation extends Base
 	protected $collection = Collections::RESERVATIONS;
 
 	public static $validation_rules = [
-		Attributes::DESCRIPTION,
-		Attributes::POINT,
-		Attributes::GUIDE,
-		Attributes::AFORUM
+		Attributes::DESCRIPTION => 'required|string|max:2000',
+		Attributes::POINT=> 'required|string|max:255',
+		Attributes::GUIDE=> 'required|string|max:255',
+		Attributes::AFORUM => 'required|string|max:255',
 	];
 }

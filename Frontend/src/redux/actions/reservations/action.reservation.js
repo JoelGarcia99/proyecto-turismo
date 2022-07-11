@@ -1,36 +1,20 @@
-import Swal from "sweetalert2";
+import {customHTTPRequest} from "../../../helpers/helper.network";
 
-export const startSavingReservation = (reservation, callback=()=>{}) => {
-	return async(_, state)=>{
+export const startSavingReservation = (reservation, callback = () => {}) => {
+	return async (dispatch, state) => {
 		const {token} = state().auth;
 
-		console.log(JSON.stringify(reservation));
-		const response = await fetch(`${process.env.REACT_APP_API_HOST}/reservation`, {
-			method: 'POST',
+		const response = await customHTTPRequest(dispatch, process.env.REACT_APP_NG_API_HOST + "/api/reservation/", {
+			method: "POST",
 			headers: {
-				'Content-Type': 'application/json;charset=utf-8',
-				auth: token
+				"Content-Type": "application/json",
+				'Authorization': `Bearer ${token}`,
 			},
-			body: JSON.stringify(reservation)
-		});
+			body: JSON.stringify(reservation),
+		}, true);
 
-		const jsonRes = await response.json();
-
-		if(response.status !== 200) {
-			Swal.fire({
-				title: jsonRes.message,
-				text: jsonRes?.error,
-				type: 'error'
-			});
-			return;
+		if(response?.data) {
+			callback(response.data);
 		}
-
-		// If everything is OK
-		callback();
-
-		Swal.fire({
-			title: 'Reserva guardada',
-			text: jsonRes.message
-		});
 	}
 }
