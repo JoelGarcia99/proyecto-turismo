@@ -50,7 +50,7 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::POST('/manage/guide/', [GuideController::class, 'create']);
 	Route::POST('/manage/guide/{id}/upload-image', [GuideController::class, 'updateImage']);
 
-	// reservations
+	// reviews
 	Route::POST('/review/', [ReviewController::class, 'create']);
 });
 
@@ -66,3 +66,7 @@ Route::GET('/puntos-turisticos', [TouristicPointController::class, 'readByCatego
 // reservations
 Route::POST('/reservation/', [ReservationController::class, 'create']);
 Route::GET('/reservation/load-available-guides', [ReservationController::class, 'loadAvailableGuides']);
+
+// Reviews
+Route::GET('/review/punto-turistico/{id}', [ReviewController::class, 'readByTouristicPoint']);
+Route::GET('/review/stats/{pointId}', [ReviewController::class, 'getRatingSummary']);

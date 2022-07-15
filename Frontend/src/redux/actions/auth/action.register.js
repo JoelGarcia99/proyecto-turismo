@@ -1,46 +1,16 @@
-import Swal from "sweetalert2";
-import types from "../../types";
+import {customHTTPRequest} from "../../../helpers/helper.network";
 
-export const startRegister = (email, password, nombre, apellido,cedula_pas, telefono)=>{
-  return async(dispatch)=>{
-    var urlencoded = new URLSearchParams();
-    urlencoded.append("nombre", nombre);
-    urlencoded.append("apellido", apellido);
-    urlencoded.append("email", email);
-    urlencoded.append("password", password);
-    urlencoded.append("cedula_pas", cedula_pas);
-    urlencoded.append("telefono", telefono);
-    
-    var requestOptions = {
-    method: 'POST',
-    body: urlencoded,
-    };
+export const startRegister = (data, callback) => {
+	return async (dispatch) => {
 
-    const res = await fetch(`${process.env.REACT_APP_API_HOST}/user/register`, requestOptions)
+		const url = `${process.env.REACT_APP_NG_API_HOST}/api/auth/register`;
+		const response = await customHTTPRequest(dispatch, url, {
+			method: "POST",
+			body: JSON.stringify(data)
+		}, true);
 
-    const jsonRes = await res.json();
-
-    if(res.status !== 200) {
-      Swal.fire({
-        title: "No se pudo Registrar",
-        icon: "error",
-        text: JSON.stringify(jsonRes.error),
-        onClose: ()=>Swal.close()
-      });
-    }
-    else{
-
-      Swal.close();
-      window.location.href = `${process.env.REACT_APP_HOST}/login`;
-      dispatch( setRegisterDatos() );
-    }
-  }
+		if(response !== {}) {
+			callback();
+		}
+	}
 }
-
-export const setRegisterDatos = ()=>({
-  type: types.register,
-  payload: {
-    
-  }
-});
-

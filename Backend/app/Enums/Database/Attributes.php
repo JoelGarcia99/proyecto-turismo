@@ -8,6 +8,7 @@ enum Attributes: string
 	const IS_MAIN_IMAGE = 'is_main_image';
 	const IS_TYPICAL_PLATE_IMAGE = 'is_typical_plate_image';
 	const POINT_ID = 'point_id';
+	const USER_ID = 'user_id';
 
 	// Reviews
 	const REVIEW_SCORE = 'review_score';

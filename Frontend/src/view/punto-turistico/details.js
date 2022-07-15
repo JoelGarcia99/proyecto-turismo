@@ -165,7 +165,11 @@ const PuntoturisAbout = () => {
 					details={punto?.typical_plate_description ?? ""}
 				/>
 			}
-			<Reviews pointId={punto._id}/>
+			{
+
+				punto._id &&
+				<Reviews pointId={punto._id} />
+			}
 			<div className='my-8'></div>
 			{/* Footer */}
 			<SessionFooterComponent />
