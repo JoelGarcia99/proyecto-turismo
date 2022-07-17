@@ -7,6 +7,14 @@ use App\Enums\Database\Collections;
 
 class Reservation extends Base
 {
+	const STATUS_UNATTENDED = 'status_unattended';
+	const STATUS_IN_PROGRESS = 'status_in_progress';
+
+	// filters
+	const ASSIGNED_TO_ME = 'assigned_to_me';
+	const PENDING = 'pending';
+	const APPROVED = 'approved';
+
 	// collection name on MongoDB
 	protected $collection = Collections::RESERVATIONS;
 

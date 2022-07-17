@@ -52,6 +52,11 @@ Route::middleware(['auth:api'])->group(function(){
 
 	// reviews
 	Route::POST('/review/', [ReviewController::class, 'create']);
+
+	// reservations
+	Route::GET('/manage/reservations/pending', [
+		ReservationController::class, 'getUnattendedReservations'
+	]);
 });
 
 // Public routes

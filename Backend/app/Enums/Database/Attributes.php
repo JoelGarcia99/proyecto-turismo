@@ -9,6 +9,7 @@ enum Attributes: string
 	const IS_TYPICAL_PLATE_IMAGE = 'is_typical_plate_image';
 	const POINT_ID = 'point_id';
 	const USER_ID = 'user_id';
+	const FILTER = 'filter';
 
 	// Reviews
 	const REVIEW_SCORE = 'review_score';
@@ -34,6 +35,7 @@ enum Attributes: string
 	const CATEGORY = 'category';
 	const MAIN_IMAGE_URL = 'main_image_url';
 	const IS_ACTIVE = 'is_active';
+	const STATUS = 'status';
 
 	// Date
 	const START_RANGE = 'from';

@@ -68,9 +68,8 @@ class ReviewController extends Controller
 				->map(function ($review) {
 					$review->author = User::find($review->author_id)->name;
 					return $review;
-				});
+				})->take(3);
 		}
-
 
 		return response()->json([
 			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,

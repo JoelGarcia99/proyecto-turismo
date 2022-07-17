@@ -13,6 +13,37 @@ use Illuminate\Http\Request;
 class ReservationController extends Controller
 {
 
+	public function getReservations(Request $request)
+	{
+		// extracting the filter from the query param
+		$filter = $request->query(Attributes::FILTER) ?? Reservation::ASSIGNED_TO_ME;
+
+		// the list of reservations
+		$reservations = [];
+
+		switch($filter) {
+		case Reservation::STATUS_UNATTENDED:
+			$reservations = Reservation::where(
+				Attributes::STATUS, 
+				Reservation::PENDING
+			)->orWhere(
+
+			)->get();
+			break;
+		}
+		// querying all the reservations that do not have any
+		// administrator assigned to them
+		$reservations = Reservation::where(
+			Attributes::STATUS,
+			Reservation::STATUS_UNATTENDED
+		)->orWhere(
+			Attributes::STATUS,
+			null
+		)->get();
+
+		return response()->json($reservations);
+	}
+
 	public function create(Request $request) {
 		// main model to perform DB operations
 		$model = new Reservation();

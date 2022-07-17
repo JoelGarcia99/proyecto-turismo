@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, NavLink} from 'react-router-dom';
 import {faAdd, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
@@ -8,11 +8,20 @@ import {startFetchingAllTP} from '../../../redux/actions/locations/action.locati
 import {allRoutes} from '../../../router/routes';
 import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 import QuickAccess from '../../../modules/admin_dashboard/components/QuickAccess';
+import ResponsiveSelect from '../../../components/inputs/responsiveSelect';
+
+const filters = {
+	assigned_to_me: "Asignado a mi",
+	pending: "Pendiente",
+	approved: "Aprobado",
+};
 
 const ManageReservationsIndex = () => {
 
 	const dispatch = useDispatch();
 	const {locations} = useSelector(state => state.locations);
+
+	const [filter, setFilter] = useState(filters.assigned_to_me);
 
 	useEffect(() => {
 		dispatch(startFetchingAllTP());
@@ -31,8 +40,18 @@ const ManageReservationsIndex = () => {
 			</div>
 			<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
 				<table className="w-full text-sm text-left px-4 text-gray-500">
-					<caption className="w-full text-xl my-4">
-						<div>En revisión por mi</div>
+					<caption className="px-6 w-full text-xl my-4">
+						<div className="flex flex-row items-center justify-between">
+						<div>{filters[filter]}</div>
+						<div>
+							<ResponsiveSelect
+								name={"filter"}
+								setData={(e)=>setFilter(e.target.value)}
+								data={Object.keys(filters)}
+								formater={e => filters[e]}
+							/>
+						</div>
+						</div>
 					</caption>
 					<thead className="text-xs text-gray-700 uppercase bg-gray-50">
 						<tr>
