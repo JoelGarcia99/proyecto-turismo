@@ -7,44 +7,91 @@ use App\Enums\Network\NetworkAttributes;
 use App\Models\Guide;
 use App\Models\Reservation;
 use App\Models\TouristicPoint;
+use App\Models\User;
 use App\Utilities\DateUtilities;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
 
-	public function getReservations(Request $request)
+	/**
+	 * Shows data of a specific reservation based on an ID
+	 */
+	public function read($id)
+	{
+
+		$reservation = Reservation::find($id)?->first();
+
+		if ($reservation == null) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+				NetworkAttributes::MESSAGE => "Reserva no encontrada",
+			], NetworkAttributes::STATUS_404);
+		}
+
+		//TODO: consider to add an email here
+		//TODO: consider using aggregations instead of this strange thing
+		$reservation->author = User::find($reservation->author_id)
+			->only(Attributes::NAME, 'id');
+		$reservation->guide = Guide::find($reservation->guide)
+			->only(Attributes::NAME, Attributes::ID);
+		$reservation->point = TouristicPoint::find($reservation->point)
+			->only(Attributes::NAME, Attributes::ID);
+
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => "Mostrando datos de la reserva",
+			NetworkAttributes::DATA => $reservation,
+		], NetworkAttributes::STATUS_200);
+	}
+
+	/**
+	 * Returns a set of reservations based on the given filter
+	 */
+	public function getReservations($filter)
 	{
 		// extracting the filter from the query param
-		$filter = $request->query(Attributes::FILTER) ?? Reservation::ASSIGNED_TO_ME;
+		$filter = $filter ?? Reservation::ASSIGNED_TO_ME;
 
 		// the list of reservations
 		$reservations = [];
 
-		switch($filter) {
-		case Reservation::STATUS_UNATTENDED:
-			$reservations = Reservation::where(
-				Attributes::STATUS, 
-				Reservation::PENDING
-			)->orWhere(
+		switch ($filter) {
+			case Reservation::STATUS_PENDING:
+				$reservations = Reservation::where(
+					Attributes::STATUS,
+					Reservation::STATUS_PENDING
+				)->get()->map(function ($review) {
+					$review->author = User::find($review->author_id)
+						->only(Attributes::NAME, Attributes::ID);
+					$review->point = TouristicPoint::find($review->point)
+						->only(Attributes::NAME, Attributes::ID);
+					$review->guide = Guide::find($review->guide)
+						->only(Attributes::NAME, Attributes::ID);
 
-			)->get();
-			break;
+					return $review;
+				});
+				break;
+			case Reservation::ASSIGNED_TO_ME:
+				$reservations = Reservation::where(
+					Attributes::STATUS,
+					Reservation::ASSIGNED_TO_ME
+				)->get()->map(function ($review) {
+					$review->author = User::find($review->author_id);
+					$review->point_ = TouristicPoint::find($review->point);
+
+					return $review;
+				});
+				break;
 		}
+
 		// querying all the reservations that do not have any
 		// administrator assigned to them
-		$reservations = Reservation::where(
-			Attributes::STATUS,
-			Reservation::STATUS_UNATTENDED
-		)->orWhere(
-			Attributes::STATUS,
-			null
-		)->get();
-
 		return response()->json($reservations);
 	}
 
-	public function create(Request $request) {
+	public function create(Request $request)
+	{
 		// main model to perform DB operations
 		$model = new Reservation();
 
@@ -63,6 +110,9 @@ class ReservationController extends Controller
 				$params[$key] = $value;
 			}
 		}
+
+		// assigning the author to the reservation
+		$params[Attributes::STATUS] = Reservation::STATUS_PENDING;
 
 		// verifying the touristic point exists
 		$touristicPoint = TouristicPoint::find($params[Attributes::POINT]);
@@ -98,7 +148,6 @@ class ReservationController extends Controller
 			NetworkAttributes::MESSAGE => "Reserva creada exitosamente",
 			NetworkAttributes::DATA => $data
 		], NetworkAttributes::STATUS_200);
-
 	}
 
 	public function loadAvailableGuides(Request $request)

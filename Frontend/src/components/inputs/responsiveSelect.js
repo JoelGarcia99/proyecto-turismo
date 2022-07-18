@@ -10,7 +10,7 @@
  */
 const ResponsiveSelect = ({
 	title, name, setData, initVal,
-	data, displayProp, valueProp,
+	data, displayProp, valueProp, className="",
 	formater=e=>e, customDisplay
 }) => {
 	return <div className="col-span-6 sm:col-span-3">
@@ -20,13 +20,13 @@ const ResponsiveSelect = ({
 		<select
 			name={name}
 			onChange={setData}
-			className="mt-1 block w-full py-2 px-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+			className={"mt-1 w-max block w-full py-2 px-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" + " " + className}
 		>
 			{
 				data?.map((cat, index) => {
 					return <option 
 						value={valueProp? cat[valueProp]:cat}
-						selected={valueProp? initVal === cat[valueProp]:initVal == cat}
+						defaultValue={valueProp? initVal === cat[valueProp]:initVal == cat}
 						key={index}
 					>
 						{customDisplay?

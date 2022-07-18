@@ -21,6 +21,7 @@ enum Attributes: string
 	const GUIDE = 'guide';
 	const AFORUM = 'aforum';
 	const RES_SCHEDULE = 'res_schedule';
+	const RESERVATION_SCHEDULE = 'schedule';
 
 	// Common
 	const ID = '_id';

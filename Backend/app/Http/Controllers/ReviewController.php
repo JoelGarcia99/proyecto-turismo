@@ -44,6 +44,7 @@ class ReviewController extends Controller
 
 	}
 
+
 	public function readByTouristicPoint(Request $request, $id)
 	{
 		$touristicPoint = TouristicPoint::find($id);

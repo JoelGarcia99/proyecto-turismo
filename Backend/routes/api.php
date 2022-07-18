@@ -54,8 +54,9 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::POST('/review/', [ReviewController::class, 'create']);
 
 	// reservations
-	Route::GET('/manage/reservations/pending', [
-		ReservationController::class, 'getUnattendedReservations'
+	Route::GET('/manage/reservation/{id}', [ReservationController::class, 'read']);
+	Route::GET('/manage/reservations/{filter}', [
+		ReservationController::class, 'getReservations'
 	]);
 });
 

@@ -1,6 +1,5 @@
 import {useState} from 'react';
-import {NavLink, useNavigate} from 'react-router-dom';
-import AdminNavbar from './AdminNavbar';
+import {NavLink} from 'react-router-dom';
 import {allRoutes, available_menus} from '../../../router/routes';
 import SessionHeaderComponent from '../../../components/header/sessionHeaderComponent';
 

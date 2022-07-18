@@ -16,18 +16,17 @@ import _DateSelector from './components/_DateSelector';
 import CustomTextArea from '../../components/inputs/CustomTextArea';
 import ResponsiveSelect from '../../components/inputs/responsiveSelect';
 import {ToastContainer} from 'react-toastify';
-import {useNavigate} from 'react-router-dom';
 
 const Reservation = () => {
 
 	const dispatch = useDispatch();
 
 	const [status, setStatus] = useState({});
-	const navigator = useNavigate();
 
 	const handleReservationSubmit = ()=>{
 		dispatch(startSavingReservation({
 			...status,
+			schedule: status.res_schedule,
 			point: status.point._id,
 			guide: status.guide._id,
 		}, ()=>{
