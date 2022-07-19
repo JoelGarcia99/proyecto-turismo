@@ -98,6 +98,9 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, setShowSidebar =
 													<BellIcon className="h-6 w-6" aria-hidden="true" />
 												</button>
 
+												<div id="user-name" className="text-white font-light">
+													{db_user.name}
+												</div>
 												{/* Profile dropdown */}
 												<Menu as="div" className="z-20 ml-3 relative">
 													<div>

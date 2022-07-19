@@ -14,13 +14,67 @@ use Illuminate\Http\Request;
 class ReservationController extends Controller
 {
 
+	public function addComment(Request $request)
+	{
+		// extracting the comment
+		$comment = $request->comment;
+
+		// extracting the reservation id
+		$reservationId = $request->reservation_id;
+
+		// extracting the user id
+		$userId = $request->user_id;
+
+		// searching the reservation
+		$reservation = Reservation::find($reservationId);
+
+		// checking if the reservation exists
+		if ($reservation == null) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "Reserva no encontrada"
+			], NetworkAttributes::STATUS_404);
+		}
+
+		// checking if the user is the owner of the reservation or if it is the assigned admin
+		if ($reservation->admin_id != $userId && $reservation->author_id != $userId) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "No tienes permisos para realizar esta acción. Si eres administrador, asegurate de haberte asignado esta reserva primero."
+			], NetworkAttributes::STATUS_403);
+		}
+
+		// loading the user
+		$user = User::find($userId);
+
+		// adding the comment
+		$history = $reservation->history ?? [];
+		$history[] = [
+			'comment' => $comment,
+			'role' => $user->id == $reservation->author_id? 'user':'admin',
+			'user_id' => $userId,
+			'user_name' => $user->name,
+			'date' => DateUtilities::getCurrentTimestamp()
+		];
+
+		// updating the reservation
+		$reservation->history = $history;
+		$reservation->save();
+
+		// returning the response
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => "Comentario agregado correctamente",
+			NetworkAttributes::DATA => $reservation
+		], NetworkAttributes::STATUS_200);
+	}
 	/**
 	 * Shows data of a specific reservation based on an ID
 	 */
 	public function read($id)
 	{
 
-		$reservation = Reservation::find($id)?->first();
+		$reservation = Reservation::find($id);
 
 		if ($reservation == null) {
 			return response()->json([
@@ -38,10 +92,52 @@ class ReservationController extends Controller
 		$reservation->point = TouristicPoint::find($reservation->point)
 			->only(Attributes::NAME, Attributes::ID);
 
+		if ($reservation->admin_id) {
+			$reservation->admin = User::find($reservation->admin_id)
+				->only(Attributes::NAME, Attributes::ID);
+		}
+
 		return response()->json([
 			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
 			NetworkAttributes::MESSAGE => "Mostrando datos de la reserva",
 			NetworkAttributes::DATA => $reservation,
+		], NetworkAttributes::STATUS_200);
+	}
+
+	public function assignToMe(Request $request)
+	{
+		// reading the admin id
+		$adminId = $request->admin_id;
+		// reading the reservation id
+		$reservationId = $request->reservation_id;
+
+		// validating the reservation does not have any admin ID yet
+		$reservation = Reservation::find($reservationId);
+
+		// verifying the reservation exists
+		if ($reservation == null) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "Reserva no encontrada"
+			], NetworkAttributes::STATUS_404);
+		}
+
+		if ($reservation->admin_id != null) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "La reserva ya tiene un administrador asignado"
+			], NetworkAttributes::STATUS_403);
+		}
+
+		// updating the reservation
+		$reservation->admin_id = $adminId;
+		$reservation->status = Reservation::STATUS_IN_PROGRESS;
+		$reservation->save();
+
+		// returning the response
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => "Reserva asignada correctamente"
 		], NetworkAttributes::STATUS_200);
 	}
 
@@ -75,7 +171,7 @@ class ReservationController extends Controller
 			case Reservation::ASSIGNED_TO_ME:
 				$reservations = Reservation::where(
 					Attributes::STATUS,
-					Reservation::ASSIGNED_TO_ME
+					Reservation::STATUS_IN_PROGRESS
 				)->get()->map(function ($review) {
 					$review->author = User::find($review->author_id);
 					$review->point_ = TouristicPoint::find($review->point);
@@ -139,6 +235,20 @@ class ReservationController extends Controller
 				NetworkAttributes::MESSAGE => "El guia no existe"
 			], NetworkAttributes::STATUS_404);
 		}
+
+		$user = User::find($params[Attributes::AUTHOR_ID]);
+
+		// other params
+		$params[Attributes::STATUS] = Reservation::STATUS_PENDING;
+		$params[Attributes::HISTORY] = [[
+			'start_message' => "El usuario " . $user->name .
+				" ha creado la reserva para el punto turistico "
+				. $touristicPoint->name,
+			'role' => $user->id == $params[Attributes::AUTHOR_ID]? 'user':'admin',
+			'user_id' => $user->id,
+			'user_name' => $user->name,
+			'date' => DateUtilities::getCurrentTimestamp()
+		]];
 
 		// creating & storing on DB
 		$data = $model->create($params);

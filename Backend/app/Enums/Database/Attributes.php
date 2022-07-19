@@ -22,6 +22,8 @@ enum Attributes: string
 	const AFORUM = 'aforum';
 	const RES_SCHEDULE = 'res_schedule';
 	const RESERVATION_SCHEDULE = 'schedule';
+	const ADMIN_ID = 'admin_id';
+	const HISTORY = 'history';
 
 	// Common
 	const ID = '_id';

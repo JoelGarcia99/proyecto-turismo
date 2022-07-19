@@ -58,9 +58,9 @@ const adminRoutes = {
 	manage_guide_new: "/manage/guias/create/",
 	manage_guide_update: "/manage/guias/update/",
 
-	manage_reservation: "/manage/reservations/index",
-	manage_reservation_new: "/manage/reservations/create",
-	manage_reservation_update: "/manage/reservations/update",
+	manage_reservation: "/manage/reservations/index/",
+	manage_reservation_new: "/manage/reservations/create/",
+	manage_reservation_update: "/manage/reservations/update/",
 
 	// defining routes for admin panel dashboard
 	dashboard: "/dashboard"

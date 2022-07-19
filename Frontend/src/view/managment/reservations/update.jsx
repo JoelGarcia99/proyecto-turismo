@@ -13,51 +13,28 @@ import {allRoutes} from '../../../router/routes';
 import 'react-vertical-timeline-component/style.min.css';
 import CustomTextArea from '../../../components/inputs/CustomTextArea';
 import ResponsiveSelect from '../../../components/inputs/responsiveSelect';
+import SpinLoader from '../../../components/loader/SpinLoader';
+import {ToastContainer} from 'react-toastify';
 
 const statuses = {
-	'pending': 'Pendiente',
-	'assigned_to_me': 'Asignado a mí',
-	'unattended': 'Sin atender',
+	'in_progress': 'En progreso',
+	'rejected': 'Rechazado',
 	'approved': 'Aprobado',
 }
 
 const ManageReservationsUpdate = () => {
 
 	// fetching data for this location
-	const [reservation, setReservation] = useState(null);
 	const dispatch = useDispatch();
+	const [reservation, setReservation] = useState(null);
 	const [newComment, setNewComment] = useState('');
 	const {token} = useSelector(state => state.auth);
+	const {user} = useSelector(state => state.auth);
 
-	const statusColorFormat = (status) => {
-		switch (status) {
-			case 'pending':
-				return 'bg-yellow-500';
-			case 'assigned_to_me':
-				return 'bg-blue-500';
-			case 'unattended':
-				return 'bg-orange-900';
-			case 'approved':
-				return 'bg-teal-500';
-			default:
-				return 'bg-gray-500';
-		}
-	}
+	const [loadingState, setLoadingState] = useState(false);
 
-	const statusTextFormat = (status) => {
-		switch (status) {
-			case 'pending':
-				return 'text-black';
-			case 'assigned_to_me':
-				return 'text-white';
-			case 'unattended':
-				return 'text-white';
-			case 'approved':
-				return 'text-white';
-			default:
-				return 'text-black';
-		}
-	}
+	const historyLogs = [...(reservation?.history ?? [])];
+
 	// this comes from URL params
 	const {id} = useParams();
 
@@ -75,12 +52,61 @@ const ManageReservationsUpdate = () => {
 		setReservation(response.data);
 	}, []);
 
+	// only when the user adds a new comment
+	const handleAddingComment = async () => {
+		const url = `${process.env.REACT_APP_NG_API_HOST}/api/manage/reservation/comment`;
+
+		// sending the comment to the server
+		const response = await customHTTPRequest(dispatch, url, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				reservation_id: id,
+				comment: newComment,
+				user_id: user.id,
+			}),
+		}, true);
+
+		if(response !== {}) {
+			setReservation({
+				...reservation,
+				history: response.data.history ?? reservation.history
+			});
+			setNewComment("");
+		}
+	}
+
+	// assigning the reservation to the current admin
+	const handleAssigningReservation = async () => {
+		const url = `${process.env.REACT_APP_NG_API_HOST}/api/manage/reservation/assign-to-me`;
+
+		const response = await customHTTPRequest(dispatch, url, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				admin_id: user.id,
+				reservation_id: reservation._id,
+			}),
+		}, true);
+
+		if(response !== {}) {
+			window.location.reload();
+		}
+	}
+
 	return <div className="max-h-full bg-slate-100">
 		<Sidebar
 			title="Detalles de la reserva"
 			activeRoute={allRoutes.manage_reservation}
 		/>
 		<div className="md:ml-64 w-100 py-5 px-10 bg-slate-100 flex-1">
+			<ToastContainer />
 			{
 				!reservation &&
 				<SquareLoader />
@@ -102,24 +128,42 @@ const ManageReservationsUpdate = () => {
 								&nbsp;
 								<span className="font-normal"> {reservation.guide?.name} </span>
 							</span>
+							{
+								reservation.admin?.name &&
+								<small className="text-sm font-normal">
+									En revision por {reservation.admin.id == user.id ? "ti" : reservation.admin.name}
+								</small>
+							}
 						</div>
-
-						<div id="status" className="mx-4">
-							<ResponsiveSelect
-								title={"Estado de la reserva"}
-								className={
-									"font-bold " + statusColorFormat(reservation.status) +
-									" " + statusTextFormat(reservation.status)
+						{
+							!reservation.admin &&
+							<button 
+								className="w-max text-white font-bold px-2 py-1 rounded-md shadow-md bg-blue-500"
+								onClick={handleAssigningReservation}
+							>
+								Asignarme reserva
+							</button>
+						}
+						{
+							reservation.admin &&
+							<div id="status" className="mx-4">
+								{
+									loadingState && <SpinLoader /> ||
+									<ResponsiveSelect
+										title={"Estado de la reserva"}
+										className={"font-bold"}
+										name="status"
+										data={Object.keys(statuses)}
+										initVal={reservation.status}
+										formater={(value) => statuses[value]}
+										setData={(value) => {
+											// updating current node
+											setReservation({...reservation, status: value.target.value});
+										}}
+									/>
 								}
-								name="status"
-								data={Object.keys(statuses)}
-								initVal={reservation.status}
-								formater={(value) => statuses[value]}
-								setData={(value) => {
-									setReservation({...reservation, status: value.target.value});
-								}}
-							/>
-						</div>
+							</div>
+						}
 					</div>
 					<hr />
 					{/* Author's comment */}
@@ -134,25 +178,39 @@ const ManageReservationsUpdate = () => {
 							name="comment"
 							placeholder="Ingrese su comentario"
 							value={newComment}
-							setValue={setNewComment}
+							onChange={(e)=>setNewComment(e.target.value)}
 						/>
-						<button className="px-4 py-1 bg-blue-500 text-white font-bold shadow hover:shadow-lg rounded-md float-right">
+						<button 
+							className="px-4 py-1 bg-blue-500 text-white font-bold shadow hover:shadow-lg rounded-md float-right"
+							onClick={handleAddingComment}
+						>
 							Comentar
 						</button>
 					</div>
 					<h1 id="timeline-cap" className="my-6 text-lg font-bold uppercase float-left">Linea de tiempo</h1>
 					<VerticalTimeline lineColor='rgb(22 163 74)'>
 						{
-							reservation.history?.reverse()?.map((history, index) => {
+							historyLogs?.reverse()?.map((history, index) => {
 								return <VerticalTimelineElement
 									key={index}
 									className="vertical-timeline-element--work"
-									contentStyle={{background: 'rgb(49 46 129)', color: '#fff'}}
-									contentArrowStyle={{borderRight: '7px solid  rgb(49 46 129)'}}
+									contentStyle={{
+										background: history.role === "admin"? 'rgb(185 28 28)' : 'rgb(49 46 129)',
+										color: '#fff'
+									}}
+									contentArrowStyle={{
+										borderRight: `7px solid  ${!history.role === "admin"? "rgb(49 46 129)" : "rgb(185 28 28)"}`
+									}}
 									iconStyle={{background: 'rgb(33, 150, 243)', color: 'fff'}}
-									icon={<FontAwesomeIcon icon={faComment} className="text-white"/>}
+									icon={<FontAwesomeIcon icon={faComment} className="text-white" />}
 								>
-									{history.start_message ?? history.admin_message}
+									<h1 className="font-bold">
+										{(history.role === 'admin'? "(Admin) ":"") + history.user_name}
+										&nbsp;ha comentado
+									</h1>
+									<span>
+										{history.comment}
+									</span>
 								</VerticalTimelineElement>
 							})
 						}

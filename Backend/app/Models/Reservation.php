@@ -23,6 +23,7 @@ class Reservation extends Base
 		Attributes::GUIDE=> 'required|string|max:255',
 		Attributes::AFORUM => 'required|string|max:255',
 		Attributes::AUTHOR_ID => 'string|max:255',
+		Attributes::ADMIN_ID => 'string|max:255',
 		Attributes::STATUS => 'string|max:255',
 		Attributes::RESERVATION_SCHEDULE => 'required',
 	];

@@ -93,6 +93,12 @@ class DateUtilities
 		return null;
 	}
 
+	// getting the current date on 13 digits timestamp using Carbon
+	public static function getCurrentTimestamp(): int
+	{
+		return Carbon::now()->timestamp * 1000;
+	}
+
 
 	public static function compareOnlyDate(string $date1, string $date2): int
 	{

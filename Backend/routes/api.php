@@ -58,6 +58,9 @@ Route::middleware(['auth:api'])->group(function(){
 	Route::GET('/manage/reservations/{filter}', [
 		ReservationController::class, 'getReservations'
 	]);
+
+	Route::POST('/manage/reservation/comment', [ReservationController::class, 'addComment']);
+	Route::POST('/manage/reservation/assign-to-me', [ReservationController::class, 'assignToMe']);
 });
 
 // Public routes
