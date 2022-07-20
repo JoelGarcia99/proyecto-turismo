@@ -8,11 +8,19 @@ use App\Enums\Database\Collections;
 class Reservation extends Base
 {
 	// statuses
-	const STATUS_UNATTENDED = 'unattended';
 	const STATUS_IN_PROGRESS = 'in_progress';
+	const STATUS_REJECTED = 'rejected';
 	const STATUS_PENDING = 'pending';
-	const ASSIGNED_TO_ME = 'assigned_to_me';
 	const APPROVED = 'approved';
+
+	public static function isValidStatus(string $status) {
+		return in_array($status, [
+			self::STATUS_IN_PROGRESS,
+			self::STATUS_PENDING,
+			self::STATUS_REJECTED,
+			self::APPROVED,
+		]);
+	}
 
 	// collection name on MongoDB
 	protected $collection = Collections::RESERVATIONS;

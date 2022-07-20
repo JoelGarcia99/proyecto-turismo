@@ -10,14 +10,74 @@ use App\Models\TouristicPoint;
 use App\Models\User;
 use App\Utilities\DateUtilities;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
+
+	public function changeStatus(Request $request, string $status) {
+		// extracting the reservation ID
+		$reservationId = $request->reservation_id;
+
+		// getting the reservation
+		$reservation = Reservation::find($reservationId);
+
+		// checking if the reservation exists
+		if ($reservation == null) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "La reserva no existe"
+			], NetworkAttributes::STATUS_404);
+		}
+
+		// checking if the user is the admin of the reservation
+		if (Auth::user()->id != $reservation->admin_id) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "No tienes permiso para cambiar el estado de la reserva".Auth::user()->id
+
+			], NetworkAttributes::STATUS_403);
+		}
+
+		// checking the new status is different from the current status
+		if ($reservation->status == $status) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "El estado de la reserva no ha cambiado"
+			], NetworkAttributes::STATUS_400);
+		}
+
+		// checking if the status is valid
+		if (!Reservation::isValidStatus($status)) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "El estado no es válido"
+			], NetworkAttributes::STATUS_400);
+		}
+
+		// updating the reservation
+		$reservation->status = $status;
+		$reservation->save();
+
+		// TODO: add notifications (model & controller already created)
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => "El estado de la reserva ha sido cambiado"
+		], NetworkAttributes::STATUS_200);
+	}
 
 	public function addComment(Request $request)
 	{
 		// extracting the comment
 		$comment = $request->comment;
+
+		// if the comment is empty then return an error
+		if (empty($comment)) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "El comentario no puede estar vacio"
+			], NetworkAttributes::STATUS_400);
+		}
 
 		// extracting the reservation id
 		$reservationId = $request->reservation_id;
@@ -38,9 +98,18 @@ class ReservationController extends Controller
 
 		// checking if the user is the owner of the reservation or if it is the assigned admin
 		if ($reservation->admin_id != $userId && $reservation->author_id != $userId) {
+
+			$message = "";
+
+			if($reservation->admin_id == null) {
+				$message = "Debes asignarte este reserva para poder comentar.";
+			} else {
+				$message = "No eres el administrador de esta reserva";
+			}
+
 			return response()->json([
 				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
-				NetworkAttributes::MESSAGE => "No tienes permisos para realizar esta acción. Si eres administrador, asegurate de haberte asignado esta reserva primero."
+				NetworkAttributes::MESSAGE => $message
 			], NetworkAttributes::STATUS_403);
 		}
 
@@ -157,6 +226,9 @@ class ReservationController extends Controller
 				$reservations = Reservation::where(
 					Attributes::STATUS,
 					Reservation::STATUS_PENDING
+				)->orWhere(
+					Attributes::ADMIN_ID,
+					null
 				)->get()->map(function ($review) {
 					$review->author = User::find($review->author_id)
 						->only(Attributes::NAME, Attributes::ID);
@@ -170,8 +242,8 @@ class ReservationController extends Controller
 				break;
 			case Reservation::ASSIGNED_TO_ME:
 				$reservations = Reservation::where(
-					Attributes::STATUS,
-					Reservation::STATUS_IN_PROGRESS
+					Attributes::ADMIN_ID,
+					Auth::user()->id
 				)->get()->map(function ($review) {
 					$review->author = User::find($review->author_id);
 					$review->point_ = TouristicPoint::find($review->point);
@@ -179,6 +251,7 @@ class ReservationController extends Controller
 					return $review;
 				});
 				break;
+
 		}
 
 		// querying all the reservations that do not have any

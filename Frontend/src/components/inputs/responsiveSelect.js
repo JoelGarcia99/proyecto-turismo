@@ -20,14 +20,19 @@ const ResponsiveSelect = ({
 		<select
 			name={name}
 			onChange={setData}
+			defaultValue={initVal}
+			value={initVal}
 			className={"mt-1 w-max block w-full py-2 px-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" + " " + className}
 		>
 			{
 				data?.map((cat, index) => {
+
+					const value = valueProp ? cat[valueProp] : cat;
+
 					return <option 
-						value={valueProp? cat[valueProp]:cat}
-						defaultValue={valueProp? initVal === cat[valueProp]:initVal == cat}
+						value={value}
 						key={index}
+						selected={initVal == value}
 					>
 						{customDisplay?
 							customDisplay(cat) :

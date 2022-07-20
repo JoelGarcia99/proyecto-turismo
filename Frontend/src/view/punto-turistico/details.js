@@ -137,7 +137,7 @@ const PuntoturisAbout = () => {
 			{
 				punto?.images &&
 				<div id="img-gallery" className="bg-white">
-					<h1 className="text-xl px-8 font-bold uppercase my-2">Imágenes</h1>
+					<h1 className="text-xl mx-8 px-8 font-bold uppercase my-2">Imágenes</h1>
 					<div id="carrousel py-4 w-full">
 						<GalleryCarrousel imagesUrls={punto.images} />
 					</div>
@@ -168,14 +168,16 @@ const PuntoturisAbout = () => {
 			{
 
 				punto._id &&
-				<Reviews pointId={punto._id} />
+				<div
+					className="px-8"
+				>
+					<Reviews pointId={punto._id} />
+				</div>
 			}
 			<div className='my-8'></div>
 			{/* Footer */}
 			<SessionFooterComponent />
 		</div>
-
-
 		<ToastContainer />
 	</div>
 }

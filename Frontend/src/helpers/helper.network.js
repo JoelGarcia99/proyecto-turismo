@@ -52,7 +52,7 @@ export const customHTTPRequest = async (
 	}
 
 	// Common errors from the API
-	const errorCodes = [400, 404, 405, 422, 500];
+	const errorCodes = [400, 403, 404, 405, 422, 500];
 
 	if (errorCodes.includes(res.status)) {
 		//TODO: replace it with 404 page
