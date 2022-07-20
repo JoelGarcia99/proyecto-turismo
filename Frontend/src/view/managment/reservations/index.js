@@ -17,7 +17,7 @@ import {getUTCDate} from '../../../helpers/helper.date';
 const filters = {
 	assigned_to_me: "Asignado a mi",
 	pending: "Pendiente",
-	approved: "Aprobado",
+	closed: "Cerrado",
 };
 
 const processFilter = (selectedFilter) => {

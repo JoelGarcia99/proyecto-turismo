@@ -65,15 +65,16 @@ export const startDeletingCategory = (id, callback = () => {}) => {
 
 		let url = `${process.env.REACT_APP_NG_API_HOST}/api/manage/category/${id}`;
 
-		await customHTTPRequest(dispatch, url, {
+		const response = await customHTTPRequest(dispatch, url, {
 			method: 'DELETE',
 			headers: {
 				'Authorization': `Bearer ${token}`
 			},
-		});
+		}, true);
 
-		// executing custom piece of code after registering
-		callback();
+		if (response !== {}) {
+			callback();
+		}
 	}
 }
 

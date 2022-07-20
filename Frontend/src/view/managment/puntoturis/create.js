@@ -7,6 +7,9 @@ import _GeneralForm from './components/_GeneralForm';
 import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 import {ToastContainer} from 'react-toastify';
 import _TypicPlate from './components/_TypicPlate';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import {useNavigate} from 'react-router-dom';
 
 
 /**
@@ -17,6 +20,7 @@ import _TypicPlate from './components/_TypicPlate';
 const ManagePuntoturisCreate = ({initS}) => {
 
 	const dispatch = useDispatch();
+	const navigator = useNavigate();
 
 	// Permanently removes this touristic point from DB
 	const handleDelete = (e) => {
@@ -37,7 +41,8 @@ const ManagePuntoturisCreate = ({initS}) => {
 				<_TypicPlate touristicPoint={initS} />
 				<hr />
 				<_MediaForm touristicPoint={initS} />
-				<button onClick={handleDelete} className="btn">
+				<button onClick={handleDelete} className="float-right mx-8 my-4 bg-red-600 hover:bg-red-800 px-4 py-2 rounded-md text-white">
+					<FontAwesomeIcon icon={faTrash} /> &nbsp;
 					Eliminar
 				</button>
 			</>

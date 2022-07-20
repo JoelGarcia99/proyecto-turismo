@@ -13,6 +13,28 @@ use Illuminate\Http\Request;
 class TouristicPointController extends Controller
 {
 
+	public function delete($id) {
+		// Get the touristic point
+		$touristicPoint = TouristicPoint::find($id);
+
+		// validating it exists
+		if (!$touristicPoint) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => "El punto turístico ya no existe"
+			], NetworkAttributes::STATUS_404);
+		}
+
+		// Delete the touristic point
+		$touristicPoint->delete();
+
+		// Return the response
+		return response()->json([
+			NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+			NetworkAttributes::MESSAGE => "El punto turístico ha sido eliminado"
+		], NetworkAttributes::STATUS_200);
+	}
+
 	/**
 	 * updates the image of the guide
 	 */

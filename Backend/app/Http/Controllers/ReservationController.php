@@ -216,7 +216,7 @@ class ReservationController extends Controller
 	public function getReservations($filter)
 	{
 		// extracting the filter from the query param
-		$filter = $filter ?? Reservation::ASSIGNED_TO_ME;
+		$filter = $filter ?? Reservation::STATUS_PENDING;
 
 		// the list of reservations
 		$reservations = [];
@@ -240,13 +240,38 @@ class ReservationController extends Controller
 					return $review;
 				});
 				break;
-			case Reservation::ASSIGNED_TO_ME:
+			case 'assigned_to_me':
 				$reservations = Reservation::where(
 					Attributes::ADMIN_ID,
 					Auth::user()->id
+				)->where(
+					Attributes::STATUS,
+					Reservation::STATUS_IN_PROGRESS
 				)->get()->map(function ($review) {
-					$review->author = User::find($review->author_id);
-					$review->point_ = TouristicPoint::find($review->point);
+					$review->author = User::find($review->author_id)
+						->only(Attributes::NAME, Attributes::ID);
+					$review->point = TouristicPoint::find($review->point)
+						->only(Attributes::NAME, Attributes::ID);
+					$review->guide = Guide::find($review->guide)
+						->only(Attributes::NAME, Attributes::ID);
+
+					return $review;
+				});
+				break;
+			case 'closed':
+				$reservations = Reservation::where(
+					Attributes::STATUS,
+					Reservation::STATUS_REJECTED
+				)->orWhere(
+					Attributes::STATUS,
+					Reservation::APPROVED
+				)->get()->map(function ($review) {
+					$review->author = User::find($review->author_id)
+						->only(Attributes::NAME, Attributes::ID);
+					$review->point = TouristicPoint::find($review->point)
+						->only(Attributes::NAME, Attributes::ID);
+					$review->guide = Guide::find($review->guide)
+						->only(Attributes::NAME, Attributes::ID);
 
 					return $review;
 				});

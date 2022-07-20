@@ -172,40 +172,21 @@ export const startUpdatingLocation = (location, callback) => {
  *
  **/
 export const startDeletingPunto = (id, callback) => {
-	return async (_, state) => {
+	return async (dispatch, state) => {
 
 		const {token} = state().auth;
 
-		const res = await fetch(`${process.env.REACT_NG_APP_API_HOST}/punto-turistico/${id}`, {
+		const url = `${process.env.REACT_APP_NG_API_HOST}/api/manage/punto-turistico/${id}`;
+
+		const response = await customHTTPRequest(dispatch, url, {
 			method: 'DELETE',
 			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-				'auth': token
-			},
-		});
+				'Authorization': `Bearer ${token}`
+			}
+		}, true);
 
-		const jsonRes = await res.json();
-
-		if (res.status !== 200) {
-			await Swal.fire({
-				title: "Ha ocurrido un error. Intente más tarde",
-				icon: "error",
-				text: jsonRes.error,
-				onClose: () => Swal.close()
-			});
-			return;
-		}
-		else {
-			await Swal.fire({
-				title: "Proceso exitoso",
-				icon: "success",
-				text: jsonRes.message,
-				onClose: () => Swal.close()
-			});
-
-			// dispatch(setNewLocation(jsonRes.punto_turistico));
+		if(response !== {}) {
 			callback();
-
 		}
 	}
 }

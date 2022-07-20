@@ -19,22 +19,22 @@ export default function Sidebar({title = "None", activeRoute = null}) {
 				fixed={true}
 			/>
 			<div
-				className={`h-screen drop-shadow-lg fixed md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-white w-64 z-0 py-4 px-6 transition-all duration-300`}
+				className={`z-40 h-screen drop-shadow-lg fixed md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-white w-64 z-0 py-4 px-6 transition-all duration-300`}
 			>
-				<div className="flex-col items-stretch min-h-full flex-nowrap px-0 relative">
+				<div className="z-40 flex-col items-stretch min-h-full flex-nowrap px-0 relative">
 					{/* Menu items */}
 					<div className="flex flex-col">
-					<span className="mx-auto font-bold my-4 text-2xl uppercase">ADMIN Panel</span>
-						<ul className="flex-col min-w-full flex list-none">
+					<span className="z-40 mx-auto font-bold my-4 text-2xl uppercase">ADMIN Panel</span>
+						<ul className="z-40 flex-col min-w-full flex list-none">
 							{
 								// mapping all available menu items
 								available_menus.map((item, index) => {
 									return <li
 										key={index}
-										className={"rounded-lg mb-4" + " " + (activeRoute === item.route ? active_class_name : "")}
+										className={"z-40 rounded-lg mb-4" + " " + (activeRoute === item.route ? active_class_name : "")}
 									>
 										<NavLink
-											className="flex items-center gap-4 text-sm text-gray-700 font-light px-4 py-3 rounded-lg"
+											className="z-40 flex items-center gap-4 text-sm text-gray-700 font-light px-4 py-3 rounded-lg"
 											to={item.route}
 										>
 											{item.icon}

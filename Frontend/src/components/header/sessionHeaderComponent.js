@@ -15,7 +15,7 @@ function classNames(...classes) {
 	return classes.filter(Boolean).join(' ')
 }
 
-const SessionHeaderComponent = ({currentRoute = allRoutes.home, setShowSidebar = () => {}, fullWidth = false, fixed = false}) => {
+const SessionHeaderComponent = ({currentRoute = allRoutes.home, setShowSidebar, fullWidth = false, fixed = false}) => {
 	// hooks 
 	const dispatch = useDispatch();
 	const {user: db_user} = useSelector(state => state.auth);
@@ -55,7 +55,7 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, setShowSidebar =
 
 	return (
 		<>
-			<div className="flex flex-row justify-between z-10 relative fixed">
+			<div className="flex flex-row justify-between z-50 relative fixed">
 				<div id="logo" className="flex px-2 md:px-0 md:flex-1 justify-start">
 					<img src={logoFinal} className="mx-auto py-0.5" alt="" style={{height: "5rem"}} />
 				</div>
@@ -145,18 +145,18 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, setShowSidebar =
 												</Menu>
 											</div>
 										</div>
-										<div className="-mr-2 flex md:hidden">
-											<Button
-												color="transparent"
-												buttonType="link"
-												size="lg"
-												iconOnly
-												rounded
-												ripple="light"
-												onClick={() => setShowSidebar()}
-											>
-												<Icon name="menu" size="2xl" color="white" />
-											</Button>
+										<div className="w-full -mr-2 flex flex-row justify-between md:hidden">
+											{
+												setShowSidebar && <Button
+													color="transparent"
+													buttonType="link"
+													iconOnly
+													className="float-left text-green-400 hover:text-white"
+													onClick={() => setShowSidebar()}
+												>
+													ADMIN LTE
+												</Button>
+											}
 											{/* Mobile menu button */}
 											<Disclosure.Button className="bg-green-800 inline-flex items-center justify-center p-2 rounded-md text-green-400 hover:text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-800 focus:ring-white">
 												<span className="sr-only">Open main menu</span>

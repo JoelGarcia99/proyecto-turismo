@@ -1,4 +1,4 @@
-import {faAdd, faInfoCircle, faSearch, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {faAdd, faInfoCircle, faSearch, faTrash, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import React, {useEffect, useState} from 'react';
 
@@ -13,19 +13,21 @@ const ManagaGuideIndex = () => {
 
 	const dispatch = useDispatch();
 	const {guidemen: guides} = useSelector(state => state.guideman);
+	const [shouldReload, setShouldReload] = useState(false);
 
 	useEffect(() => {
 		dispatch(startFetchingGuides());
-	}, [dispatch]);
+	}, [dispatch, shouldReload]);
 
 	const handleDelete = (guideID)=>{
 		dispatch(startDeletingGuide(guideID, ()=>{
-			{/* return <ToastContainer /> */}
+			setShouldReload(!shouldReload);
 		}));
 	}
 
 
 	return <div className="max-h-full bg-slate-100">
+		<ToastContainer />
 		<Sidebar title="Gestión puntos turísticos" activeRoute={allRoutes.manage_guide} />
 		<div className="md:ml-64 w-100 py-5 px-10 bg-slate-100 flex-1">
 			<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -75,29 +77,20 @@ const ManagaGuideIndex = () => {
 									<td className="px-6 py-4">{guide.phone || "N/A"}</td>
 									<td className="px-6 py-4">{(guide.schedules || []).length}&nbsp;disponibles</td>
 									<td className="px-6 py-4">{guide.is_active ? "Sí" : "No"}</td>
-									<td className="px-6 py-4">
-										<div
-											className="cursor-pointer hover:bg-gray-300 my-0 py-1 px-1 rounded text-center"
-										>
-											<Link
+									<td className="px-6 py-4 flex flex-row items-stretch">
+										<Link
 												to={`${allRoutes.manage_guide_update}${guide._id}`}
-												className="my-0"
-											>
-												<FontAwesomeIcon icon={faInfoCircle} />&nbsp;
-												<span>Editar</span>
-											</Link>
-										</div>
-										&nbsp;&nbsp;
-										<div
-											className="cursor-pointer hover:bg-red-300 py-1 px-1 rounded text-center"
+											className="rounded-md shadow-md px-4 py-2 hover:shadow-xl hover:text-blue-500"
+										>
+											<FontAwesomeIcon icon={faInfoCircle} />
+										</Link>
+										<div className="mx-1"></div>
+										<button
+											className="rounded-md shadow-md px-4 py-2 hover:shadow-xl hover:text-red-500"
 											onClick={()=>handleDelete(guide._id)}
 										>
-											<FontAwesomeIcon
-												icon={faTrash}
-											/>
-											&nbsp;
-											<span>Eliminar</span>
-										</div>
+											<FontAwesomeIcon icon={faTrashAlt} />
+										</button>
 									</td>
 								</tr>
 							})
