@@ -8,6 +8,7 @@ import {Link, NavLink} from 'react-router-dom';
 import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 import {startDeletingGuide, startFetchingGuides} from '../../../redux/actions/guideman/action.guideman';
 import {ToastContainer} from 'react-toastify';
+import NoData from '../../../components/feedback/NoData';
 
 const ManagaGuideIndex = () => {
 
@@ -19,8 +20,8 @@ const ManagaGuideIndex = () => {
 		dispatch(startFetchingGuides());
 	}, [dispatch, shouldReload]);
 
-	const handleDelete = (guideID)=>{
-		dispatch(startDeletingGuide(guideID, ()=>{
+	const handleDelete = (guideID) => {
+		dispatch(startDeletingGuide(guideID, () => {
 			setShouldReload(!shouldReload);
 		}));
 	}
@@ -79,7 +80,7 @@ const ManagaGuideIndex = () => {
 									<td className="px-6 py-4">{guide.is_active ? "Sí" : "No"}</td>
 									<td className="px-6 py-4 flex flex-row items-stretch">
 										<Link
-												to={`${allRoutes.manage_guide_update}${guide._id}`}
+											to={`${allRoutes.manage_guide_update}${guide._id}`}
 											className="rounded-md shadow-md px-4 py-2 hover:shadow-xl hover:text-blue-500"
 										>
 											<FontAwesomeIcon icon={faInfoCircle} />
@@ -87,7 +88,7 @@ const ManagaGuideIndex = () => {
 										<div className="mx-1"></div>
 										<button
 											className="rounded-md shadow-md px-4 py-2 hover:shadow-xl hover:text-red-500"
-											onClick={()=>handleDelete(guide._id)}
+											onClick={() => handleDelete(guide._id)}
 										>
 											<FontAwesomeIcon icon={faTrashAlt} />
 										</button>
@@ -97,6 +98,10 @@ const ManagaGuideIndex = () => {
 						}
 					</tbody>
 				</table>
+				{
+					guides.length === 0 &&
+					<NoData />
+				}
 			</div>
 		</div>
 	</div>

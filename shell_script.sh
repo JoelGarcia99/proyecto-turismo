@@ -15,8 +15,24 @@ apt-get install -y mongodb
 echo "Installing PHP"
 sudo apt install software-properties-common -y
 sudo add-apt-repository ppa:ondrej/php -y
-sudo apt install composer
 echo "PHP has been installed."
+
+echo "Installing composer"
+sudo apt install php-cli unzip -y 
+cd ~
+curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
+
+echo "Creating hash key"
+HASH=`curl -sS https://composer.github.io/installer.sig`
+
+echo "Verifying script"
+php -r "if (hash_file('SHA384', '/tmp/composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+
+echo "Making composer global"
+sudo php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+echo "Printing version"
+composer --version
 
 echo "Installing mongodb driver for php"
 apt-get install -y php-mongodb

@@ -8,6 +8,7 @@ import {startDeletingPunto, startFetchingAllTP} from '../../../redux/actions/loc
 import {allRoutes} from '../../../router/routes';
 import Sidebar from '../../../modules/admin_dashboard/components/Sidebar';
 import {ToastContainer} from 'react-toastify';
+import NoData from '../../../components/feedback/NoData';
 
 const ManagePuntoturisIndex = () => {
 
@@ -85,7 +86,7 @@ const ManagePuntoturisIndex = () => {
 										<div className="mx-1"></div>
 										<button
 											className="rounded-md shadow-md px-4 py-2 hover:shadow-xl hover:text-red-500"
-											onClick={()=>handleDelete(loc._id)}
+											onClick={() => handleDelete(loc._id)}
 										>
 											<FontAwesomeIcon icon={faTrashAlt} />
 										</button>
@@ -95,6 +96,10 @@ const ManagePuntoturisIndex = () => {
 						}
 					</tbody>
 				</table>
+				{
+					locations.length === 0 &&
+					<NoData />
+				}
 			</div>
 		</div>
 	</div>
