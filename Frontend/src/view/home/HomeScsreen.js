@@ -10,10 +10,13 @@ import hotelImage from "../../assets/others/HOTEL CEIBO REAL.webp";
 import arqueoImage from "../../assets/others/PARQUE ARQUEOLÓGICO  HOJAS JABONCILLO.webp";
 import WideDescriptorComponent from "./component.wideDescriptor";
 import SessionFooterComponent from "./component.footer";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 
 const HomeScsreen = () => {
+
+	const navigator = useNavigate();
+
 	return <>
 		<div className="flex flex-col justify-start align-center">
 			<SessionHeaderComponent
@@ -39,6 +42,9 @@ const HomeScsreen = () => {
 			<MaravillasListComponent />
 			<WideDescriptorComponent
 				title="La mejor gastronomía manabita"
+				onClick={() => {
+					navigator(allRoutes.gastronomia);
+				}}
 				imageLeft={false}
 				imageUrl={morcillaImage}
 				details="La maravilla es una experiencia que te permite disfrutar de una comida que no te parece familiar, pero que te da la oportunidad de disfrutar de una experiencia que te hará sentir muy feliz. La maravilla es una experiencia que te permite disfrutar de una comida que no te parece familiar, pero que te da la oportunidad de disfrutar de una experiencia que te hará sentir muy feliz. "
@@ -47,11 +53,17 @@ const HomeScsreen = () => {
 			<WideDescriptorComponent
 				title="Zona arquológica"
 				imageUrl={arqueoImage}
+				onClick={() => {
+					navigator(allRoutes.arqueologia)
+				}}
 				details="La maravilla es una experiencia que te permite disfrutar de una comida que no te parece familiar, pero que te da la oportunidad de disfrutar de una experiencia que te hará sentir muy feliz. La maravilla es una experiencia que te permite disfrutar de una comida que no te parece familiar, pero que te da la oportunidad de disfrutar de una experiencia que te hará sentir muy feliz. "
 			/>
 			<WideDescriptorComponent
 				title="Hotelería"
 				imageLeft={false}
+				onClick={() => {
+					navigator(allRoutes.hoteleria)
+				}}
 				imageUrl={hotelImage}
 				details="La maravilla es una experiencia que te permite disfrutar de una comida que no te parece familiar, pero que te da la oportunidad de disfrutar de una experiencia que te hará sentir muy feliz. La maravilla es una experiencia que te permite disfrutar de una comida que no te parece familiar, pero que te da la oportunidad de disfrutar de una experiencia que te hará sentir muy feliz. "
 			/>

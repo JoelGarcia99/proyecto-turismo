@@ -5,7 +5,6 @@ import Dashboard from "./pages/Dashboard";
 // Tailwind CSS Style Sheet
 import './assets/styles/index.css';
 import {allRoutes} from "../../router/routes";
-import SessionHeaderComponent from "../../components/header/sessionHeaderComponent";
 
 const AdminmanagmentPanel = () => {
   return <>

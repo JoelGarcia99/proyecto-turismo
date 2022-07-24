@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
 	faChartLine,
+	faFish,
 	faFolder,
 	faLocationArrow,
 	faTicketSimple,
@@ -38,6 +39,10 @@ import ManageCategoryUpdate from '../view/managment/category/update';
 import ManageReservationsIndex from '../view/managment/reservations';
 import TouristicPoints from '../view/punto-turistico/TouristicPoints';
 import ManageReservationsUpdate from '../view/managment/reservations/update';
+import Gastronomia from '../view/gastronomia/Gastronomia';
+import ManageGastronomia from '../view/managment/gastronomia/manage.gastronomia';
+import Hoteleria from '../view/hoteleria/Hoteleria';
+import Arqueologia from '../view/arqueologia/Arqueologia';
 
 
 const adminRoutes = {
@@ -62,6 +67,8 @@ const adminRoutes = {
 	manage_reservation_new: "/manage/reservations/create/",
 	manage_reservation_update: "/manage/reservations/update/",
 
+	manage_gastronomia: "/manage/gastronomia",
+
 	// defining routes for admin panel dashboard
 	dashboard: "/dashboard"
 }
@@ -71,6 +78,9 @@ const privateRoutes = {
 	puntos_turis: "/puntos-turisticos",
 	home: "/home",
 	punto_detail: '/punto-turistico/detalles/',
+	gastronomia: '/gastronomia',
+	hoteleria: '/hoteleria',
+	arqueologia: '/arqueologia',
 	...adminRoutes, // admin routes are private as well
 }
 
@@ -113,7 +123,12 @@ export const available_menus = [
 		name: "Reservas",
 		route: allRoutes.manage_reservation,
 		icon: <FontAwesomeIcon icon={faTicketSimple} />
-	}
+	},
+	// {
+	// 	name: "Gastronomia",
+	// 	route: allRoutes.manage_gastronomia,
+	// 	icon: <FontAwesomeIcon icon={faFish} />
+	// }
 ];
 
 
@@ -191,6 +206,23 @@ const RoutesComponent = () => {
 				<Route exact path={privateRoutes.manage_category_edit + ":id"} element={<ManageCategoryUpdate />} />
 
 				<Route exact path={privateRoutes.manage_reservation} element={<ManageReservationsIndex />} />
+
+				{
+				//	Gastronomia
+				}
+				<Route exact path={privateRoutes.gastronomia} element={<Gastronomia />} />
+				<Route exact path={privateRoutes.manage_gastronomia} element={<ManageGastronomia />} />
+
+				{
+				//	Hoteleria
+				}
+				<Route exact path={privateRoutes.hoteleria} element={<Hoteleria />} />
+
+				{
+				// Arqueologia
+				}
+				<Route exact path={privateRoutes.arqueologia} element={<Arqueologia />} />
+
 
 				<Route exact path={privateRoutes.manage_locales} element={<ManageLocal />} />
 				<Route exact path={privateRoutes.manage} element={<ManagePanel />} />
