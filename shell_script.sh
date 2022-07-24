@@ -1,32 +1,80 @@
 # exit on error
 set -e
 
-ROOT_PROJECT=${1%/}
-echo "Working from $ROOT_PROJECT"
+# storing the current directory
+CURRENT_DIR=$(pwd)
 
-echo "Destroying previous images"
-docker rmi -f portoturismo_backend
-docker rmi -f portoturismo_frontend
-docker rmi -f portoturismo_mongodb
-docker rmi -f portoturismo_mysql
+# updating apt 
+echo "Updating APT"
+apt-get update -y
 
-docker-compose stop
-docker-compose rm -f
+# installing mongodb
+echo "installing mongodb"
+apt-get install -y mongodb
 
-echo "Building backend image"
-cd ./Backend
+echo "Installing PHP"
+sudo apt install software-properties-common -y
+sudo add-apt-repository ppa:ondrej/php -y
+sudo apt install composer
+echo "PHP has been installed."
 
-# docker build -t portoturismo_backend:latest .
+echo "Installing mongodb driver for php"
+apt-get install -y php-mongodb
 
-cd ../Frontend
-echo "Building frontend image"
-docker build -t portoturismo_frontend:latest .
+echo "Installing MySQL"
+apt-get install -y mysql-server
 
-docker-compose up -d
+echo "Starting mongodb"
+sudo service mongodb start
 
-#TODO: php artisan migrate
-#TODO: MySQL image
-#TODO: MySQL connection on Laravel
-#TODO: php artisan passport:install
-#TODO: php artisan passport:install --uuids
-#TODO: php artisan passport:keys
+echo "Starting MySQL"
+sudo service mysql start
+
+echo "Creating a database"
+mysql -u root -e "create database proyecto_turismo"
+
+echo "Moving to the Backend directory"
+cd $CURRENT_DIR/Backend
+
+# removing .env if exists
+if [ -f .env ]; then
+	rm .env
+fi
+
+echo "Copying .env.example to .env"
+cp .env.example .env
+
+#removing vendor if exists
+if [ -d vendor ]; then
+	rm -rf vendor
+fi
+
+echo "Installing dependencies"
+composer install
+
+echo "Making migrations"
+php artisan migrate
+
+echo "Installing passport"
+php artisan passport:install
+
+echo "Moving to the fontend"
+cd $CURRENT_DIR/Frontend
+
+# removing .env if exists
+if [ -f .env ]; then
+	rm .env
+fi
+
+# removing node_modules if exists
+if [ -d node_modules ]; then
+	rm -rf node_modules
+fi
+
+echo "Copy .env.example to .env"
+cp .env.example .env
+
+echo "Installing dependencies"
+npm install
+
+echo "Everything is ready!"
