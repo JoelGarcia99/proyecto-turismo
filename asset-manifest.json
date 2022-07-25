@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/proyecto-turismo/static/css/main.6cb48fc6.css",
+    "main.js": "/proyecto-turismo/static/js/main.a44fa8ff.js",
+    "static/media/logoFinal.png": "/proyecto-turismo/static/media/logoFinal.16bd77c22f2216374883.png",
+    "static/media/PLAZA ELOY ALFARO CATEDRAL.webp": "/proyecto-turismo/static/media/PLAZA ELOY ALFARO CATEDRAL.f967f0dea1c2b09db8fb.webp",
+    "static/media/PARQUE LAS VEGAS (2).webp": "/proyecto-turismo/static/media/PARQUE LAS VEGAS (2).6f604ff3a0e55380a8d0.webp",
+    "static/media/CENTRO HISTORICO Parque Vicente Amador.webp": "/proyecto-turismo/static/media/CENTRO HISTORICO Parque Vicente Amador.f0453394da3454018a47.webp",
+    "static/media/PLAYA LA BOCA DE CRUCITA 2.webp": "/proyecto-turismo/static/media/PLAYA LA BOCA DE CRUCITA 2.0a1216ac519877075830.webp",
+    "static/media/ROTONDA  LUCES PILETA.webp": "/proyecto-turismo/static/media/ROTONDA  LUCES PILETA.e9c4a782ef745849cf5f.webp",
+    "static/media/CATEDRAL DEL BUEN PASTOR.webp": "/proyecto-turismo/static/media/CATEDRAL DEL BUEN PASTOR.d5105ffe9a17a2ad6c52.webp",
+    "static/media/PARAPENTE CRUCITA.webp": "/proyecto-turismo/static/media/PARAPENTE CRUCITA.b4422cc0f2f6d5312c6e.webp",
+    "static/media/ROTONDA  LUCES.webp": "/proyecto-turismo/static/media/ROTONDA  LUCES.f4c2f5588f5599f32662.webp",
+    "static/media/FESTIVAL DE LA MORCILLA PARROQUIA ABDÓN CALDERÓN.webp": "/proyecto-turismo/static/media/FESTIVAL DE LA MORCILLA PARROQUIA ABDÓN CALDERÓN.6e7455083685a4019678.webp",
+    "static/media/PARQUE ARQUEOLÓGICO  HOJAS JABONCILLO.webp": "/proyecto-turismo/static/media/PARQUE ARQUEOLÓGICO  HOJAS JABONCILLO.9e257b1f2dd22e1096ed.webp",
+    "static/media/background-green-texturized-image-extra-wide.jpg": "/proyecto-turismo/static/media/background-green-texturized-image-extra-wide.e0dbbe5e96ad7ab27acd.jpg",
+    "static/media/HOTEL CEIBO REAL.webp": "/proyecto-turismo/static/media/HOTEL CEIBO REAL.29a82006f574ea8d465c.webp",
+    "index.html": "/proyecto-turismo/index.html",
+    "static/media/index.cjs": "/proyecto-turismo/static/media/index.cd351d7c31d0d3fccf96.cjs",
+    "main.6cb48fc6.css.map": "/proyecto-turismo/static/css/main.6cb48fc6.css.map",
+    "main.a44fa8ff.js.map": "/proyecto-turismo/static/js/main.a44fa8ff.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6cb48fc6.css",
+    "static/js/main.a44fa8ff.js"
+  ]
+}
