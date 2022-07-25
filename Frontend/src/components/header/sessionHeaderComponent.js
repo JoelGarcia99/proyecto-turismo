@@ -36,7 +36,6 @@ const SessionHeaderComponent = ({currentRoute = allRoutes.home, setShowSidebar, 
 			current: currentRoute === allRoutes.puntos_turis
 		},
 		{name: 'Reservas', route: allRoutes.reservation, current: currentRoute === allRoutes.reservation},
-		{name: 'Planificador', route: allRoutes.home, current: false},
 		db_user?.role === "admin" && {
 			name: 'Panel administrativo',
 			route: allRoutes.dashboard,

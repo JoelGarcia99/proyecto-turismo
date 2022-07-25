@@ -23,12 +23,21 @@ import useCustomForm from '../../hooks/useCustomForm';
 import {startLogin} from '../../redux/actions/auth/action.login';
 import {allRoutes} from '../../router/routes';
 
+import logo from '../../assets/logoFinal.png';
+import mainImg from '../../assets/header/ROTONDA  LUCES.webp';
+import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import CustomModal from '../../components/modal/component.modal';
+import Registro from './Registro';
+
 export default function LoginComponent() {
 
 	const {logged} = useSelector(state => state.auth);
 	const dispatch = useDispatch();
 	const navigator = useNavigate();
 	const [isLoading, setIsLoading] = useState(false);
+	const [showPass, setShowPass] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 
 	const [fields, setFields] = useCustomForm({
 		email: '',
@@ -48,21 +57,26 @@ export default function LoginComponent() {
 
 
 	return (
-		<div className="container mx-auto shadow-md my-9">
-			{/*
-        This example requires updating your template:
+		<div className="mx-auto shadow-md">
+			<div
+				className="min-h-full flex flex-row-reverse items-center justify-between"
+			>
 
-        ```
-        <html class="h-full bg-gray-50">
-        <body class="h-full">
-        ```
-      */}
-			<div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-				<div className="max-w-md w-full space-y-8">
+				<div
+					className="hidden md:block bg-blue-500 flex-col justify-center items-center h-full w-full"
+					style={{width: '50%', height: '100vh'}}
+				>
+					<img src={mainImg} alt=""
+						className='mx-auto'
+						style={{width: "100%", height: "100%", objectFit: "cover"}}
+					/>
+				</div>
+				<div className="py-16 md:py-0 px-16 max-w-md mx-auto w-full space-y-8">
 					<div>
 						<img
 							className="mx-auto h-12 w-auto"
-							src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+							style={{width: "8rem", height: "8rem"}}
+							src={logo}
 							alt="Workflow"
 						/>
 						<h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -70,7 +84,10 @@ export default function LoginComponent() {
 						</h2>
 						<p className="mt-2 text-center text-sm text-gray-600">
 							No tienes cuenta?
-							<a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+							<a  
+								onClick={() => setShowModal(true)}
+								className="font-medium text-indigo-600 cursor-pointer hover:text-indigo-500"
+							>
 								&nbsp;Crea una nueva.
 							</a>
 						</p>
@@ -98,17 +115,31 @@ export default function LoginComponent() {
 								<label htmlFor="password" className="sr-only">
 									Contraseña
 								</label>
-								<input
-									id="password"
-									name="password"
-									onChange={setFields}
-									value={fields?.value}
-									type="password"
-									autoComplete="current-password"
-									required
-									className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-									placeholder="Password"
-								/>
+								<div className="relative">
+									<input
+										id="password"
+										name="password"
+										onChange={setFields}
+										value={fields?.value}
+										type={showPass ? 'text' : 'password'}
+										autoComplete="current-password"
+										required
+										className="appearance-none rounded-none w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+										placeholder="Password"
+									/>
+									<button
+										className="absolute z-10 float-right"
+										style={{right: "10px", top: "10px"}}
+										onClick={(e) => {
+											e.preventDefault();
+											setShowPass(!showPass)
+										}}
+									>
+										<FontAwesomeIcon
+											icon={showPass ? faEye : faEyeSlash}
+										/>
+									</button>
+								</div>
 							</div>
 						</div>
 
@@ -124,22 +155,19 @@ export default function LoginComponent() {
 							</div>
 						</div>
 
-						<div>
-							{
-								isLoading && <SpinLoader />
-								||
-								<button
-									type="submit"
-									className="group relative w-full flex justify-center py-2 px-4 border border-2 text-sm font-medium rounded-md text-black hover:text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-								>
-									<span className="absolute left-0 inset-y-0 flex items-center pl-3">
-										<LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-white" aria-hidden="true" />
-									</span>
-									Iniciar sesión
-								</button>
-							}
+						<div className='bg-blue-500 hover:bg-blue-600 w-content cursor-pointer rounded-md px-4 py-2 flex flex-row shadow hover:shadow-md justify-center'>
+							<LockClosedIcon className="text-white h-5 w-5 text-indigo-500 group-hover:text-white" aria-hidden="true" />
+							&nbsp;
+							<span className="text-white font-semibold">
+							Iniciar sesión
+							</span>
 						</div>
 					</form>
+					<CustomModal
+						isOpen={showModal}
+						content={<Registro />}
+						onClose={() => {setShowModal(false)}}
+					/>
 				</div>
 			</div>
 		</div>

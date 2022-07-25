@@ -22,9 +22,15 @@ const _TypicPlate = ({touristicPoint}) => {
 		imageUrl = process.env.REACT_APP_NG_API_HOST + imageUrl;
 	}
 
+	// Uploading the image for the guide on the server
+	const handleImageUpload = (image, isMainImage = false) => {
+		//TODO: lock interface while this is uploading
+		dispatch(startUploadingImage(touristicPoint._id, image.file, false, true, () => { }));
+	}
+
 	// general data related to the touristic point such as description, name, availability, etc
-	const handleSubmit = (e) => {
-		e.preventDefault();
+	const handleSubmit = (e, image, isMainImage = false) => {
+		e?.preventDefault();
 
 		// cleaning all the trash fields
 		const newData = cleanUndefinedFields(data);
@@ -35,19 +41,17 @@ const _TypicPlate = ({touristicPoint}) => {
 			name: touristicPoint.name,
 			...newData
 		}));
-	}
 
-	// Uploading the image for the guide on the server
-	const handleImageUpload = (image, isMainImage = false) => {
-		//TODO: lock interface while this is uploading
-		dispatch(startUploadingImage(touristicPoint._id, image.file, false, true, () => { }));
+		if(image && image.file) {
+			handleImageUpload(image, isMainImage);
+		}
 	}
 
 	return <DescriptionInputPanelLayout
 		title="Plato tipico"
 		description="Ingrese los datos del plato tipico del punto turístico"
 		isCreate={false}
-		onSubmit={handleSubmit}
+		showSaveButton={false}
 		child={
 			<>
 				<ResponsiveInput
@@ -72,7 +76,11 @@ const _TypicPlate = ({touristicPoint}) => {
 					panelWidth={"100%"}
 					panelHeight={"20rem"}
 					initialUrl={imageUrl}
-					handleImageUpload={handleImageUpload}
+					alwaysShowUplodButton={true}
+					customButtonContent={
+						<>Actualizar</>
+					}
+					handleImageUpload={(image)=>handleSubmit(null, image)}
 				/>
 			</>
 		}

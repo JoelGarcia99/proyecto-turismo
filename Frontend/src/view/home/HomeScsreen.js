@@ -11,6 +11,7 @@ import arqueoImage from "../../assets/others/PARQUE ARQUEOLÓGICO  HOJAS JABONCI
 import WideDescriptorComponent from "./component.wideDescriptor";
 import SessionFooterComponent from "./component.footer";
 import {Link, useNavigate} from "react-router-dom";
+import Top3TouristicPoints from "./component.top3";
 
 
 const HomeScsreen = () => {
@@ -24,8 +25,10 @@ const HomeScsreen = () => {
 			/>
 			<HeaderContent />
 			<div className="container mx-auto sm:text-center lg:text-left px-10 flex flex-col lg:flex-row justify-between" style={{marginTop: "80vh"}}>
-				<h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-					<span className="block xl:inline w-full">Disfruta el momento y <br /></span>{' '}
+				<h1 className="text-4xl tracking-tight font-black text-gray-900 sm:text-5xl md:text-6xl">
+					<span className="block xl:inline w-full">
+						Disfruta el momento y <br />
+					</span>{' '}
 					<span className="block w-full text-green-600 xl:inline"> hazlo inolvidable</span>
 				</h1>
 				<div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
@@ -67,6 +70,7 @@ const HomeScsreen = () => {
 				imageUrl={hotelImage}
 				details="La maravilla es una experiencia que te permite disfrutar de una comida que no te parece familiar, pero que te da la oportunidad de disfrutar de una experiencia que te hará sentir muy feliz. La maravilla es una experiencia que te permite disfrutar de una comida que no te parece familiar, pero que te da la oportunidad de disfrutar de una experiencia que te hará sentir muy feliz. "
 			/>
+			<Top3TouristicPoints />
 			<SessionFooterComponent />
 		</div>
 	</>

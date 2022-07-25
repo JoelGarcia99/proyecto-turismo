@@ -124,11 +124,7 @@ export const available_menus = [
 		route: allRoutes.manage_reservation,
 		icon: <FontAwesomeIcon icon={faTicketSimple} />
 	},
-	// {
-	// 	name: "Gastronomia",
-	// 	route: allRoutes.manage_gastronomia,
-	// 	icon: <FontAwesomeIcon icon={faFish} />
-	// }
+
 ];
 
 

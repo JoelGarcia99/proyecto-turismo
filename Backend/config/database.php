@@ -37,9 +37,8 @@ return [
 	'connections' => [
 		'mongodb' => [
 			'driver' => 'mongodb',
-			'host' => Utils::getEnv(DatabaseConfig::HOST),
-			'port' => Utils::getEnv(DatabaseConfig::PORT),
-			'database' => Utils::getEnv(DatabaseConfig::NAME),
+			'dsn' => env('DB_URI', 'mongodb+srv://username:password@<atlas-cluster-uri>/myappdb?retryWrites=true&w=majority'),
+			'database' => 'myappdb',
 			// 'username' => Utils::getEnv(DatabaseConfig::USER),
 			// 'password' => Utils::getEnv(DatabaseConfig::PASS),
 			// 'options' => [

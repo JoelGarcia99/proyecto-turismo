@@ -17,6 +17,9 @@ class FileUploader
 	public static function uploadImage($file, $folder): string | int {
 		$extension = $file->getClientOriginalExtension();
 
+		// lower case to extension
+		$extension = strtolower($extension);
+
 		// Validating the extension is allowed.
 		if (!in_array($extension, self::$validExtensions)) {
 			return self::INVALID_EXTENSION_CODE;

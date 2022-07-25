@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\GastronomyController;
 use App\Http\Controllers\GuideController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
@@ -81,3 +82,8 @@ Route::GET('/reservation/load-available-guides', [ReservationController::class, 
 // Reviews
 Route::GET('/review/punto-turistico/{id}', [ReviewController::class, 'readByTouristicPoint']);
 Route::GET('/review/stats/{pointId}', [ReviewController::class, 'getRatingSummary']);
+Route::get('/review/top-3/', [TouristicPointController::class, 'getTop3']);
+
+
+// Gastronomy
+Route::GET('/gastronomy', [GastronomyController::class, 'read']);

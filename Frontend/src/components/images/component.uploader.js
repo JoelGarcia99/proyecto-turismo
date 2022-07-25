@@ -18,6 +18,8 @@ const ImageUploader = ({
 	panelWidth = "100%",
 	panelHeight = "10rem",
 	showTitle = true,
+	customButtonContent = undefined,
+	alwaysShowUplodButton = false,
 	handleImageUpload
 }) => {
 
@@ -67,12 +69,16 @@ const ImageUploader = ({
 			/>
 		}
 		{
-			(showButtons && image.file) &&
+			(showButtons && image.file || alwaysShowUplodButton) &&
 			<button 
 				onClick={(e) => {e.preventDefault();handleImageUpload(image)}}
-				className="bg-green-700 text-white rounded my-4 px-4 py-2"
+				className="float-right bg-green-700 text-white rounded my-4 px-4 py-2"
 			>
-				<FontAwesomeIcon icon={faUpload} />&nbsp;Subir
+				{
+					customButtonContent ? 
+						customButtonContent :
+						<><FontAwesomeIcon icon={faUpload}/>&nbsp; Subir</>
+				}
 			</button>
 		}
 	</div>

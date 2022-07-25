@@ -1,5 +1,5 @@
 
-const DescriptionInputPanelLayout = ({isCreate, onSubmit, title, description, child}) => {
+const DescriptionInputPanelLayout = ({isCreate, onSubmit=()=>{}, showSaveButton=true, title, description, child}) => {
 	return <form onSubmit={onSubmit} >
 		<div className="box-border py-3 px-3 overflow-x-hidden md:ml-64">
 			<div className="md:grid md:grid-cols-3 md:gap-6">
@@ -13,7 +13,7 @@ const DescriptionInputPanelLayout = ({isCreate, onSubmit, title, description, ch
 			</div>
 
 			{
-
+				showSaveButton &&
 				<div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
 					{
 						onSubmit &&

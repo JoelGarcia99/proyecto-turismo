@@ -18,7 +18,7 @@ const Registro = () => {
 		dispatch(startRegister(data, ()=>navigator(allRoutes.login)));
 	}
 
-	return <div id="register-form" className="container mt-5 mb-5">
+	return <div id="register-form" className="bg-white h-full w-full px-16 py-2">
 		<h1 className="text-xl font-bold text-center">Registro de usuario</h1>
 		<hr />
 		<form id="register-form" onSubmit={handleSubmit} className="px-2 py-4 shadow-md rounded-md" action="">
@@ -46,7 +46,7 @@ const Registro = () => {
 
 			<button 
 				type="submit"
-				className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+				className="mt-2 mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
 			>
 				Registrarse
 			</button>

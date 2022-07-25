@@ -12,11 +12,11 @@ const WideDescriptorComponent = ({
 	identification = null,
 	buttonText = null,
 	isTitleInside = false,
-	onClick = ()=>{},
+	onClick = () => {},
 	showButton = true,
 	imageLeft = true,
 	title,
-	subtitle="",
+	subtitle = "",
 	details,
 	imageUrl
 }) => {
@@ -29,7 +29,7 @@ const WideDescriptorComponent = ({
 		imageLeft = true;
 	}
 
-	const imageDiv = <img 
+	const imageDiv = <img
 		src={imageUrl}
 		className={`flex-1 h-full rounded-2xl h-44 sm:h-80 object-cover`}
 	/>;
@@ -38,14 +38,14 @@ const WideDescriptorComponent = ({
 		<div className="flex flex-col px-3 py-3 w-full lg:w-1/3 justify-evenly align-center">
 			{
 				isTitleInside &&
-				<h1 className="text-xl py-2 uppercase font-bold">{title}</h1>
+				<h1 className="text-2xl md:text-4xl font-extrabold py-2 uppercase font-bold">{title}</h1>
 			}
 			<h2 className="font-bold">{subtitle}</h2>
 			<span>{details}</span>
 			{
 				showButton &&
 				<button
-					onClick={()=>onClick(identification)}
+					onClick={() => onClick(identification)}
 					className={`px-2 py-2 bg-transparent border-2 border-sky-500 hover:text-white w-full md:w-32 hover:bg-sky-600 text-black rounded-3xl font-bold shadow-2xl ${imageLeft ? "self-end" : "self-start"}`}
 				>{buttonText || "Ver detalles"}</button>
 			}
@@ -57,7 +57,7 @@ const WideDescriptorComponent = ({
 	>
 		{
 			!isTitleInside &&
-			<h1 className="text-xl py-2 uppercase font-bold">{title}</h1>
+			<h1 className="text-2xl font-extrabold py-2 uppercase font-bold">{title}</h1>
 		}
 		<div style={{backgroundColor: backgroundColor}} className="rounded-2xl">
 			<div className="py-4 px-4 flex flex-col lg:flex-row align-center justify-center text-justify">

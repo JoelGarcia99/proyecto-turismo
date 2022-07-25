@@ -116,7 +116,7 @@ export const startFetchingAllTP = () => {
  * @param {object} location Is the object of the locatino with all the fields
  * @param {function} callback Is a function to execute a piece of code after this job is done
  */
-export const startRegisteringLocation = (location, callback) => {
+export const startRegisteringLocation = (location, callback=()=>{}) => {
 	return async (dispatch, state) => {
 
 		// extracting authorization token
@@ -142,7 +142,7 @@ export const startRegisteringLocation = (location, callback) => {
  * @param {object} location Is the object of the locatino with all the fields
  * @param {function} callback Is a function to execute a piece of code after this job is done
  */
-export const startUpdatingLocation = (location, callback) => {
+export const startUpdatingLocation = (location, callback=()=>{}) => {
 	return async (dispatch, state) => {
 
 		const {token} = state().auth;
@@ -171,7 +171,7 @@ export const startUpdatingLocation = (location, callback) => {
  * @param callback {function} To execute if this ends properly
  *
  **/
-export const startDeletingPunto = (id, callback) => {
+export const startDeletingPunto = (id, callback=()=>{}) => {
 	return async (dispatch, state) => {
 
 		const {token} = state().auth;

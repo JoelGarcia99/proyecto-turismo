@@ -17,6 +17,9 @@ sudo apt install software-properties-common -y
 sudo add-apt-repository ppa:ondrej/php -y
 echo "PHP has been installed."
 
+echo "Installing  php-curl"
+sudo apt install php-curl
+
 echo "Installing composer"
 sudo apt install php-cli unzip -y 
 cd ~
@@ -46,11 +49,24 @@ sudo service mongodb start
 echo "Starting MySQL"
 sudo service mysql start
 
-echo "Creating a database"
-mysql -u root -e "create database proyecto_turismo"
+# verifying the database does not exists
+echo "Verifying database does not exists"
+if [ ! -d /var/lib/mysql/proyecto_turismo ]; then
+	echo "Database does not exists"
+	echo "Creating a database"
+	mysql -u root -e "create database proyecto_turismo"
+else
+	echo "Database exists"
+fi
 
 echo "Moving to the Backend directory"
 cd $CURRENT_DIR/Backend
+
+echo "Installing Node.js"
+curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh
+sudo bash /tmp/nodesource_setup.sh
+sudo apt install nodejs -y
+echo "Node.js has been installed."
 
 # removing .env if exists
 if [ -f .env ]; then

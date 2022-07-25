@@ -6,6 +6,7 @@ use App\Enums\Database\Attributes;
 use App\Enums\Network\NetworkAttributes;
 use App\Helpers\FileUploader;
 use App\Models\Guide;
+use App\Models\Review;
 use App\Models\TouristicPoint;
 use Exception;
 use Illuminate\Http\Request;
@@ -13,7 +14,56 @@ use Illuminate\Http\Request;
 class TouristicPointController extends Controller
 {
 
-	public function delete($id) {
+	public function getTop3()
+	{
+		// get the top 3 ranked touristic points based on the review_score
+		// and grouping by touristic point id & calculating average in mongoDB
+		$top3 = Review::raw(function ($collection) {
+			return $collection->aggregate([
+				[
+					'$group' => [
+						'_id' => '$point_id',
+						'review_score' => [
+							'$avg' => '$review_score',
+						],
+					],
+				],
+				[
+					'$sort' => [
+						'review_score' => -1,
+					],
+				],
+				[
+					'$limit' => 3,
+				],
+			]);
+		});
+
+		// get the touristic points
+		$points = TouristicPoint::whereIn('_id', array_column($top3->toArray(), '_id'))->get();
+
+		// adding the average review score to the touristic points
+		foreach ($points as $point) {
+			$point->review_score = array_column($top3->toArray(), 'review_score')[array_search($point->_id, array_column($top3->toArray(), '_id'))];
+		}
+
+		// return the top 3 touristic points
+		if ($points->count() === 0) {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_ERROR,
+				NetworkAttributes::MESSAGE => 'No hay puntos turisticos calificados aun',
+			], NetworkAttributes::STATUS_404);
+		} else {
+			return response()->json([
+				NetworkAttributes::STATUS => NetworkAttributes::STATUS_SUCCESS,
+				NetworkAttributes::MESSAGE => 'Puntos turisticos encontrados',
+				NetworkAttributes::DATA => $points,
+			], NetworkAttributes::STATUS_200);
+		}
+	}
+
+	public function delete($id)
+	{
 		// Get the touristic point
 		$touristicPoint = TouristicPoint::find($id);
 
@@ -87,23 +137,22 @@ class TouristicPointController extends Controller
 			// they will just be uploaded together with different IDs.
 			if ($isMainImage && $touristicPoint->main_image != null && $touristicPoint->main_image != "") {
 				unlink(public_path() . "/images/touristic_points/" . $touristicPoint->main_image);
-			}
-			else if($request->query(Attributes::IS_TYPICAL_PLATE_IMAGE) == 'true') {
+			} else if ($request->query(Attributes::IS_TYPICAL_PLATE_IMAGE) == 'true') {
 				unlink(public_path() . "/images/touristic_points/" . $touristicPoint->typical_plate_image);
 			}
-		} catch (Exception) { }
+		} catch (Exception) {
+		}
 
 		// Updating the image according to its type
 		if ($isMainImage) {
 			$touristicPoint->update([
 				Attributes::MAIN_IMAGE_URL => "/images/touristic_points/" . $image_path
 			]);
-		} else if($request->query(attributes::IS_TYPICAL_PLATE_IMAGE, 'false')=='true') {
+		} else if ($request->query(attributes::IS_TYPICAL_PLATE_IMAGE, 'false') == 'true') {
 			$touristicPoint->update([
 				Attributes::TYPICAL_PLATE_IMAGE_URL => "/images/touristic_points/" . $image_path
 			]);
-		}
-		else {
+		} else {
 			// Appending the new image to the previous ones
 			$imageList = $touristicPoint->images ?? [];
 			$imageList[] = "/images/touristic_points/" . $image_path;

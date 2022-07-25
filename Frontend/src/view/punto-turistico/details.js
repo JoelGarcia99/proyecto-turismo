@@ -16,6 +16,7 @@ import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SpinLoader from '../../components/loader/SpinLoader';
 import Reviews from './components/component.reviews';
+import ImageCarousel from '../../components/ImageCarrousel/component.imageCarrousel';
 
 const PuntoturisAbout = () => {
 
@@ -139,7 +140,7 @@ const PuntoturisAbout = () => {
 				<div id="img-gallery" className="bg-white">
 					<h1 className="text-xl mx-8 px-8 font-bold uppercase my-2">Imágenes</h1>
 					<div id="carrousel py-4 w-full">
-						<GalleryCarrousel imagesUrls={punto.images} />
+						<ImageCarousel imagesUrls={punto.images} />
 					</div>
 				</div>
 			}
@@ -149,7 +150,7 @@ const PuntoturisAbout = () => {
 				<div id="vid-gallery" style={{marginTop: "4rem"}}>
 					<h1 className="text-xl px-8 font-bold uppercase my-2">videos</h1>
 					<div id="carrousel py-4 w-full">
-						<GalleryCarrousel imagesUrls={punto.videos} />
+						<ImageCarousel imagesUrls={punto.videos} />
 					</div>
 				</div>
 			}
@@ -181,32 +182,4 @@ const PuntoturisAbout = () => {
 		<ToastContainer />
 	</div>
 }
-
-const GalleryCarrousel = ({imagesUrls}) => {
-	const {width} = useWindowDimensions();
-
-	return <div className="mx-auto flex-col items-center justify-center" style={{width: "90%"}}>
-		<Carousel
-			autoPlay={true}
-			interval={5000}
-			infiniteLoop={true}
-			showThumbs={true}
-			showStatus={false}
-			stopOnHover={false}
-			useKeyboardArrows={true}
-			centerMode={width >= 768}
-			centerSlidePercentage={33.33}
-
-		>
-			{
-				imagesUrls.map((image, index) => {
-					return <div key={index} className="px-2">
-						<img src={process.env.REACT_APP_NG_API_HOST + image} className="object-cover rounded-xl" alt="" />
-					</div>
-
-				})}
-		</Carousel>
-	</div>
-}
-
 export default PuntoturisAbout

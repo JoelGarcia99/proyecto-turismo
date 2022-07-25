@@ -29,18 +29,29 @@ const PlacesListComponent = ({title, items}) => {
 
 	return (
 		<div className="bg-white">
-			<div className="w-full mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
-				<h2 className="text-2xl font-extrabold tracking-tight text-3xl text-green-900">{title}</h2>
+			<div className="w-full mx-auto py-16 px-1 sm:py-24 sm:px-6 lg:px-8">
+				<h2
+					className="text-2xl md:text-4xl font-extrabold tracking-tight text-green-900"
 
-				<div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:gap-x-8 xl:grid-cols-4">
-					{items.map((product) => (
-						<div key={product._id} className="border-8 rounded-2xl group">
+				>
+					{title}
+				</h2>
+
+				<div className="flex flex-col md:flex-row md:justify-center items-center flex-wrap justify-between">
+					{items.map((product, index) => (
+						<div
+							key={product._id}
+							style={{marginRight: index < items.length - 1? "1rem":"0"}}
+							className="my-1 border-8 rounded-2xl group"
+						>
 							<div 
-								style={{height: "10rem !important"}}
-								className="w-full bg-gray-200 aspect-w-1 aspect-h-1 overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+								className="bg-gray-200 w-80 aspect-w-1 aspect-h-1 overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
 								<img
 									src={`${process.env.REACT_APP_NG_API_HOST}${product.main_image_url}`}
 									className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+									style={{
+										height: "20rem"
+									}}
 								/>
 							</div>
 							<div className="mt-4 px-2 py-2">

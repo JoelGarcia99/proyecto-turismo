@@ -48,7 +48,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+	"predeploy":"npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -70,11 +72,13 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.4",
+    "gh-pages": "^4.0.0",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.2.13",
     "postcss-cli": "^8.3.1",
     "tailwindcss": "^3.0.23"
   },
+  "homepage": "https://JoelGarcia99.github.io/proyecto-turismo",
   "optionalDependencies": {
     "@babel/core": "7.14.0",
     "typescript": "4.2.4"
