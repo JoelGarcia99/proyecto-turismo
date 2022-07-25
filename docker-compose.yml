@@ -11,7 +11,7 @@ services:
   portoturismo_frontend:
     image: portoturismo_frontend
     container_name: portoturismo_frontend
-    restart: always
+    tty: true
     ports:
       - 3000:3000
     environment:

@@ -8,5 +8,6 @@ COPY tailwind.config.js /frontend/tailwind.config.js
 
 COPY public /frontend/public
 
-RUN apt-get update
+WORKDIR /frontend
+
 RUN npm install
