@@ -1,15 +1,12 @@
-FROM node:lts-alpine3.16
+FROM node:lts-alpine3.15
 
-WORKDIR /frontend
-COPY package.json ./
-COPY package-lock.json ./
+COPY src /frontend/src
+COPY package.json /frontend/package.json
+COPY package-lock.json /frontend/package-lock.json
+COPY postcss.config.js /frontend/postcss.config.js
+COPY tailwind.config.js /frontend/tailwind.config.js
 
-# installing bash
-RUN apk update && apk add bash
+COPY public /frontend/public
 
+RUN apt-get update
 RUN npm install
-
-COPY . ./
-
-CMD ["npm", "start"]
-
