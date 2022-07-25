@@ -18,3 +18,27 @@ services:
       REACT_APP_NG_API_HOST: http://www.localhost:8000
       REACT_APP_HOST: http://www.localhost:3000
       REACT_APP_TINY_API: t7oertz17kn7nbifea1uplykssgq4ervr3lpyym6sqsi1kko
+  portoturismo_backend:
+    image: portoturismo_backend
+    container_name: portoturismo_backend
+    tty: true
+    ports:
+      - 8000:8000
+    environment:
+      APP_NAME: Portoturismo
+      APP_ENV: local
+      APP_KEY: base64:VsV0r6QK3jmUkDza/ZRagnL3UCikzS+PD2B7zzK271U=
+      APP_DEBUG: true
+      APP_URL: http://backend-ng.test
+
+      # database settings
+      DB_URI: mongodb+srv://jgarcia5169:123Joel.@cluster0.kyt3zqg.mongodb.net/portoturismo
+      DATABASE_NAME: portoturismo
+
+      DB_CONNECTION: mysql
+
+      DATABASE_AUTH_HOST: 127.0.0.1
+      DATABASE_AUTH_PORT: 3306
+      DATABASE_AUTH_USER: root
+      DATABASE_AUTH_PASS: example
+      DATABASE_AUTH_NAME: proyecto_turismo

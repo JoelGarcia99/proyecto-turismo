@@ -6,6 +6,11 @@ CURRENT_DIR=$(pwd)
 
 echo "Current dir is: $CURRENT_DIR"
 
+echo "Initializing backend"
+cd $CURRENT_DIR/Backend
+docker build -t portoturismo_backend .
+
+# The process above was tested and is working
 echo "Initializing the frontend"
 cd $CURRENT_DIR/Frontend
 
