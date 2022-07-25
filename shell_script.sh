@@ -43,6 +43,8 @@ apt-get install -y php-mongodb
 echo "Installing MySQL"
 apt-get install -y mysql-server
 
+apt-get install -y php-mysql
+
 echo "Starting mongodb"
 sudo service mongodb start
 
