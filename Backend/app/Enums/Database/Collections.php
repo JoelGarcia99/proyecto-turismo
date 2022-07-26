@@ -9,4 +9,5 @@ enum Collections: string
 	const GUIDES = 'portoturismo.guides';
 	const RESERVATIONS = 'portoturismo.reservations';
 	const REVIEWS = 'portoturismo.reviews';
+	const USERS = 'portoturismo.users';
 }

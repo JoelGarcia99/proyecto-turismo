@@ -155,13 +155,15 @@ export default function LoginComponent() {
 							</div>
 						</div>
 
-						<div className='bg-blue-500 hover:bg-blue-600 w-content cursor-pointer rounded-md px-4 py-2 flex flex-row shadow hover:shadow-md justify-center'>
+						<button 
+							type="submit"
+							className='bg-blue-500 hover:bg-blue-600 w-content cursor-pointer rounded-md px-4 py-2 flex flex-row shadow hover:shadow-md justify-center'>
 							<LockClosedIcon className="text-white h-5 w-5 text-indigo-500 group-hover:text-white" aria-hidden="true" />
 							&nbsp;
 							<span className="text-white font-semibold">
 							Iniciar sesión
 							</span>
-						</div>
+						</button>
 					</form>
 					<CustomModal
 						isOpen={showModal}

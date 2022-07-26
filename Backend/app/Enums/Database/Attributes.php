@@ -4,6 +4,10 @@ namespace App\Enums\Database;
 
 enum Attributes: string
 {
+	// USEr
+	const EMAIL = 'email';
+	const PASSWORD = 'password';
+
 	// Query params
 	const IS_MAIN_IMAGE = 'is_main_image';
 	const IS_TYPICAL_PLATE_IMAGE = 'is_typical_plate_image';

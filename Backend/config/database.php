@@ -37,14 +37,8 @@ return [
 	'connections' => [
 		'mongodb' => [
 			'driver' => 'mongodb',
-			'dsn' => env('DB_URI', 'mongodb+srv://username:password@<atlas-cluster-uri>/myappdb?retryWrites=true&w=majority'),
-			'database' => 'myappdb',
-			// 'username' => Utils::getEnv(DatabaseConfig::USER),
-			// 'password' => Utils::getEnv(DatabaseConfig::PASS),
-			// 'options' => [
-			//     // here you can pass more settings to the Mongo Driver Manager
-			//     'database' => Utils::getEnv(DatabaseConfig::AUTHENTICATION_DATABASE)
-			// ],
+			'database' => 'portoturismo',
+			'dsn' => Utils::getEnv('DB_URI', 'mongodb+srv://username:password@<atlas-cluster-uri>/myappdb?retryWrites=true&w=majority'),
 		],
 		'mysql' => [
 			'driver' => 'mysql',

@@ -14,6 +14,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 # installing mongodb extension
 RUN pecl install mongodb-1.12.0
+
+
+
+RUN echo 'extension=pdo_mysql' > /usr/local/etc/php/php.ini-production
+RUN echo 'extension=pdo_mysql' > /usr/local/etc/php/php.ini-development
 RUN echo 'extension=mongodb.so' > /usr/local/etc/php/conf.d/mongodb.ini
 
 RUN echo "Installing composer"
