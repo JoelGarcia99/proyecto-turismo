@@ -24,13 +24,3 @@ docker-compose down
 echo "assembling everything"
 docker-compose up -d
 #---------------------------------------------
-
-
-
-
-echo "Installing passport"
-docker exec portoturismo_backend php artisan passport:install
-
-echo "Migrating database"
-docker exec portoturismo_backend php artisan migrate
-

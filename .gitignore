@@ -6,3 +6,4 @@ Backend/vendor/
 Frontend/node_modules/
 
 **/**/node_modules
+db/

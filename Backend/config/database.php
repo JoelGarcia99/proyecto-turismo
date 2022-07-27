@@ -38,18 +38,12 @@ return [
 		'mongodb' => [
 			'driver' => 'mongodb',
 			'database' => 'portoturismo',
-			'dsn' => Utils::getEnv('DB_URI', 'mongodb+srv://username:password@<atlas-cluster-uri>/myappdb?retryWrites=true&w=majority'),
+			'host' => env('DB_HOST', 'portoturismo_mongo'),
+            'port' => env('DB_PORT', 27017),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', 'example'),
+			// 'dsn' => 'mongodb://root:example@0.0.0.0:27017/'
 		],
-		'mysql' => [
-			'driver' => 'mysql',
-			'host' => Utils::getEnv('DATABASE_AUTH_HOST', '127.0.0.1'),
-			'port' => Utils::getEnv('DATABASE_AUTH_PORT', '3306'),
-			'database' => Utils::getEnv('DATABASE_AUTH_NAME', 'forge'),
-			'username' => Utils::getEnv('DATABASE_AUTH_USER', 'forge'),
-			'password' => Utils::getEnv('DATABASE_AUTH_PASS', ''),
-			'charset' => 'utf8',
-			'collation' => 'utf8_unicode_ci',
-		]
 	],
 
 	/*

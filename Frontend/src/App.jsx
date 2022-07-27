@@ -3,7 +3,6 @@ import {RoutesComponent} from './router/routes'
 
 function App() {
   
-
   return (
     <BrowserRouter>
       <RoutesComponent />

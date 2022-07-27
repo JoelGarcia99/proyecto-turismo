@@ -1,22 +1,13 @@
 # creating a network for the database
 services:
-  portoturismo_mysql:
-    image: mariadb:10.7.4-focal
-    container_name: portoturismo_mysql
-    restart: always
-    environment:
-      MARIADB_ROOT_PASSWORD: 12345678
-      MARIADB_DATABASE: proyecto_turismo
-      MARIADB_USER: administrador
-      MARIADB_PASSWORD: 12345678
-    ports:
-      - 3306:3306
   portoturismo_mongo:
     image: mongo:5.0.9
     container_name: portoturismo_mongo
     restart: always
     ports:
       - 27017:27017
+    volumes:
+      - ./db/data/:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -24,35 +15,32 @@ services:
     image: portoturismo_frontend
     container_name: portoturismo_frontend
     tty: true
+    volumes:
+      - ./Frontend/:/frontend/
     ports:
       - 3000:3000
     depends_on:
       - portoturismo_backend
     environment:
-      REACT_APP_NG_API_HOST: portoturismo_backend
+      REACT_APP_NG_API_HOST: http://127.0.0.1:8000
       REACT_APP_HOST: 127.0.0.1:3000
       REACT_APP_TINY_API: t7oertz17kn7nbifea1uplykssgq4ervr3lpyym6sqsi1kko
   portoturismo_backend:
     image: portoturismo_backend
     container_name: portoturismo_backend
     tty: true
+    volumes:
+      - ./Backend/:/backend/
     depends_on:
       - portoturismo_mongo
-      - portoturismo_mysql
     ports:
       - 8000:8000
     environment:
       APP_NAME: Portoturismo
       APP_ENV: local
       APP_KEY: base64:VsV0r6QK3jmUkDza/ZRagnL3UCikzS+PD2B7zzK271U=
-      APP_DEBUG: true
-      APP_URL: http://backend-ng.test
-
-      # database settings
+      DB_HOST: portoturismo_mongo
+      DB_PORT: 27017
+      DB_USERNAME: root
+      DB_PASSWORD: example
       DB_URI: mongodb://root:example@portoturismo_mongo:27017/
-
-      DATABASE_AUTH_HOST: portoturismo_mysql
-      DATABASE_AUTH_PORT: 3306
-      DATABASE_AUTH_USER: administrador
-      DATABASE_AUTH_PASS: 12345678
-      DATABASE_AUTH_NAME: proyecto_turismo
